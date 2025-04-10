@@ -27,6 +27,7 @@ public class StorageSpace : InteractableObject
 
     public override void StopHighlight()
     {
+        base.StopHighlight();
         showHighlight = false;
     }
 }

@@ -20,12 +20,6 @@ public class Printer : InteractableObject
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.E) && !isPrinting)
-        {
-            model = Instantiate(printModel, printBase.transform);
-            isPrinting = true;
-            animator.SetBool("Printing", true);
-        }
         if (model != null && model.GetComponent<PrintableModel>().IsFinished)
         {
             animator.SetBool("Printing", false);
@@ -56,7 +50,19 @@ public class Printer : InteractableObject
 
     public override GameObject Interact()
     {
-        isPrinting = false;
-        return model;
+        if (!isPrinting)
+        {
+            model = Instantiate(printModel, printBase.transform);
+            isPrinting = true;
+            animator.SetBool("Printing", true);
+        }
+        else if (ModelHasFinished())
+        {
+            if (ItemHolder.HoldItem(model))
+            {
+                isPrinting = false;
+            }
+        }
+        return null;
     }
 }

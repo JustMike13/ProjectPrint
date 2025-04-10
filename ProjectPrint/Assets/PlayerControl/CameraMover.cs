@@ -6,6 +6,9 @@ public class CameraMover : MonoBehaviour
     [SerializeField] float ySensitivity = 2f;
     [SerializeField] float maxInteractDistance = 5;
     InteractableObject lastInteracted;
+    private float lastTime = 0f;
+    private float interactDelay = 0.1f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,6 +25,14 @@ public class CameraMover : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         transform.parent.Rotate(new Vector3(0, mouseX * xSensitivity, 0));
         ProcessHighlight();
+
+        if (Input.GetKey(KeyCode.E) 
+            && lastInteracted != null
+            && Time.time - lastTime > interactDelay)
+        {
+            lastInteracted.Interact();
+            lastTime = Time.time;
+        }
     }
 
     void ProcessHighlight()
