@@ -3,7 +3,7 @@ using UnityEngine;
 public class StorageSpace : InteractableObject
 {
     [SerializeField] GameObject highlight;
-    [SerializeField] GameObject storedObject;
+    [SerializeField] GameObject storedObject = null;
     bool showHighlight = false;
     public bool ShowHighlight { get { return showHighlight; } set { showHighlight = value; } }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,13 +21,43 @@ public class StorageSpace : InteractableObject
     public override void Highlight()
     {
         base.Highlight();
-        showHighlight = true;
-        InteractHintBox.AddText(HintText[0]);
+        if (ItemHolder.IsHoldingSomething() && storedObject == null)
+        {
+            showHighlight = true;
+            InteractHintBox.AddText(HintText[0]);
+        }
+        if (!ItemHolder.IsHoldingSomething() && storedObject != null)
+        {
+            showHighlight = true;
+            InteractHintBox.AddText(HintText[1]);
+        }
     }
 
     public override void StopHighlight()
     {
         base.StopHighlight();
         showHighlight = false;
+    }
+
+    public override GameObject Interact()
+    {
+        if (ItemHolder.IsHoldingSomething() && storedObject == null)
+        {
+            storedObject = ItemHolder.TakeItem();
+            storedObject.transform.parent = transform;
+            storedObject.transform.localPosition = Vector3.zero;
+            storedObject.transform.localScale = Vector3.one;
+            storedObject.transform.rotation = transform.rotation;
+            return null;
+        }
+        if (!ItemHolder.IsHoldingSomething() && storedObject != null)
+        {
+            GameObject item = storedObject;
+            storedObject = null;
+            ItemHolder.HoldItem(item);
+            return item;
+        }
+
+        return null;
     }
 }
