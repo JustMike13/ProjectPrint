@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PrintableModel : MonoBehaviour
 {
+    [SerializeField] int id = 0;
+    public int ID {  get { return id; } }
     [SerializeField] float TimeToPrint = 10;
     bool finished = false;
     public bool IsFinished { get { return finished; } }

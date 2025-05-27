@@ -39,6 +39,11 @@ public class StorageSpace : InteractableObject
         showHighlight = false;
     }
 
+    public void RemoveItem()
+    {
+        storedObject = null;
+    }
+
     public override GameObject Interact()
     {
         if (ItemHolder.IsHoldingSomething() && storedObject == null)
