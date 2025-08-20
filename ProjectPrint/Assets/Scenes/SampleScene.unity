@@ -2164,8 +2164,8 @@ MonoBehaviour:
   Inventory:
   - {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
   - {fileID: 752932601878350210, guid: 140616ee94e7d194cb7bbb123a9c7fcc, type: 3}
-  maxItems: 4
-  box: {fileID: 0}
+  maxItems: 8
+  box: {fileID: 99659281312360518, guid: 3ec015de96540344291e6d926401e0b1, type: 3}
   defaultPosition: {x: 2.673, y: 1.398, z: -1.78}
   boxObject: {fileID: 99659281312360518, guid: 3ec015de96540344291e6d926401e0b1, type: 3}
 --- !u!4 &1240219933

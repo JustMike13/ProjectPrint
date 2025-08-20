@@ -55,11 +55,18 @@ public class OrderGenerator : MonoBehaviour
             OrderItem orderItem = new OrderItem();
             orderItem.item = item;
             orderItem.quantity = quantity;
-            items.Add(orderItem);
-            Debug.Log("Added item " + item.name + ", quantity: " + quantity);
+            if (quantity > 0)
+            {
+                items.Add(orderItem);
+                Debug.Log("Added item " + item.name + ", quantity: " + quantity);
+            }
         }
         currentOrder = new Order();
         currentOrder.CreateOrder(items);
         box.Order = currentOrder;
+        if (currentOrder.OrderItems.Count == 0)
+        {
+            GenerateOrder();
+        }
     }
 }
