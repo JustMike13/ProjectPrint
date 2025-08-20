@@ -52,7 +52,8 @@ public class Printer : InteractableObject
     {
         if (!isPrinting)
         {
-            model = Instantiate(printModel, printBase.transform);
+            model = Instantiate(printModel.gameObject, printBase.transform);
+            model.transform.localRotation = Quaternion.identity;
             isPrinting = true;
             animator.SetBool("Printing", true);
         }

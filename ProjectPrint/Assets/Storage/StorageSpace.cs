@@ -4,12 +4,12 @@ public class StorageSpace : InteractableObject
 {
     [SerializeField] GameObject highlight;
     [SerializeField] GameObject storedObject = null;
+    [SerializeField] Quaternion defaultRotation = Quaternion.identity;
     bool showHighlight = false;
     public bool ShowHighlight { get { return showHighlight; } set { showHighlight = value; } }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -52,7 +52,7 @@ public class StorageSpace : InteractableObject
             storedObject.transform.parent = transform;
             storedObject.transform.localPosition = Vector3.zero;
             storedObject.transform.localScale = Vector3.one;
-            storedObject.transform.rotation = transform.rotation;
+            storedObject.transform.localRotation = defaultRotation; //transform.rotation;
             return null;
         }
         if (!ItemHolder.IsHoldingSomething() && storedObject != null)
