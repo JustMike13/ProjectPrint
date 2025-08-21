@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class CameraMover : MonoBehaviour
 {
@@ -26,11 +27,19 @@ public class CameraMover : MonoBehaviour
         transform.parent.Rotate(new Vector3(0, mouseX * xSensitivity, 0));
         ProcessHighlight();
 
-        if (Input.GetKey(KeyCode.E) 
+        if (Input.GetKeyDown(KeyCode.E) 
             && lastInteracted != null
             && Time.time - lastTime > interactDelay)
         {
             lastInteracted.Interact();
+            lastTime = Time.time;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0)
+            && lastInteracted != null
+            && Time.time - lastTime > interactDelay)
+        {
+            ItemHolder.HoldItem(lastInteracted.transform.gameObject);
             lastTime = Time.time;
         }
     }

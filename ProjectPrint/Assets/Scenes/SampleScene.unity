@@ -2165,9 +2165,9 @@ MonoBehaviour:
   - {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
   - {fileID: 752932601878350210, guid: 140616ee94e7d194cb7bbb123a9c7fcc, type: 3}
   maxItems: 8
-  box: {fileID: 99659281312360518, guid: 3ec015de96540344291e6d926401e0b1, type: 3}
+  box: {fileID: 0}
   defaultPosition: {x: 2.673, y: 1.398, z: -1.78}
-  boxObject: {fileID: 99659281312360518, guid: 3ec015de96540344291e6d926401e0b1, type: 3}
+  boxObject: {fileID: 5457361570442193563, guid: 0a7b6e76127289846b87827a582ab54f, type: 3}
 --- !u!4 &1240219933
 Transform:
   m_ObjectHideFlags: 0
@@ -2182,6 +2182,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1242098409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1242098410}
+  m_Layer: 0
+  m_Name: objectPlacer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1242098410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242098409}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.437, y: 0, z: 0.449}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1825910483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1249130579 stripped
 Transform:
@@ -3163,6 +3194,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1794430055}
+  - {fileID: 1242098410}
   m_Father: {fileID: 330585546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1825910484
@@ -3177,6 +3209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade7bf02fb06dc44eb9e33dcf934a6d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectPlacer: {fileID: 1242098409}
 --- !u!1 &1860930141
 GameObject:
   m_ObjectHideFlags: 0
@@ -3646,7 +3679,7 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.2
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
@@ -3663,6 +3696,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 4.5
+  gravity: -9.81
+  jumpHeight: 3
 --- !u!4 &2091440162
 Transform:
   m_ObjectHideFlags: 0
@@ -3672,7 +3707,7 @@ Transform:
   m_GameObject: {fileID: 2091440159}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: -0.89, y: 1.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
