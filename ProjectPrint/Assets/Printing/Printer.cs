@@ -23,6 +23,8 @@ public class Printer : InteractableObject
         if (model != null && model.GetComponent<PrintableModel>().IsFinished)
         {
             animator.SetBool("Printing", false);
+            model.transform.localPosition = Vector3.zero;
+            model.transform.rotation = Quaternion.identity;
         }
     }
 
@@ -61,6 +63,7 @@ public class Printer : InteractableObject
         {
             if (ItemHolder.HoldItem(model))
             {
+                model = null;
                 isPrinting = false;
             }
         }

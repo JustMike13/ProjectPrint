@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PrintableModel : MonoBehaviour
+public class PrintableModel : InteractableObject
 {
     [SerializeField] int id = 0;
     public int ID {  get { return id; } }
@@ -12,7 +12,7 @@ public class PrintableModel : MonoBehaviour
     void Start()
     {
         //TODO: if speed multiplier is given, calculate time to print
-        GetComponent<MeshRenderer>().enabled = false;
+        EnableModel(false);
     }
 
     // Update is called once per frame
@@ -23,11 +23,17 @@ public class PrintableModel : MonoBehaviour
             elapsedTime += Time.deltaTime;
             if (elapsedTime > TimeToPrint)
             {
-                finished = true;
-                GetComponent<MeshRenderer>().enabled = true;
+                EnableModel(true);
             }
         }
     }
 
+    private void EnableModel(bool val)
+    {
+        finished = val;
+        GetComponent<MeshRenderer>().enabled = val;
+        GetComponent<Rigidbody>().isKinematic = !val;
+        GetComponent<BoxCollider>().enabled = val;
+    }
     //TODO: Add material to print
 }
