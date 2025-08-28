@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class OrderBox : InteractableObject
@@ -58,6 +59,15 @@ public class OrderBox : InteractableObject
         {
             //showHighlight = true;
             InteractHintBox.AddText(HintText[sendOrderMessage]);
+        }
+        if (order != null)
+        {
+            OrderDetailsTextBox.AddText("Ordered items:\n" + order.ToString()
+                                       +"\nItems in box:\n" + currentItems.ToString());
+        }
+        else
+        {
+            OrderDetailsTextBox.AddText("Empty Box");
         }
     }
 }

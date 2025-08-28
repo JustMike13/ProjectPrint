@@ -76,5 +76,16 @@ public class Order
     {
         AddItem(item.item, item.quantity);
     }
+    public override string ToString()
+    {
+        if (OrderItems == null || OrderItems.Count == 0)
+            return "Empty Order";
+        string result = "";
+        foreach (OrderItem item in OrderItems)
+        {
+            result = result + item.item.name + ": " + item.quantity + "\n";
+        }
+        return result;
+    }
 
 }
