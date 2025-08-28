@@ -37,7 +37,8 @@ public class CameraMover : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0)
             && lastInteracted != null
-            && Time.time - lastTime > interactDelay)
+            && Time.time - lastTime > interactDelay
+            && lastInteracted.CanBePickedUp)
         {
             ItemHolder.HoldItem(lastInteracted.transform.gameObject);
             lastTime = Time.time;

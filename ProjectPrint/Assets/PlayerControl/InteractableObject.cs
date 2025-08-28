@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class InteractableObject : MonoBehaviour
 {
+    [SerializeField] bool canBePickedUp = true;
+    public bool CanBePickedUp { get { return canBePickedUp; } }
     [SerializeField] List<string> hintText = new List<string>();
     protected List<string> HintText {  get { return hintText; } }
     float lastInteraction = 0;
@@ -26,6 +28,7 @@ public class InteractableObject : MonoBehaviour
     {
         hasInteracted = false;
         InteractHintBox.RemoveText();
+        OrderDetailsTextBox.RemoveText();
     }
 
     public virtual GameObject Interact()
