@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractableObject : MonoBehaviour
+public class InteractableObject : Highlight
 {
     [SerializeField] bool canBePickedUp = true;
     public bool CanBePickedUp { get { return canBePickedUp; } }
-    [SerializeField] List<string> hintText = new List<string>();
-    protected List<string> HintText {  get { return hintText; } }
     float lastInteraction = 0;
     private float highlightTime = 1f;
     private bool hasInteracted;
@@ -15,23 +13,19 @@ public class InteractableObject : MonoBehaviour
     {
         if (hasInteracted && lastInteraction - Time.time > highlightTime)
         {
-            StopHighlight();
+            hasInteracted = false;
         }
     }
-    public virtual void Highlight()
+    public override void StartHighlight(int i = -1)
     {
+        if (i == -1)
+            return;
         hasInteracted = true;
         lastInteraction = Time.time;
+        base.StartHighlight(i);
     }
 
-    public virtual void StopHighlight()
-    {
-        hasInteracted = false;
-        InteractHintBox.RemoveText();
-        OrderDetailsTextBox.RemoveText();
-    }
-
-    public virtual GameObject Interact()
+    public virtual GameObject Interact(ControlsSystem.ControlBinding control)
     {
         return null;
     }

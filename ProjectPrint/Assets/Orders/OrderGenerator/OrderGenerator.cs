@@ -62,7 +62,7 @@ public class OrderGenerator : InteractableObject
         return true;
     }
 
-    public override GameObject Interact()
+    public override GameObject Interact(ControlsSystem.ControlBinding control)
     {
         if (IsEmpty())
         {
@@ -74,9 +74,9 @@ public class OrderGenerator : InteractableObject
         }
         return null;
     }
-    public override void Highlight()
+    public override void StartHighlight(int i = -1)
     {
-        base.Highlight();
+        base.StartHighlight(i);
         if (IsEmpty())
         {
             InteractHintBox.AddText(HintText[GenerateOrderMessage]);

@@ -5,7 +5,10 @@ using UnityEngine;
 public class InteractHintBox : MonoBehaviour
 {
     public static InteractHintBox Instance { get; private set; }
-    [SerializeField] static TextMeshProUGUI HintTextBox;
+    static TextMeshProUGUI HintTextBox;
+    static float textAddedAt = -1f;
+    [SerializeField] float highlightTime = 1f;
+
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -18,19 +21,24 @@ public class InteractHintBox : MonoBehaviour
         {
             Instance = this;
         }
-    }
-    private void Start()
-    {
         HintTextBox = GetComponent<TextMeshProUGUI>();
         RemoveText();
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private void Update()
+    {
+        if (textAddedAt != -1 && Time.time - textAddedAt > highlightTime)
+        {
+            RemoveText();
+        }
+    }
+
     public static void AddText(string text)
     {
+        textAddedAt = Time.time;
         HintTextBox.text = text;
     }
 
-    // Update is called once per frame
     public static void RemoveText()
     {
         HintTextBox.text = string.Empty;

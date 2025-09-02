@@ -1,6 +1,5 @@
 using UnityEngine;
-
-public class Printer : InteractableObject
+public class Printer : Highlight
 {
     const int PickUpText = 0;
     const int RunningText = 1;
@@ -12,7 +11,7 @@ public class Printer : InteractableObject
     Animator animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         animator = GetComponent<Animator>();
     }
@@ -33,40 +32,39 @@ public class Printer : InteractableObject
         return model != null ? model.GetComponent<PrintableModel>().IsFinished : false;
     }
 
-    public override void Highlight()
+    public override void StartHighlight()
     {
-        base.Highlight();
         if (!isPrinting)
         {
-            InteractHintBox.AddText(HintText[StartText]);
+            base.StartHighlight(StartText);
         }
         else if (!ModelHasFinished())
         {
-            InteractHintBox.AddText(HintText[RunningText]);
+            base.StartHighlight(RunningText);
         }
         else
         {
-            InteractHintBox.AddText(HintText[PickUpText]);
+            base.StartHighlight(PickUpText);
         }
     }
 
-    public override GameObject Interact()
-    {
-        if (!isPrinting)
-        {
-            model = Instantiate(printModel.gameObject, printBase.transform);
-            model.transform.localRotation = Quaternion.identity;
-            isPrinting = true;
-            animator.SetBool("Printing", true);
-        }
-        else if (ModelHasFinished())
-        {
-            if (ItemHolder.HoldItem(model))
-            {
-                model = null;
-                isPrinting = false;
-            }
-        }
-        return null;
-    }
+    //public override GameObject Interact(ControlsSystem.ControlBinding control)
+    //{
+    //    if (!isPrinting)
+    //    {
+    //        model = Instantiate(printModel.gameObject, printBase.transform);
+    //        model.transform.localRotation = Quaternion.identity;
+    //        isPrinting = true;
+    //        animator.SetBool("Printing", true);
+    //    }
+    //    else if (ModelHasFinished())
+    //    {
+    //        if (ItemHolder.HoldItem(model))
+    //        {
+    //            model = null;
+    //            isPrinting = false;
+    //        }
+    //    }
+    //    return null;
+    //}
 }

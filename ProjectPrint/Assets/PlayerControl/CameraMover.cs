@@ -31,7 +31,7 @@ public class CameraMover : MonoBehaviour
             && lastInteracted != null
             && Time.time - lastTime > interactDelay)
         {
-            lastInteracted.Interact();
+            lastInteracted.Interact(ControlsSystem.ControlBinding.EMPTY);
             lastTime = Time.time;
         }
 
@@ -56,12 +56,21 @@ public class CameraMover : MonoBehaviour
             InteractableObject intobj = hit.collider.gameObject.GetComponent<InteractableObject>();
             if (intobj != null)
             {
-                intobj.Highlight();
+                //intobj.StartHighlight();
                 UpdateLastInteracted(intobj);
-                return;
+            }
+            OrderBox or = hit.collider.gameObject.GetComponent<OrderBox>();
+            if (or != null)
+            {
+                int x = 0;
+            }
+            Highlight hl = hit.collider.gameObject.GetComponent<Highlight>();
+            if (hl != null)
+            {
+                hl.StartHighlight();
             }
         }
-        UpdateLastInteracted();
+        //UpdateLastInteracted();
     }
 
     void UpdateLastInteracted(InteractableObject newObj = null)

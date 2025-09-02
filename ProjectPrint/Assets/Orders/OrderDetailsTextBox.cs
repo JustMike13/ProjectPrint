@@ -4,7 +4,10 @@ using UnityEngine;
 public class OrderDetailsTextBox : MonoBehaviour
 {
     public static OrderDetailsTextBox Instance { get; private set; }
-    [SerializeField] static TextMeshProUGUI OrderDetailsBox;
+    static TextMeshProUGUI HintTextBox;
+    static float textAddedAt = -1f;
+    [SerializeField] float highlightTime = 1f;
+
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -18,20 +21,28 @@ public class OrderDetailsTextBox : MonoBehaviour
             Instance = this;
         }
     }
-
     private void Start()
     {
-        OrderDetailsBox = GetComponent<TextMeshProUGUI>();
+        HintTextBox = GetComponent<TextMeshProUGUI>();
         RemoveText();
     }
-    public static void AddText(string text)
+
+    private void Update()
     {
-        OrderDetailsBox.text = text;
+        if (textAddedAt != -1 && Time.time - textAddedAt > highlightTime)
+        {
+            RemoveText();
+        }
     }
 
-    // Update is called once per frame
+    public static void AddText(string text)
+    {
+        textAddedAt = Time.time;
+        HintTextBox.text = text;
+    }
+
     public static void RemoveText()
     {
-        OrderDetailsBox.text = string.Empty;
+        HintTextBox.text = string.Empty;
     }
 }

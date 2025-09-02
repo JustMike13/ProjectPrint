@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class StorageSpace : InteractableObject
 {
-    [SerializeField] GameObject highlight;
+    //[SerializeField] GameObject highlight;
     [SerializeField] GameObject storedObject = null;
     [SerializeField] Quaternion defaultRotation = Quaternion.identity;
     bool showHighlight = false;
@@ -15,23 +15,23 @@ public class StorageSpace : InteractableObject
     // Update is called once per frame
     void Update()
     {
-        highlight.SetActive(showHighlight);
+        //highlight.SetActive(showHighlight);
     }
 
-    public override void Highlight()
-    {
-        base.Highlight();
-        if (ItemHolder.IsHoldingSomething() && storedObject == null)
-        {
-            showHighlight = true;
-            InteractHintBox.AddText(HintText[0]);
-        }
-        if (!ItemHolder.IsHoldingSomething() && storedObject != null)
-        {
-            showHighlight = true;
-            InteractHintBox.AddText(HintText[1]);
-        }
-    }
+    //public override void Highlight()
+    //{
+    //    base.Highlight();
+    //    if (ItemHolder.IsHoldingSomething() && storedObject == null) 
+    //    {
+    //        showHighlight = true;
+    //        InteractHintBox.AddText(HintText[0]);
+    //    }
+    //    if (!ItemHolder.IsHoldingSomething() && storedObject != null)
+    //    {
+    //        showHighlight = true;
+    //        InteractHintBox.AddText(HintText[1]);
+    //    }
+    //}
 
     public override void StopHighlight()
     {
@@ -44,7 +44,7 @@ public class StorageSpace : InteractableObject
         storedObject = null;
     }
 
-    public override GameObject Interact()
+    public override GameObject Interact(ControlsSystem.ControlBinding control)
     {
         if (ItemHolder.IsHoldingSomething() && storedObject == null)
         {

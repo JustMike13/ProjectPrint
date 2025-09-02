@@ -20,7 +20,7 @@ public class OrderBox : InteractableObject
         
     }
 
-    public override GameObject Interact()
+    public override GameObject Interact(ControlsSystem.ControlBinding control)
     {
         if (ItemHolder.IsHoldingSomething())
         {
@@ -46,19 +46,19 @@ public class OrderBox : InteractableObject
         return null;
     }
 
-    public override void Highlight()
+    public override void StartHighlight()
     {
-        base.Highlight();
+        base.StartHighlight();
         if (ItemHolder.IsHoldingSomething())
         {
             // TODO: Add highlight to box
             //showHighlight = true;
-            InteractHintBox.AddText(HintText[placeInBoxMessage]);
+            base.StartHighlight(placeInBoxMessage);
         }
         if (!ItemHolder.IsHoldingSomething())
         {
             //showHighlight = true;
-            InteractHintBox.AddText(HintText[sendOrderMessage]);
+            base.StartHighlight(sendOrderMessage);
         }
         if (order != null)
         {

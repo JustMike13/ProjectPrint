@@ -240,12 +240,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8919e54119dfd7a4a92dd8c079777668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickUp: 0
   hintText:
-  - Pick up print
+  - (E) Pick up print
   - Printer running
   - (E) Start print
-  printModel: {fileID: 5624519669151426188, guid: 140616ee94e7d194cb7bbb123a9c7fcc, type: 3}
+  printModel: {fileID: 7443286835550512290, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
   printBase: {fileID: 6613759199311162563}
 --- !u!65 &1977412387736978406
 BoxCollider:
