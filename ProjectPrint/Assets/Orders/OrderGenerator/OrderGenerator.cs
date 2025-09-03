@@ -74,12 +74,11 @@ public class OrderGenerator : InteractableObject
         }
         return null;
     }
-    public override void StartHighlight(int i = -1)
+    public override void StartHighlight()
     {
-        base.StartHighlight(i);
         if (IsEmpty())
         {
-            InteractHintBox.AddText(HintText[GenerateOrderMessage]);
+            base.StartHighlight(GenerateOrderMessage);
         }
     }
 
