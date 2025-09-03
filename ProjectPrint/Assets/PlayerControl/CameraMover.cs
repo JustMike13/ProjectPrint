@@ -5,10 +5,6 @@ public class CameraMover : MonoBehaviour
 {
     [SerializeField] float xSensitivity = 2f;
     [SerializeField] float ySensitivity = 2f;
-    [SerializeField] float maxInteractDistance = 5;
-    InteractableObject lastInteracted;
-    private float lastTime = 0f;
-    private float interactDelay = 0.1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,64 +21,5 @@ public class CameraMover : MonoBehaviour
 
         float mouseX = Input.GetAxis("Mouse X");
         transform.parent.Rotate(new Vector3(0, mouseX * xSensitivity, 0));
-        ProcessHighlight();
-
-        if (Input.GetKeyDown(KeyCode.E) 
-            && lastInteracted != null
-            && Time.time - lastTime > interactDelay)
-        {
-            lastInteracted.Interact(ControlsSystem.ControlBinding.EMPTY);
-            lastTime = Time.time;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Mouse0)
-            && lastInteracted != null
-            && Time.time - lastTime > interactDelay
-            && lastInteracted.CanBePickedUp)
-        {
-            ItemHolder.HoldItem(lastInteracted.transform.gameObject);
-            lastTime = Time.time;
-        }
-    }
-
-    void ProcessHighlight()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, 
-                    transform.TransformDirection(Vector3.forward), 
-                    out hit, 
-                    maxInteractDistance))
-        {
-            InteractableObject intobj = hit.collider.gameObject.GetComponent<InteractableObject>();
-            if (intobj != null)
-            {
-                //intobj.StartHighlight();
-                UpdateLastInteracted(intobj);
-            }
-            OrderBox or = hit.collider.gameObject.GetComponent<OrderBox>();
-            if (or != null)
-            {
-                int x = 0;
-            }
-            Highlight hl = hit.collider.gameObject.GetComponent<Highlight>();
-            if (hl != null)
-            {
-                hl.StartHighlight();
-            }
-        }
-        //UpdateLastInteracted();
-    }
-
-    void UpdateLastInteracted(InteractableObject newObj = null)
-    {
-        if (lastInteracted != null && lastInteracted != newObj)
-        {
-            lastInteracted.StopHighlight();
-            lastInteracted = null;
-        }
-        if (newObj != null)
-        {
-            lastInteracted = newObj;
-        }
     }
 }

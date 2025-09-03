@@ -244,6 +244,7 @@ MonoBehaviour:
   - (E) Pick up print
   - Printer running
   - (E) Start print
+  canBePickedUp: 0
   printModel: {fileID: 7443286835550512290, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
   printBase: {fileID: 6613759199311162563}
 --- !u!65 &1977412387736978406

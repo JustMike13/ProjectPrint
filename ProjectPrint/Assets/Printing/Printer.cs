@@ -1,5 +1,5 @@
 using UnityEngine;
-public class Printer : Highlight
+public class Printer : InteractableObject
 {
     const int PickUpText = 0;
     const int RunningText = 1;
@@ -48,23 +48,23 @@ public class Printer : Highlight
         }
     }
 
-    //public override GameObject Interact(ControlsSystem.ControlBinding control)
-    //{
-    //    if (!isPrinting)
-    //    {
-    //        model = Instantiate(printModel.gameObject, printBase.transform);
-    //        model.transform.localRotation = Quaternion.identity;
-    //        isPrinting = true;
-    //        animator.SetBool("Printing", true);
-    //    }
-    //    else if (ModelHasFinished())
-    //    {
-    //        if (ItemHolder.HoldItem(model))
-    //        {
-    //            model = null;
-    //            isPrinting = false;
-    //        }
-    //    }
-    //    return null;
-    //}
+    public override GameObject Interact(ControlsSystem.ControlBinding control)
+    {
+        if (!isPrinting)
+        {
+            model = Instantiate(printModel.gameObject, printBase.transform);
+            model.transform.localRotation = Quaternion.identity;
+            isPrinting = true;
+            animator.SetBool("Printing", true);
+        }
+        else if (ModelHasFinished())
+        {
+            if (ItemHolder.HoldItem(model))
+            {
+                model = null;
+                isPrinting = false;
+            }
+        }
+        return null;
+    }
 }
