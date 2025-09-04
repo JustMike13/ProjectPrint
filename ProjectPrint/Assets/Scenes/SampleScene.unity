@@ -613,8 +613,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c504112cf6402441b51579ac651a6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSensitivity: 2
-  ySensitivity: 2
+  inputActions: {fileID: 0}
+  xSensitivity: 0.8
+  ySensitivity: 0.8
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -628,6 +629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxInteractDistance: 2
+  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!4 &343574986 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6717319232273480708, guid: 4cfe415458a560345a645d26c55325a7, type: 3}
@@ -3371,6 +3373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPlacer: {fileID: 1242098409}
+  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &1860930141
 GameObject:
   m_ObjectHideFlags: 0
@@ -3861,6 +3864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1af27f8f1354c9e40bbb9dba05c759ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   movementSpeed: 4.5
   gravity: -9.81
   jumpHeight: 3

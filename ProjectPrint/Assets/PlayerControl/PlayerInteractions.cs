@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInteractions : MonoBehaviour
 {
@@ -6,18 +7,21 @@ public class PlayerInteractions : MonoBehaviour
     InteractableObject lastInteracted;
     private float lastTime = 0f;
     private float interactDelay = 0.1f;
+    public InputActionAsset inputActions;
+    InputAction Attack;
+    InputAction Interact;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        
+        Attack   = InputSystem.actions.FindAction("Attack");
+        Interact = InputSystem.actions.FindAction("Interact");
     }
 
     // Update is called once per frame
     void Update()
     {
         ProcessHighlight();
-
-        if (Input.GetKeyDown(KeyCode.E)
+        if (Interact.WasPressedThisFrame()
             && lastInteracted != null
             && Time.time - lastTime > interactDelay)
         {
@@ -25,7 +29,7 @@ public class PlayerInteractions : MonoBehaviour
             lastTime = Time.time;
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0)
+        if (Attack.WasPressedThisFrame()
             && lastInteracted != null
             && Time.time - lastTime > interactDelay
             && lastInteracted.CanBePickedUp)
@@ -70,5 +74,15 @@ public class PlayerInteractions : MonoBehaviour
         {
             lastInteracted = newObj;
         }
+    }
+
+    private void OnEnable()
+    {
+        inputActions.FindActionMap("Player").Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.FindActionMap("Player").Disable();
     }
 }

@@ -1,15 +1,19 @@
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ItemHolder : MonoBehaviour
 {
     [SerializeField] static GameObject currentItem = null;
     [SerializeField] GameObject objectPlacer;
+    [SerializeField] InputActionAsset inputActions;
     public static ItemHolder Instance { get; private set; }
+    InputAction RightClick;
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
+        RightClick = InputSystem.actions.FindAction("RightClick");
 
         if (Instance != null && Instance != this)
         {
@@ -24,13 +28,13 @@ public class ItemHolder : MonoBehaviour
     bool prevMouse = false;
     private void Update()
     {
-        bool mouseVal = Input.GetKey(KeyCode.Mouse1);
+        bool mouseVal = RightClick.IsPressed();
         if ( mouseVal && currentItem != null)
         {
             currentItem.transform.localPosition = objectPlacer.transform.localPosition;
         }
         if (prevMouse && !mouseVal && currentItem != null)
-        {
+        { 
             TakeItem();
         }
         prevMouse = mouseVal;
