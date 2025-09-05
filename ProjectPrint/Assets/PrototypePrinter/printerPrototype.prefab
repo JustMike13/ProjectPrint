@@ -41,15 +41,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5827106
+      value: -0.673
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.038
+      value: 1.0316992
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.5673919
+      value: 2.567392
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalRotation.w
@@ -245,8 +245,10 @@ MonoBehaviour:
   - Printer running
   - (E) Start print
   canBePickedUp: 0
-  printModel: {fileID: 7443286835550512290, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
+  printModel: {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
   printBase: {fileID: 6613759199311162563}
+  filament: {fileID: 0}
+  failedPrint: {fileID: -5895585480689805537, guid: ed8e6cadd5c7bf5409d790c84487a90e, type: 3}
 --- !u!65 &1977412387736978406
 BoxCollider:
   m_ObjectHideFlags: 0

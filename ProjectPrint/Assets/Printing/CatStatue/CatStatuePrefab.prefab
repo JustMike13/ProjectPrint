@@ -84,8 +84,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hintText: []
+  canBePickedUp: 1
   id: 2
   TimeToPrint: 3
+  filamentNeeded: 20
 --- !u!54 &1475241786302507602
 Rigidbody:
   m_ObjectHideFlags: 0

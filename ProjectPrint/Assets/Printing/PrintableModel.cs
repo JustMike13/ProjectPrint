@@ -5,9 +5,13 @@ public class PrintableModel : InteractableObject
     [SerializeField] int id = 0;
     public int ID {  get { return id; } }
     [SerializeField] float TimeToPrint = 10;
-    bool finished = false;
+    [SerializeField] float filamentNeeded = 10;
+    public float FilamentNeeded {  get { return filamentNeeded; } set { filamentNeeded = value; } }
+    bool finished = false; 
     public bool IsFinished { get { return finished; } }
     float elapsedTime = 0;
+    FilamentSpool filament;
+    public FilamentSpool Filament { set { filament = value; } }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -23,6 +27,7 @@ public class PrintableModel : InteractableObject
             elapsedTime += Time.deltaTime;
             if (elapsedTime > TimeToPrint)
             {
+                filament.useFilament(FilamentNeeded);
                 EnableModel(true);
             }
         }

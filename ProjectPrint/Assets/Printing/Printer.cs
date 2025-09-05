@@ -4,8 +4,10 @@ public class Printer : InteractableObject
     const int PickUpText = 0;
     const int RunningText = 1;
     const int StartText = 2;
-    [SerializeField] GameObject printModel;
+    [SerializeField] PrintableModel printModel;
     [SerializeField] GameObject printBase;
+    [SerializeField] FilamentSpool filament;
+    [SerializeField] PrintableModel failedPrint;
     bool isPrinting = false;
     GameObject model;
     Animator animator;
@@ -48,14 +50,28 @@ public class Printer : InteractableObject
         }
     }
 
+    void StartPrinting()
+    {
+        if (filament.Quantiy == 0)
+        {
+            Debug.Log("Filament Empty");
+            return;
+        }
+        bool enoughFilament = filament.Quantiy >= printModel.FilamentNeeded;
+        GameObject toPrint = enoughFilament ? printModel.gameObject : failedPrint.gameObject;
+        model = Instantiate(toPrint, printBase.transform);
+        model.transform.localRotation = Quaternion.identity;
+        model.GetComponent<PrintableModel>().Filament = filament;
+        model.GetComponent<PrintableModel>().FilamentNeeded = printModel.FilamentNeeded;
+        isPrinting = true;
+        animator.SetBool("Printing", true);
+    }
+
     public override GameObject Interact(ControlsSystem.ControlBinding control)
     {
         if (!isPrinting)
         {
-            model = Instantiate(printModel.gameObject, printBase.transform);
-            model.transform.localRotation = Quaternion.identity;
-            isPrinting = true;
-            animator.SetBool("Printing", true);
+            StartPrinting();
         }
         else if (ModelHasFinished())
         {

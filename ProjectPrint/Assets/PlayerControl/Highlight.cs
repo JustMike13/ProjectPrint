@@ -19,6 +19,10 @@ public class Highlight : MonoBehaviour
     }
     public virtual void StartHighlight()
     {
+        if (hintText.Count > 0)
+        {
+            InteractHintBox.AddText(HintText[0]);
+        }
     }
 
     public virtual void StartHighlight(int i = -1)
