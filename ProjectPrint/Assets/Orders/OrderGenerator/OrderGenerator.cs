@@ -62,7 +62,7 @@ public class OrderGenerator : InteractableObject
         return true;
     }
 
-    public override GameObject Interact(ControlsSystem.ControlBinding control)
+    public override GameObject Interact(ControlBinding control)
     {
         if (IsEmpty())
         {

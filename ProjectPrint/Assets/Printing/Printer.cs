@@ -67,7 +67,7 @@ public class Printer : InteractableObject
         animator.SetBool("Printing", true);
     }
 
-    public override GameObject Interact(ControlsSystem.ControlBinding control)
+    public override GameObject Interact(ControlBinding control)
     {
         if (!isPrinting)
         {

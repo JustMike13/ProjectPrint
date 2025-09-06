@@ -4,7 +4,7 @@ using UnityEngine;
 public class InteractableObject : Highlight
 {
     [SerializeField] bool canBePickedUp = true;
-    public bool CanBePickedUp { get { return canBePickedUp; } }
+    public bool CanBePickedUp { get { return canBePickedUp; } set { canBePickedUp = value; } }
     float lastInteraction = 0;
     private float highlightTime = 1f;
     private bool hasInteracted;
@@ -25,7 +25,7 @@ public class InteractableObject : Highlight
         base.StartHighlight(i);
     }
 
-    public virtual GameObject Interact(ControlsSystem.ControlBinding control)
+    public virtual GameObject Interact(ControlBinding control)
     {
         return null;
     }

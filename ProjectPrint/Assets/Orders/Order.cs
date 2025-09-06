@@ -19,7 +19,6 @@ public class Order
         {
             RemoveItem(item);
         }
-        HiddenObjects.DestroyObjects();
         if (OrderItems.Count == 0)
         {
             Debug.Log("Order fulfilled");

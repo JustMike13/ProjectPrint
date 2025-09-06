@@ -1,5 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+public enum ControlBinding
+{
+    EMPTY,
+    PRIMARY,
+    SECONDARY,
+    E,
+    F,
+    Q,
+    SHIFT,
+    ESC
+}
 
 public class PlayerInteractions : MonoBehaviour
 {
@@ -8,13 +19,15 @@ public class PlayerInteractions : MonoBehaviour
     private float lastTime = 0f;
     private float interactDelay = 0.1f;
     public InputActionAsset inputActions;
-    InputAction Attack;
+    InputAction Primary;
     InputAction Interact;
+    InputAction FButton;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        Attack   = InputSystem.actions.FindAction("Attack");
+        Primary   = InputSystem.actions.FindAction("Attack");
         Interact = InputSystem.actions.FindAction("Interact");
+        FButton = InputSystem.actions.FindAction("FButton");
     }
 
     // Update is called once per frame
@@ -25,11 +38,19 @@ public class PlayerInteractions : MonoBehaviour
             && lastInteracted != null
             && Time.time - lastTime > interactDelay)
         {
-            lastInteracted.Interact(ControlsSystem.ControlBinding.EMPTY);
+            lastInteracted.Interact(ControlBinding.E);
+            lastTime = Time.time;
+        }
+        ProcessHighlight();
+        if (FButton.WasPressedThisFrame()
+            && lastInteracted != null
+            && Time.time - lastTime > interactDelay)
+        {
+            lastInteracted.Interact(ControlBinding.F);
             lastTime = Time.time;
         }
 
-        if (Attack.WasPressedThisFrame()
+        if (Primary.WasPressedThisFrame()
             && lastInteracted != null
             && Time.time - lastTime > interactDelay
             && lastInteracted.CanBePickedUp)

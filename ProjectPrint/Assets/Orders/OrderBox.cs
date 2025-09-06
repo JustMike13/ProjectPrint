@@ -20,7 +20,7 @@ public class OrderBox : InteractableObject
         
     }
 
-    public override GameObject Interact(ControlsSystem.ControlBinding control)
+    public override GameObject Interact(ControlBinding control)
     {
         if (ItemHolder.IsHoldingSomething())
         {
