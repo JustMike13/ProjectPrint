@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3588975142522714079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4040643237717953764}
+  m_Layer: 0
+  m_Name: SpoolHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4040643237717953764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3588975142522714079}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.662, y: 0.397, z: -0.342}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1322306004228453914}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6613759199311162563
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,6 +213,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4040643237717953764}
     - targetCorrespondingSourceObject: {fileID: 1172396749628439318, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4610842512252349575}
@@ -199,6 +233,11 @@ PrefabInstance:
 --- !u!4 &402596708295813863 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1172396749628439318, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
+  m_PrefabInstance: {fileID: 1572740553728741873}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1322306004228453914 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
   m_PrefabInstance: {fileID: 1572740553728741873}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1806531562743229600 stripped
@@ -248,7 +287,8 @@ MonoBehaviour:
   printModel: {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
   printBase: {fileID: 6613759199311162563}
   filament: {fileID: 0}
-  failedPrint: {fileID: -5895585480689805537, guid: ed8e6cadd5c7bf5409d790c84487a90e, type: 3}
+  spoolHolder: {fileID: 3588975142522714079}
+  failedPrint: {fileID: 2591486108463036601, guid: 8e543eb70ab13264fa5c5d378acf770c, type: 3}
 --- !u!65 &1977412387736978406
 BoxCollider:
   m_ObjectHideFlags: 0

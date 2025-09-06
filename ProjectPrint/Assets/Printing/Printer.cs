@@ -7,6 +7,8 @@ public class Printer : InteractableObject
     [SerializeField] PrintableModel printModel;
     [SerializeField] GameObject printBase;
     [SerializeField] FilamentSpool filament;
+    [SerializeField] GameObject spoolHolder;
+    //[SerializeField] Vector3 spoolOrientation;
     [SerializeField] PrintableModel failedPrint;
     bool isPrinting = false;
     GameObject model;
@@ -69,16 +71,36 @@ public class Printer : InteractableObject
 
     public override GameObject Interact(ControlBinding control)
     {
-        if (!isPrinting)
+        if (control == ControlBinding.E)
         {
-            StartPrinting();
-        }
-        else if (ModelHasFinished())
-        {
-            if (ItemHolder.HoldItem(model))
+            if (!isPrinting)
             {
-                model = null;
-                isPrinting = false;
+                StartPrinting();
+            }
+            else if (ModelHasFinished())
+            {
+                if (ItemHolder.HoldItem(model))
+                {
+                    model = null;
+                    isPrinting = false;
+                }
+            }
+        }
+        if (control == ControlBinding.F)
+        {
+            if (filament == null)
+            {
+                filament = ItemHolder.TakeItem<FilamentSpool>();
+                filament.CanBePickedUp = false;
+                filament.transform.position = spoolHolder.transform.position;
+                filament.transform.rotation = Quaternion.identity;
+            }
+            else if (!ItemHolder.IsHoldingSomething() && 
+                (!isPrinting || ModelHasFinished()))
+            { 
+                filament.CanBePickedUp = true;
+                ItemHolder.HoldItem(filament.gameObject);
+                filament = null;
             }
         }
         return null;

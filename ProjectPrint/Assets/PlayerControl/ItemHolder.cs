@@ -2,6 +2,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.Progress;
 
 public class ItemHolder : MonoBehaviour
 {
@@ -78,6 +79,15 @@ public class ItemHolder : MonoBehaviour
         currentItem.transform.parent = null;
         GameObject item = currentItem;
         currentItem = null;
-        return item;
+        return item; 
+    }
+    public static T TakeItem<T>() where T : Component
+    {
+        if (currentItem != null && currentItem.TryGetComponent<T>(out T component))
+        {
+            return TakeItem().GetComponent<T>();
+        }
+
+        return null;
     }
 }
