@@ -3,16 +3,22 @@ using UnityEngine;
 
 public class FilamentSpool : InteractableObject
 {
-    //constants
+    #region constants
     const int maxQuantity = 1000;
-    //Editor fields
+    #endregion //constants
+    #region editor fields
     [SerializeField] GameObject filament;
     [SerializeField, Range(0, maxQuantity)] float quantity;
-    public float Quantiy {  get { return quantity; } set { quantity = value;  } }
+    public float Quantity {  get { return quantity; } set { quantity = value;  } }
     [SerializeField] Material color;
     [SerializeField] Material baseColor;
-    //class members
+    #endregion //editor fields 
+    #region class members
     float fillPercentage;
+    #endregion //editor fields
+    #region getters and setters
+    public Material Color { get { return color; } }
+    #endregion
 
     private void ShowFilamentSize()
     {

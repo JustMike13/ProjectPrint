@@ -87,7 +87,7 @@ MonoBehaviour:
   canBePickedUp: 1
   id: 2
   TimeToPrint: 3
-  filamentNeeded: 20
+  filamentNeeded: 100
 --- !u!54 &1475241786302507602
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -8,7 +8,6 @@ public class Printer : InteractableObject
     [SerializeField] GameObject printBase;
     [SerializeField] FilamentSpool filament;
     [SerializeField] GameObject spoolHolder;
-    //[SerializeField] Vector3 spoolOrientation;
     [SerializeField] PrintableModel failedPrint;
     bool isPrinting = false;
     GameObject model;
@@ -54,16 +53,18 @@ public class Printer : InteractableObject
 
     void StartPrinting()
     {
-        if (filament.Quantiy == 0)
+        if (filament == null || filament.Quantity == 0)
         {
             Debug.Log("Filament Empty");
             return;
         }
-        bool enoughFilament = filament.Quantiy >= printModel.FilamentNeeded;
+        bool enoughFilament = filament.Quantity >= printModel.FilamentNeeded;
         GameObject toPrint = enoughFilament ? printModel.gameObject : failedPrint.gameObject;
         model = Instantiate(toPrint, printBase.transform);
+        model.GetComponent<MeshRenderer>().material = filament.Color; 
         model.transform.localRotation = Quaternion.identity;
         model.GetComponent<PrintableModel>().Filament = filament;
+        // TODO: move usefilament from model to printer
         model.GetComponent<PrintableModel>().FilamentNeeded = printModel.FilamentNeeded;
         isPrinting = true;
         animator.SetBool("Printing", true);

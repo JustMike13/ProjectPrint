@@ -27,6 +27,7 @@ public class PrintableModel : InteractableObject
             elapsedTime += Time.deltaTime;
             if (elapsedTime > TimeToPrint)
             {
+                // TODO: move usefilament from model to printer
                 filament.useFilament(FilamentNeeded);
                 EnableModel(true);
             }
@@ -40,5 +41,4 @@ public class PrintableModel : InteractableObject
         GetComponent<Rigidbody>().isKinematic = !val;
         GetComponent<BoxCollider>().enabled = val;
     }
-    //TODO: Add material to print
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2120779949442282333}
   - component: {fileID: 4270285958854256787}
-  - component: {fileID: 8030716900685805861}
+  - component: {fileID: 6104259319988699791}
   - component: {fileID: 3439206424847290043}
   m_Layer: 0
   m_Name: FilamentSpoolPrefab
@@ -53,7 +53,7 @@ MonoBehaviour:
   quantity: 1000
   color: {fileID: 2100000, guid: 303684fae007cff48a27d031c4ce4333, type: 2}
   baseColor: {fileID: 2100000, guid: 626ccf48ed92c484484bf68bc1d4226c, type: 2}
---- !u!54 &8030716900685805861
+--- !u!54 &6104259319988699791
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
