@@ -1128,6 +1128,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: FilamentSpoolPrefab (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 2100000, guid: 5c821223df27b7241a2fd038106b2d48, type: 2}
+    - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
+      propertyPath: canBePickedUp
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1882,7 +1890,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.041
       objectReference: {fileID: 0}
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1924,6 +1932,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FilamentSpoolPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
+      propertyPath: canBePickedUp
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1947,7 +1959,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3943971564085856009, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
       propertyPath: m_Size.x
-      value: 1.9633353
+      value: 1.4993865
       objectReference: {fileID: 0}
     - target: {fileID: 3943971564085856009, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
       propertyPath: m_Size.y
@@ -1959,15 +1971,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3943971564085856009, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
       propertyPath: m_Center.x
-      value: 0.030543333
+      value: -0.201431
       objectReference: {fileID: 0}
     - target: {fileID: 3943971564085856009, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
       propertyPath: m_Center.y
-      value: 0.21948351
+      value: 0.21948348
       objectReference: {fileID: 0}
     - target: {fileID: 3943971564085856009, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
       propertyPath: m_Center.z
       value: 0.08814359
+      objectReference: {fileID: 0}
+    - target: {fileID: 3943971564085856009, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6080573661221931252, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
       propertyPath: pickUp
@@ -2047,6 +2063,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7951522140230402417, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
+    - {fileID: 7024240337752419856, guid: aa20847c4c093c94d991d665424c9d7c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -2073,8 +2090,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.78585505, y: 0.096883595, z: 0.7110895}
-  m_Center: {x: -0.054916978, y: 0.016258687, z: 0.005038202}
+  m_Size: {x: 0.78585505, y: 0.077427804, z: 0.7110895}
+  m_Center: {x: -0.054916978, y: 0.0065307915, z: 0.005038202}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
