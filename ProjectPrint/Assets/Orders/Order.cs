@@ -22,6 +22,7 @@ public class Order
         if (OrderItems.Count == 0)
         {
             Debug.Log("Order fulfilled");
+            CurrencySystem.Earn(100);
             return true;
         }
         Debug.Log("Order incomplete");
