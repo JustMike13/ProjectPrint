@@ -31,6 +31,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1322306004228453914}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5390709280503551078
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6415603996884081458}
+  - component: {fileID: 105511791563573317}
+  - component: {fileID: 7989328497100071991}
+  m_Layer: 0
+  m_Name: CardSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6415603996884081458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390709280503551078}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.535, y: 0.076, z: -0.022}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1322306004228453914}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &105511791563573317
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390709280503551078}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.14972049, y: 0.102482796, z: 0.06784153}
+  m_Center: {x: 0.0062983334, y: 0.036215663, z: -0.009447675}
+--- !u!114 &7989328497100071991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390709280503551078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e253fe8867a86a4a94929d950891147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hintText: []
+  canBePickedUp: 1
 --- !u!1 &6613759199311162563
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,6 +284,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4040643237717953764}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6415603996884081458}
     - targetCorrespondingSourceObject: {fileID: 1172396749628439318, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4610842512252349575}
@@ -284,7 +355,7 @@ MonoBehaviour:
   - Printer running
   - (E) Start print
   canBePickedUp: 0
-  printModel: {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
+  memoryCard: {fileID: 0}
   printBase: {fileID: 6613759199311162563}
   filament: {fileID: 0}
   spoolHolder: {fileID: 3588975142522714079}
@@ -308,5 +379,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.6468434, y: 0.51793265, z: 0.7507123}
-  m_Center: {x: -0.12410918, y: 0.33174586, z: -0.12464386}
+  m_Size: {x: 0.6688278, y: 0.51793265, z: 0.7507123}
+  m_Center: {x: -0.08494501, y: 0.33174586, z: -0.12464386}

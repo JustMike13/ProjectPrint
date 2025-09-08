@@ -1,16 +1,18 @@
+using System;
 using UnityEngine;
 public class Printer : InteractableObject
 {
     const int PickUpText = 0;
     const int RunningText = 1;
     const int StartText = 2;
-    [SerializeField] PrintableModel printModel;
+    [SerializeField] MemoryCard memoryCard;
     [SerializeField] GameObject printBase;
     [SerializeField] FilamentSpool filament;
     [SerializeField] GameObject spoolHolder;
     [SerializeField] PrintableModel failedPrint;
     bool isPrinting = false;
-    GameObject model;
+    PrintableModel selectedModel;
+    GameObject printedModel;
     Animator animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,17 +24,17 @@ public class Printer : InteractableObject
     // Update is called once per frame
     void Update()
     {
-        if (model != null && model.GetComponent<PrintableModel>().IsFinished)
+        if (printedModel != null && printedModel.GetComponent<PrintableModel>().IsFinished)
         {
             animator.SetBool("Printing", false);
-            model.transform.localPosition = Vector3.zero;
-            model.transform.rotation = Quaternion.identity;
+            printedModel.transform.localPosition = Vector3.zero;
+            printedModel.transform.rotation = Quaternion.identity;
         }
     }
 
     bool ModelHasFinished()
     {
-        return model != null ? model.GetComponent<PrintableModel>().IsFinished : false;
+        return printedModel != null ? printedModel.GetComponent<PrintableModel>().IsFinished : false;
     }
 
     public override void StartHighlight()
@@ -58,14 +60,21 @@ public class Printer : InteractableObject
             Debug.Log("Filament Empty");
             return;
         }
-        bool enoughFilament = filament.Quantity >= printModel.FilamentNeeded;
-        GameObject toPrint = enoughFilament ? printModel.gameObject : failedPrint.gameObject;
-        model = Instantiate(toPrint, printBase.transform);
-        model.GetComponent<MeshRenderer>().material = filament.Color; 
-        model.transform.localRotation = Quaternion.identity;
-        model.GetComponent<PrintableModel>().Filament = filament;
+        if ( memoryCard == null )
+        {
+            Debug.Log("No memory card installed");
+            return;
+        }
+        // TODO: UI to select from multiple models on card
+        selectedModel = memoryCard.Models[0];
+        bool enoughFilament = filament.Quantity >= selectedModel.FilamentNeeded;
+        GameObject toPrint = enoughFilament ? selectedModel.gameObject : failedPrint.gameObject;
+        printedModel = Instantiate(toPrint, printBase.transform);
+        printedModel.GetComponent<MeshRenderer>().material = filament.Color; 
+        printedModel.transform.localRotation = Quaternion.identity;
+        printedModel.GetComponent<PrintableModel>().Filament = filament;
         // TODO: move usefilament from model to printer
-        model.GetComponent<PrintableModel>().FilamentNeeded = printModel.FilamentNeeded;
+        printedModel.GetComponent<PrintableModel>().FilamentNeeded = selectedModel.FilamentNeeded;
         isPrinting = true;
         animator.SetBool("Printing", true);
     }
@@ -80,30 +89,58 @@ public class Printer : InteractableObject
             }
             else if (ModelHasFinished())
             {
-                if (ItemHolder.HoldItem(model))
+                if (ItemHolder.HoldItem(printedModel))
                 {
-                    model = null;
+                    printedModel = null;
                     isPrinting = false;
                 }
             }
         }
         if (control == ControlBinding.F)
         {
-            if (filament == null)
+            filament = ItemHolder.TakeItem<FilamentSpool>();
+            memoryCard = ItemHolder.TakeItem<MemoryCard>();
+
+            if (filament != null)
             {
-                filament = ItemHolder.TakeItem<FilamentSpool>();
                 filament.CanBePickedUp = false;
                 filament.transform.position = spoolHolder.transform.position;
                 filament.transform.rotation = Quaternion.identity;
+                filament.transform.parent = spoolHolder.transform;
             }
-            else if (!ItemHolder.IsHoldingSomething() && 
-                (!isPrinting || ModelHasFinished()))
-            { 
+            else if ( memoryCard != null )
+            {
+                Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
+                if (cardSlot == null) Debug.LogError("No card slot");
+                memoryCard.CanBePickedUp = false;
+                memoryCard.transform.position = cardSlot.position;
+                memoryCard.transform.rotation = Quaternion.identity;
+                memoryCard.transform.parent = cardSlot;
+                memoryCard.EnableCard(false);
+            }
+            else if (!ItemHolder.IsHoldingSomething() && NotBusy())
+            {
                 filament.CanBePickedUp = true;
                 ItemHolder.HoldItem(filament.gameObject);
                 filament = null;
             }
         }
         return null;
+    }
+
+    public bool NotBusy()
+    {
+        return (!isPrinting || ModelHasFinished());
+    }
+
+    internal void TakeCard()
+    {
+        if (memoryCard == null) return;
+        if (!ItemHolder.IsHoldingSomething())
+        {
+            memoryCard.EnableCard(true);
+            ItemHolder.HoldItem(memoryCard.gameObject);
+            memoryCard = null;
+        }
     }
 }
