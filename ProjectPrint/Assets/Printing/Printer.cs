@@ -19,6 +19,7 @@ public class Printer : InteractableObject
     void Awake()
     {
         animator = GetComponent<Animator>();
+        memoryCard = GetComponentInChildren<MemoryCard>();
     }
 
     // Update is called once per frame
@@ -118,7 +119,7 @@ public class Printer : InteractableObject
                 memoryCard.transform.parent = cardSlot;
                 memoryCard.EnableCard(false);
             }
-            else if (!ItemHolder.IsHoldingSomething() && NotBusy())
+            else if (!ItemHolder.IsHoldingSomething() && NotBusy() && filament != null)
             {
                 filament.CanBePickedUp = true;
                 ItemHolder.HoldItem(filament.gameObject);
