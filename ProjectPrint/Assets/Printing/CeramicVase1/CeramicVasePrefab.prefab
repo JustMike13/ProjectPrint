@@ -108,6 +108,7 @@ MonoBehaviour:
   id: 1
   TimeToPrint: 5
   filamentNeeded: 50
+  price: 12
 --- !u!54 &6294338558940005243
 Rigidbody:
   m_ObjectHideFlags: 0

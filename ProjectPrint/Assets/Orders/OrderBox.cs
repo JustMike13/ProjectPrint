@@ -20,11 +20,12 @@ public class OrderBox : InteractableObject
                 Debug.Log("Object can not be added to box.");
                 return null; 
             }
-            Order.AddProduct(model);
-            model.EnableModel(false);
             storedObject.transform.parent = transform;
             storedObject.GetComponent<Renderer>().enabled = false;
-            storedObject.transform.position = Vector3.zero;
+            storedObject.GetComponent<Rigidbody>().isKinematic = true;
+            storedObject.GetComponent<BoxCollider>().enabled = false;
+            storedObject.transform.localPosition = Vector3.zero;
+            Order.AddProduct(model);
             return null;
         }
         else

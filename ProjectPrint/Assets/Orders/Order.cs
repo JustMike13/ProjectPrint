@@ -14,6 +14,7 @@ public class Order
     }
     public bool FulfillOrder()
     {
+        float total = 0;
         foreach (OrderItem item in orderItems)
         {
             if (item.quantity > item.addedQuantity)
@@ -21,9 +22,10 @@ public class Order
                 Debug.Log("Order incomplete");
                 return false;
             }
+            total += item.totalCost();
         }
         Debug.Log("Order fulfilled");
-        CurrencySystem.Earn(100);
+        CurrencySystem.Earn(total);
         return true;
     }
 
