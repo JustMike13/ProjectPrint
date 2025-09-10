@@ -18,7 +18,6 @@ public class PrintableModel : InteractableObject
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //TODO: if speed multiplier is given, calculate time to print
         EnableModel(false);
     }
 
@@ -43,5 +42,10 @@ public class PrintableModel : InteractableObject
         GetComponent<MeshRenderer>().enabled = val;
         GetComponent<Rigidbody>().isKinematic = !val;
         GetComponent<BoxCollider>().enabled = val;
+    }
+
+    public void SpeedMultiplier(float speed)
+    {
+        TimeToPrint = TimeToPrint / speed;
     }
 }

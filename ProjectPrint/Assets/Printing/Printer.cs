@@ -10,6 +10,7 @@ public class Printer : InteractableObject
     [SerializeField] FilamentSpool filament;
     [SerializeField] GameObject spoolHolder;
     [SerializeField] PrintableModel failedPrint;
+    [SerializeField] float speedMultiplier = 1.0f;
     bool isPrinting = false;
     PrintableModel selectedModel;
     GameObject printedModel;
@@ -73,6 +74,7 @@ public class Printer : InteractableObject
         printedModel = Instantiate(toPrint, printBase.transform);
         printedModel.GetComponent<MeshRenderer>().material = filament.Color; 
         printedModel.transform.localRotation = Quaternion.identity;
+        printedModel.GetComponent<PrintableModel>().SpeedMultiplier(speedMultiplier);
         printedModel.GetComponent<PrintableModel>().Filament = filament;
         // TODO: move usefilament from model to printer
         printedModel.GetComponent<PrintableModel>().FilamentNeeded = selectedModel.FilamentNeeded;
@@ -99,27 +101,32 @@ public class Printer : InteractableObject
         }
         if (control == ControlBinding.F)
         {
-            filament = ItemHolder.TakeItem<FilamentSpool>();
-            memoryCard = ItemHolder.TakeItem<MemoryCard>();
+            if (ItemHolder.IsHoldingSomething())
+            {
+                FilamentSpool newFilament = ItemHolder.TakeItem<FilamentSpool>();
+                MemoryCard newMemoryCard = ItemHolder.TakeItem<MemoryCard>();
 
-            if (filament != null)
-            {
-                filament.CanBePickedUp = false;
-                filament.transform.position = spoolHolder.transform.position;
-                filament.transform.rotation = Quaternion.identity;
-                filament.transform.parent = spoolHolder.transform;
+                if (newFilament != null)
+                {
+                    filament = newFilament;
+                    filament.CanBePickedUp = false;
+                    filament.transform.position = spoolHolder.transform.position;
+                    filament.transform.rotation = Quaternion.identity;
+                    filament.transform.parent = spoolHolder.transform;
+                }
+                else if (newMemoryCard != null)
+                {
+                    memoryCard = newMemoryCard;
+                    Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
+                    if (cardSlot == null) Debug.LogError("No card slot");
+                    memoryCard.CanBePickedUp = false;
+                    memoryCard.transform.position = cardSlot.position;
+                    memoryCard.transform.rotation = Quaternion.identity;
+                    memoryCard.transform.parent = cardSlot;
+                    memoryCard.EnableCard(false);
+                }
             }
-            else if ( memoryCard != null )
-            {
-                Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
-                if (cardSlot == null) Debug.LogError("No card slot");
-                memoryCard.CanBePickedUp = false;
-                memoryCard.transform.position = cardSlot.position;
-                memoryCard.transform.rotation = Quaternion.identity;
-                memoryCard.transform.parent = cardSlot;
-                memoryCard.EnableCard(false);
-            }
-            else if (!ItemHolder.IsHoldingSomething() && NotBusy() && filament != null)
+            else if (NotBusy() && filament != null)
             {
                 filament.CanBePickedUp = true;
                 ItemHolder.HoldItem(filament.gameObject);
