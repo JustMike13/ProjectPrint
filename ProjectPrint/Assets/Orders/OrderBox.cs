@@ -7,19 +7,7 @@ public class OrderBox : InteractableObject
     const int sendOrderMessage = 1;
     [SerializeField] Order order;
     public Order Order {  get { return order; } set { order = value; } }
-    Order currentItems;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        currentItems = new Order();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     public override GameObject Interact(ControlBinding control)
     {
         if (ItemHolder.IsHoldingSomething())
@@ -32,14 +20,16 @@ public class OrderBox : InteractableObject
                 Debug.Log("Object can not be added to box.");
                 return null; 
             }
-            currentItems.AddItem(model);
+            Order.AddProduct(model);
+            model.EnableModel(false);
             storedObject.transform.parent = transform;
             storedObject.GetComponent<Renderer>().enabled = false;
+            storedObject.transform.position = Vector3.zero;
             return null;
         }
         else
         {
-            order.FulfillOrder(currentItems.OrderItems);
+            order.FulfillOrder();
             base.StopHighlight();
             Destroy(this.transform.gameObject);
         }
@@ -62,8 +52,8 @@ public class OrderBox : InteractableObject
         }
         if (order != null)
         {
-            OrderDetailsTextBox.AddText("Ordered items:\n" + order.ToString()
-                                       +"\nItems in box:\n" + currentItems.ToString());
+            OrderDetailsTextBox.AddText("Ordered items:\n" + order.ToString());
+                                       //+"\nItems in box:\n" + currentItems.ToString());
         }
         else
         {

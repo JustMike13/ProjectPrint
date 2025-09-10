@@ -34,7 +34,7 @@ public class PrintableModel : InteractableObject
         }
     }
 
-    private void EnableModel(bool val)
+    public void EnableModel(bool val)
     {
         finished = val;
         GetComponent<MeshRenderer>().enabled = val;

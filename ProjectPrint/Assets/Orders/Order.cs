@@ -12,49 +12,19 @@ public class Order
         orderItems = items;
         return this;
     }
-
-    public bool FulfillOrder(List<OrderItem> items)
+    public bool FulfillOrder()
     {
-        foreach (OrderItem item in items)
+        foreach (OrderItem item in orderItems)
         {
-            RemoveItem(item);
-        }
-        if (OrderItems.Count == 0)
-        {
-            Debug.Log("Order fulfilled");
-            CurrencySystem.Earn(100);
-            return true;
-        }
-        Debug.Log("Order incomplete");
-        return false;
-    }
-
-    public bool RemoveItem(PrintableModel item, int quantity = 1)
-    {
-        //TODO: Check for more items than ordered
-        //TODO: Items are not recognized
-        foreach (OrderItem orderItem in OrderItems)
-        {
-            if (orderItem.item.ID == item.ID)
+            if (item.quantity > item.addedQuantity)
             {
-                orderItem.quantity = orderItem.quantity - quantity;
-                if (orderItem.quantity <= 0)
-                {
-                    OrderItems.Remove(orderItem);
-                }
-                if (orderItem.quantity < 0)
-                {
-                    Debug.LogError("Added to many items to order");
-                }
-                return true;
+                Debug.Log("Order incomplete");
+                return false;
             }
         }
-        Debug.LogError("Item was not part of the order");
-        return false;
-    }
-    public bool RemoveItem(OrderItem item) 
-    {
-        return RemoveItem(item.item, item.quantity);
+        Debug.Log("Order fulfilled");
+        CurrencySystem.Earn(100);
+        return true;
     }
 
     public void AddItem(PrintableModel item, int quantity = 1)
@@ -76,6 +46,20 @@ public class Order
     {
         AddItem(item.item, item.quantity);
     }
+
+    public bool AddProduct(PrintableModel item, int quantity = 1)
+    {
+        foreach(OrderItem orderItem in OrderItems)
+        {
+            if (orderItem.item.ID == item.ID)
+            {
+                orderItem.addedQuantity += quantity;
+                return true;
+            }
+        }    
+        return false;
+    }
+
     public override string ToString()
     {
         if (OrderItems == null || OrderItems.Count == 0)
@@ -83,7 +67,7 @@ public class Order
         string result = "";
         foreach (OrderItem item in OrderItems)
         {
-            result = result + item.item.name + ": " + item.quantity + "\n";
+            result = result + item.item.name + ": " + item.addedQuantity + "/" + item.quantity + "\n";
         }
         return result;
     }
