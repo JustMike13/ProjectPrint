@@ -110,9 +110,12 @@ public class Printer : InteractableObject
                 {
                     filament = newFilament;
                     filament.CanBePickedUp = false;
+                    filament.GetComponent<Rigidbody>().isKinematic = true;
+                    filament.GetComponent<BoxCollider>().enabled = false;
+                    filament.transform.rotation = spoolHolder.transform.rotation;
+                    //filament.transform.parent = spoolHolder.transform;
                     filament.transform.position = spoolHolder.transform.position;
-                    filament.transform.rotation = Quaternion.identity;
-                    filament.transform.parent = spoolHolder.transform;
+                    filament.transform.SetParent(spoolHolder.transform, true);
                 }
                 else if (newMemoryCard != null)
                 {
@@ -121,7 +124,7 @@ public class Printer : InteractableObject
                     if (cardSlot == null) Debug.LogError("No card slot");
                     memoryCard.CanBePickedUp = false;
                     memoryCard.transform.position = cardSlot.position;
-                    memoryCard.transform.rotation = Quaternion.identity;
+                    memoryCard.transform.localRotation = cardSlot.rotation;
                     memoryCard.transform.parent = cardSlot;
                     memoryCard.EnableCard(false);
                 }
@@ -129,6 +132,8 @@ public class Printer : InteractableObject
             else if (NotBusy() && filament != null)
             {
                 filament.CanBePickedUp = true;
+                filament.GetComponent<Rigidbody>().isKinematic = false;
+                filament.GetComponent<BoxCollider>().enabled = true;
                 ItemHolder.HoldItem(filament.gameObject);
                 filament = null;
             }
