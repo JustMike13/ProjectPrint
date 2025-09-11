@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hintText: []
-  canBePickedUp: 1
+  canBePickedUp: 0
 --- !u!1 &6613759199311162563
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,6 +360,7 @@ MonoBehaviour:
   filament: {fileID: 0}
   spoolHolder: {fileID: 3588975142522714079}
   failedPrint: {fileID: 2591486108463036601, guid: 8e543eb70ab13264fa5c5d378acf770c, type: 3}
+  speedMultiplier: 1
 --- !u!65 &1977412387736978406
 BoxCollider:
   m_ObjectHideFlags: 0
