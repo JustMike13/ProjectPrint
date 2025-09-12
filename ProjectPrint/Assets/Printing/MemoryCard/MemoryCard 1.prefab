@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0084e8a1ab4611b44b3c3bcf5ca9c0ce, type: 2}
+  - {fileID: 2100000, guid: 75447da5a26292545aad8bd0ccd4dda8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 4757021098203147419}
   - component: {fileID: 5218452353022685461}
   m_Layer: 0
-  m_Name: MemoryCard
+  m_Name: MemoryCard 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156,11 +156,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hintText: []
-  ObjectName: Card - Ceramic Vase
+  ObjectName: Card - Cat Statue
   price: 10
   canBePickedUp: 1
   models:
-  - {fileID: 752932601878350210, guid: 140616ee94e7d194cb7bbb123a9c7fcc, type: 3}
+  - {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
 --- !u!65 &4757021098203147419
 BoxCollider:
   m_ObjectHideFlags: 0
