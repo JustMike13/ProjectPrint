@@ -35,6 +35,8 @@ public class InteractHintBox : MonoBehaviour
 
     public static void AddText(string text)
     {
+        if (ScreenManager.CurrentState != GameState.PlayMode) return;
+
         textAddedAt = Time.time;
         HintTextBox.text = text;
     }

@@ -23,6 +23,8 @@ public class PlayerMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (ScreenManager.CurrentState != GameState.PlayMode) return;
+
         isGrounded = characterController.isGrounded;
 
         if (isGrounded && velocity.y < 0)

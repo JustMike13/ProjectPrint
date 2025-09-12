@@ -7,8 +7,6 @@ public class PrintableModel : InteractableObject
     [SerializeField] float TimeToPrint = 10;
     [SerializeField] float filamentNeeded = 10;
     // TODO: Make price independent of model
-    [SerializeField] float price = 10;
-    public float Price { get { return price; } }
     public float FilamentNeeded {  get { return filamentNeeded; } set { filamentNeeded = value; } }
     bool finished = false; 
     public bool IsFinished { get { return finished; } }

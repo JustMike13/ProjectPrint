@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class InteractableObject : Highlight
 {
+    [SerializeField] string ObjectName = "";
+    [SerializeField] float price = 10;
+    public float Price { get { return price; } }
+    public string Name { get { return ObjectName; } }
     [SerializeField] bool canBePickedUp = true;
     public bool CanBePickedUp { get { return canBePickedUp; } set { canBePickedUp = value; } }
     float lastInteraction = 0;

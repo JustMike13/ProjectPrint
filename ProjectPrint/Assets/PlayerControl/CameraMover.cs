@@ -20,6 +20,8 @@ public class CameraMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (ScreenManager.CurrentState != GameState.PlayMode) return;
+
         Vector2 look = Look.ReadValue<Vector2>();
 
         transform.parent.Rotate(new Vector3(0, look[0] * xSensitivity, 0));

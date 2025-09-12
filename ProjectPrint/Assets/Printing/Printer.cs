@@ -103,30 +103,33 @@ public class Printer : InteractableObject
         {
             if (ItemHolder.IsHoldingSomething())
             {
-                FilamentSpool newFilament = ItemHolder.TakeItem<FilamentSpool>();
-                MemoryCard newMemoryCard = ItemHolder.TakeItem<MemoryCard>();
-
-                if (newFilament != null)
+                if (filament == null)
                 {
-                    filament = newFilament;
-                    filament.CanBePickedUp = false;
-                    filament.GetComponent<Rigidbody>().isKinematic = true;
-                    filament.GetComponent<BoxCollider>().enabled = false;
-                    filament.transform.rotation = spoolHolder.transform.rotation;
-                    //filament.transform.parent = spoolHolder.transform;
-                    filament.transform.position = spoolHolder.transform.position;
-                    filament.transform.SetParent(spoolHolder.transform, true);
+                    filament = ItemHolder.TakeItem<FilamentSpool>();
+                    if (filament != null)
+                    {
+                        filament.CanBePickedUp = false;
+                        filament.GetComponent<Rigidbody>().isKinematic = true;
+                        filament.GetComponent<BoxCollider>().enabled = false;
+                        filament.transform.rotation = spoolHolder.transform.rotation;
+                        //filament.transform.parent = spoolHolder.transform;
+                        filament.transform.position = spoolHolder.transform.position;
+                        filament.transform.SetParent(spoolHolder.transform, true);
+                    }
                 }
-                else if (newMemoryCard != null)
+                if (memoryCard == null)
                 {
-                    memoryCard = newMemoryCard;
-                    Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
-                    if (cardSlot == null) Debug.LogError("No card slot");
-                    memoryCard.CanBePickedUp = false;
-                    memoryCard.transform.position = cardSlot.position;
-                    memoryCard.transform.localRotation = cardSlot.rotation;
-                    memoryCard.transform.parent = cardSlot;
-                    memoryCard.EnableCard(false);
+                    memoryCard = ItemHolder.TakeItem<MemoryCard>();
+                    if (memoryCard != null)
+                    {
+                        Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
+                        if (cardSlot == null) Debug.LogError("No card slot");
+                        memoryCard.CanBePickedUp = false;
+                        memoryCard.transform.position = cardSlot.position;
+                        memoryCard.transform.localRotation = cardSlot.rotation;
+                        memoryCard.transform.parent = cardSlot;
+                        memoryCard.EnableCard(false);
+                    }
                 }
             }
             else if (NotBusy() && filament != null)

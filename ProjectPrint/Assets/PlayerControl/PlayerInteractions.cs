@@ -33,6 +33,8 @@ public class PlayerInteractions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (ScreenManager.CurrentState != GameState.PlayMode) return;
+
         ProcessHighlight();
         if (Interact.WasPressedThisFrame()
             && lastInteracted != null
