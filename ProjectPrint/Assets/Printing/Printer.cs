@@ -1,5 +1,22 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.OnScreen;
+using UnityEngine.UI;
+
+[System.Serializable]
+public class ScreenFields
+{
+    bool isOn;
+    public bool IsOn { get { return isOn; } set { isOn = value; } }
+    public Canvas Screen;
+    public TextMeshProUGUI NameInfo;
+    public TextMeshProUGUI FilamentInfo;
+    public TextMeshProUGUI MemoryCardInfo;
+    public Button PrintButton;
+    public Button FilamentButton;
+    public Button MemoryCardButton;
+}
 public class Printer : InteractableObject
 {
     const int PickUpText = 0;
@@ -11,18 +28,59 @@ public class Printer : InteractableObject
     [SerializeField] GameObject spoolHolder;
     [SerializeField] PrintableModel failedPrint;
     [SerializeField] float speedMultiplier = 1.0f;
+    [SerializeField] ScreenFields screenFields;
     bool isPrinting = false;
     PrintableModel selectedModel;
     GameObject printedModel;
     Animator animator;
-
+     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         animator = GetComponent<Animator>();
         memoryCard = GetComponentInChildren<MemoryCard>();
+        screenFields.Screen.gameObject.SetActive(false);
+        screenFields.IsOn = false;
+        SetUpScreen();
     }
 
+    #region Screen
+    private void ScreenOnOff()
+    {
+        if (screenFields.IsOn)
+        {
+            screenFields.Screen.gameObject.SetActive(false);
+            screenFields.IsOn = false;
+            ScreenManager.CloseObject();
+        }
+        else
+        {
+            screenFields.Screen.gameObject.SetActive(true);
+            screenFields.IsOn = true;
+            UpdateScreen();
+            ScreenManager.OpenObject();
+        }
+    }
+
+    private void SetUpScreen()
+    {
+        UpdateScreen();
+        screenFields.PrintButton.onClick.AddListener(() => Print());
+        screenFields.FilamentButton.onClick.AddListener(() => FilamentInteract());
+        screenFields.MemoryCardButton.onClick.AddListener(() => MemoryCardInteract());
+    }
+
+    private void UpdateScreen()
+    {
+        screenFields.FilamentButton.GetComponentInChildren<TMP_Text>().text = filament != null ? "Take filament" : "Add filament";
+        screenFields.MemoryCardButton.GetComponentInChildren<TMP_Text>().text = memoryCard != null ? "Take card" : "Add card";
+        screenFields.NameInfo.text = Name;
+        screenFields.FilamentInfo.text = filament != null ? filament.name : "No filament";
+        screenFields.MemoryCardInfo.text = memoryCard != null ? memoryCard.name : "No card";
+        screenFields.PrintButton.GetComponentInChildren<TMP_Text>().text =
+            NotBusy() ? (printedModel != null ? "Take print" : "Start print") : "Is printing";
+    }
+    #endregion //Screen
     // Update is called once per frame
     void Update()
     {
@@ -31,6 +89,11 @@ public class Printer : InteractableObject
             animator.SetBool("Printing", false);
             printedModel.transform.localPosition = Vector3.zero;
             printedModel.transform.rotation = Quaternion.identity;
+            UpdateScreen();
+        }
+        if (screenFields.IsOn && ScreenManager.CurrentState != GameState.Object)
+        {
+            ScreenOnOff();
         }
     }
 
@@ -53,6 +116,23 @@ public class Printer : InteractableObject
         {
             base.StartHighlight(PickUpText);
         }
+    }
+
+    void Print()
+    {
+        if (!isPrinting)
+        {
+            StartPrinting();
+        }
+        else if (ModelHasFinished())
+        {
+            if (ItemHolder.HoldItem(printedModel))
+            { 
+                printedModel = null;
+                isPrinting = false;
+            }
+        }
+        UpdateScreen();
     }
 
     void StartPrinting()
@@ -86,62 +166,70 @@ public class Printer : InteractableObject
     {
         if (control == ControlBinding.E)
         {
-            if (!isPrinting)
-            {
-                StartPrinting();
-            }
-            else if (ModelHasFinished())
-            {
-                if (ItemHolder.HoldItem(printedModel))
-                {
-                    printedModel = null;
-                    isPrinting = false;
-                }
-            }
+            Print();
         }
         if (control == ControlBinding.F)
         {
-            if (ItemHolder.IsHoldingSomething())
-            {
-                if (filament == null)
-                {
-                    filament = ItemHolder.TakeItem<FilamentSpool>();
-                    if (filament != null)
-                    {
-                        filament.CanBePickedUp = false;
-                        filament.GetComponent<Rigidbody>().isKinematic = true;
-                        filament.GetComponent<BoxCollider>().enabled = false;
-                        filament.transform.rotation = spoolHolder.transform.rotation;
-                        //filament.transform.parent = spoolHolder.transform;
-                        filament.transform.position = spoolHolder.transform.position;
-                        filament.transform.SetParent(spoolHolder.transform, true);
-                    }
-                }
-                if (memoryCard == null)
-                {
-                    memoryCard = ItemHolder.TakeItem<MemoryCard>();
-                    if (memoryCard != null)
-                    {
-                        Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
-                        if (cardSlot == null) Debug.LogError("No card slot");
-                        memoryCard.CanBePickedUp = false;
-                        memoryCard.transform.position = cardSlot.position;
-                        memoryCard.transform.localRotation = cardSlot.rotation;
-                        memoryCard.transform.parent = cardSlot;
-                        memoryCard.EnableCard(false);
-                    }
-                }
-            }
-            else if (NotBusy() && filament != null)
-            {
-                filament.CanBePickedUp = true;
-                filament.GetComponent<Rigidbody>().isKinematic = false;
-                filament.GetComponent<BoxCollider>().enabled = true;
-                ItemHolder.HoldItem(filament.gameObject);
-                filament = null;
-            }
+            ScreenOnOff();
         }
         return null;
+    }
+
+    private void MemoryCardInteract()
+    {
+
+        if (ItemHolder.IsHoldingSomething())
+        {
+            if (memoryCard == null)
+            {
+                memoryCard = ItemHolder.TakeItem<MemoryCard>();
+                if (memoryCard != null)
+                {
+                    Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
+                    if (cardSlot == null) Debug.LogError("No card slot");
+                    memoryCard.CanBePickedUp = false;
+                    memoryCard.transform.position = cardSlot.position;
+                    memoryCard.transform.localRotation = cardSlot.rotation;
+                    memoryCard.transform.parent = cardSlot;
+                    memoryCard.EnableCard(false);
+                }
+            }
+        }
+        else if (NotBusy() && filament != null)
+        {
+            RemoveCard();
+        }
+        UpdateScreen();
+    }
+
+    void FilamentInteract()
+    {
+        if (ItemHolder.IsHoldingSomething())
+        {
+            if (filament == null)
+            {
+                filament = ItemHolder.TakeItem<FilamentSpool>();
+                if (filament != null)
+                {
+                    filament.CanBePickedUp = false;
+                    filament.GetComponent<Rigidbody>().isKinematic = true;
+                    filament.GetComponent<BoxCollider>().enabled = false;
+                    filament.transform.rotation = spoolHolder.transform.rotation;
+                    //filament.transform.parent = spoolHolder.transform;
+                    filament.transform.position = spoolHolder.transform.position;
+                    filament.transform.SetParent(spoolHolder.transform, true);
+                }
+            }
+        }
+        else if (NotBusy() && filament != null)
+        {
+            filament.CanBePickedUp = true;
+            filament.GetComponent<Rigidbody>().isKinematic = false;
+            filament.GetComponent<BoxCollider>().enabled = true;
+            ItemHolder.HoldItem(filament.gameObject);
+            filament = null;
+        }
+        UpdateScreen();
     }
 
     public bool NotBusy()
@@ -149,7 +237,7 @@ public class Printer : InteractableObject
         return (!isPrinting || ModelHasFinished());
     }
 
-    internal void TakeCard()
+    internal void RemoveCard()
     {
         if (memoryCard == null) return;
         if (!ItemHolder.IsHoldingSomething())

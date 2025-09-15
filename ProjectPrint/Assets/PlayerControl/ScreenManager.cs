@@ -6,7 +6,8 @@ public enum GameState
 {
     PlayMode,
     Pause,
-    Shop
+    Shop,
+    Object
 }
 
 public class ScreenManager : MonoBehaviour
@@ -41,13 +42,14 @@ public class ScreenManager : MonoBehaviour
             if (currentState == GameState.PlayMode)
             {
                 currentState = GameState.Pause;
-                Debug.Log("Pause");
+                //Debug.Log("Pause");
             }
             else
             {
                 CloseShop();
+                CloseObject();
                 currentState = GameState.PlayMode;
-                Debug.Log("Play");
+                //Debug.Log("Play");
             }
         }
         if (Tab.WasPressedThisFrame()) 
@@ -61,7 +63,6 @@ public class ScreenManager : MonoBehaviour
                 CloseShop();
             }
         }
-
     }
 
     private void CloseShop()
@@ -82,5 +83,19 @@ public class ScreenManager : MonoBehaviour
         ShopCanvas.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+    }
+
+    public static void OpenObject()
+    {
+        currentState = GameState.Object;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+    public static void CloseObject()
+    {
+        if (currentState != GameState.Object) return;
+        currentState = GameState.PlayMode;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

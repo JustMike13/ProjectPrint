@@ -17,7 +17,7 @@ public class CardSlot : InteractableObject
     public override GameObject Interact(ControlBinding control)
     {
         if (control == ControlBinding.F)
-            transform.parent.GetComponent<Printer>().TakeCard();
+            transform.parent.GetComponent<Printer>().RemoveCard();
         return null;
     }
 
