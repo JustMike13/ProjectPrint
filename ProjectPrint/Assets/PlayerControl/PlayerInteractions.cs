@@ -33,7 +33,14 @@ public class PlayerInteractions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ScreenManager.CurrentState != GameState.PlayMode) return;
+        if (ScreenManager.CurrentState != GameState.PlayMode)
+        {
+            if (ScreenManager.CurrentState == GameState.Object)
+            {
+                ProcessFButton();
+            }
+            return;
+        }
 
         ProcessHighlight();
         if (Interact.WasPressedThisFrame()
@@ -44,13 +51,7 @@ public class PlayerInteractions : MonoBehaviour
             lastTime = Time.time;
         }
         ProcessHighlight();
-        if (FButton.WasPressedThisFrame()
-            && lastInteracted != null
-            && Time.time - lastTime > interactDelay)
-        {
-            lastInteracted.Interact(ControlBinding.F);
-            lastTime = Time.time;
-        }
+        ProcessFButton();
 
         if (Primary.WasPressedThisFrame()
             && lastInteracted != null
@@ -58,6 +59,17 @@ public class PlayerInteractions : MonoBehaviour
             && lastInteracted.CanBePickedUp)
         {
             ItemHolder.HoldItem(lastInteracted.transform.gameObject);
+            lastTime = Time.time;
+        }
+    }
+
+    private void ProcessFButton()
+    {
+        if (FButton.WasPressedThisFrame()
+                    && lastInteracted != null
+                    && Time.time - lastTime > interactDelay)
+        {
+            lastInteracted.Interact(ControlBinding.F);
             lastTime = Time.time;
         }
     }

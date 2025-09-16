@@ -103,7 +103,6 @@ public class OrderGenerator : InteractableObject
                 if (quantity > 0)
                 {
                     items.Add(orderItem);
-                    Debug.Log("Added item " + item.name + ", quantity: " + quantity);
                 }
             }
             currentOrder.CreateOrder(items);

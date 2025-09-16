@@ -78,7 +78,6 @@ public class ScreenManager : MonoBehaviour
     private void OpenShop()
     {
         if (currentState == GameState.Shop) return;
-
         currentState = GameState.Shop;
         ShopCanvas.SetActive(true);
         Cursor.visible = true;
