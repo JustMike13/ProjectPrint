@@ -1,6 +1,22 @@
 using System;
 using UnityEngine;
+[System.Serializable]
+public class FilamentData
+{
+    public Vector3 location;
+    public Quaternion rotation;
+    public float quantity;
+}
 
+[System.Serializable]
+public class Filament
+{
+    public string type;
+    public string prefab;
+    public FilamentData data;
+}
+
+[System.Serializable]
 public class FilamentSpool : InteractableObject
 {
     #region constants
@@ -19,6 +35,11 @@ public class FilamentSpool : InteractableObject
     #region getters and setters
     public Material Color { get { return color; } }
     #endregion
+
+    private void Awake()
+    {
+        SaveSystem.Subscribe(this.gameObject);
+    }
 
     private void ShowFilamentSize()
     {
@@ -48,5 +69,33 @@ public class FilamentSpool : InteractableObject
     {
         base.StartHighlight();
         InteractHintBox.AddText("Filament left: " + quantity);
+    }
+
+    public override string CreateSave()
+    {
+        string pf = PrefabName;
+        Filament filament = new Filament
+        {
+            type = "filament",
+            prefab = pf,
+            data = new FilamentData
+            {
+                location = transform.localPosition,
+                rotation = transform.localRotation,
+                quantity = quantity
+            }
+        };
+
+        string json = JsonUtility.ToJson(filament);
+        return json;
+    }
+
+    public override void LoadSave(string json)
+    {
+        Filament parsed = JsonUtility.FromJson<Filament>(json);
+        transform.localPosition = parsed.data.location;
+        transform.localRotation = parsed.data.rotation;
+        quantity = parsed.data.quantity;
+        Debug.Log("Loaded " + parsed.prefab);
     }
 }

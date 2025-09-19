@@ -24,10 +24,26 @@ PrefabInstance:
       propertyPath: ObjectName
       value: White Filament
       objectReference: {fileID: 0}
+    - target: {fileID: 1156876110396518274, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
+      propertyPath: prefabName
+      value: WhiteFilament
+      objectReference: {fileID: 0}
     - target: {fileID: 1184648029247885175, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
       propertyPath: m_Name
       value: WhiteFilament
       objectReference: {fileID: 0}
+    - target: {fileID: 2536693018611035971, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
+      propertyPath: PrefabName
+      value: WhiteFilament
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536693018611035971, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
+      propertyPath: prefabName
+      value: WhiteFilament
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536693018611035971, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
+      propertyPath: RespawnPrefab
+      value: 
+      objectReference: {fileID: 1022462675368937861}
     - target: {fileID: 3901121018253440076, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -68,8 +84,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2536693018611035971, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
+--- !u!1 &1022462675368937861 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1184648029247885175, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
+  m_PrefabInstance: {fileID: 2179798818564458226}
+  m_PrefabAsset: {fileID: 0}

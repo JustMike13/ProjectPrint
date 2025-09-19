@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3120175152395536145
+--- !u!1001 &2145756343137793096
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -30,19 +30,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.7071068
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2120779949442282333, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -58,23 +58,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4268745997421021286, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: m_Name
-      value: YellowFilament
+      value: BlueFilament
       objectReference: {fileID: 0}
     - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: name
-      value: Yellow Filament
+      value: Blue Filament
       objectReference: {fileID: 0}
     - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: color
       value: 
-      objectReference: {fileID: 2100000, guid: 5c821223df27b7241a2fd038106b2d48, type: 2}
+      objectReference: {fileID: 2100000, guid: 14c7de33fcb31e34aa92dd5981e79482, type: 2}
     - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: price
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: ObjectName
-      value: Yellow Filament
+      value: Blue Filament
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
+      propertyPath: prefabName
+      value: BlueFilament
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

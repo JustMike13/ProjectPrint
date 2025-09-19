@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class Highlight : MonoBehaviour
+public class Highlight : SaveObject
 {
     [SerializeField] List<string> hintText = new List<string>();
     public List<string> HintText { get { return hintText; } }
