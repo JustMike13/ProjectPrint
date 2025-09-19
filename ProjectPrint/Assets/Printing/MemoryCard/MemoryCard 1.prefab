@@ -155,6 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a66cb9afaf4f5438eb0d4a497fccbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabName: 
   hintText: []
   ObjectName: Card - Cat Statue
   price: 10

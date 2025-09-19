@@ -80,7 +80,7 @@ public class FilamentSpool : InteractableObject
             prefab = pf,
             data = new FilamentData
             {
-                location = transform.localPosition,
+                location = transform.position,
                 rotation = transform.localRotation,
                 quantity = quantity
             }

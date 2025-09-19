@@ -10,6 +10,7 @@ public class CurrencySystem : MonoBehaviour
     #endregion
     #region class members
     static float currentValue = 100;
+    static public float CurrentValue {  get { return currentValue; } set { currentValue = value; ShowCurrency(); } }
     public static CurrencySystem Instance;
     #endregion
 

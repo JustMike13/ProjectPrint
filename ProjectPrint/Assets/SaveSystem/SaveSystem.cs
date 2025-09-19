@@ -78,7 +78,11 @@ public class SaveSystem : MonoBehaviour
             return;
         }
         jsonWrapper jw = new jsonWrapper();
-        int i = 0;
+        jw.list.Add(new JsonObject {
+            index = 0,
+            json = "{ \"type\": \"setting\", \"obj\": \"currency\", \"data\": " + CurrencySystem.CurrentValue + "}"
+        });
+        int i = 1;
         foreach (GameObject obj in objects)
         {
             JsonObject jo = new JsonObject
@@ -113,13 +117,24 @@ public class SaveSystem : MonoBehaviour
         {
             string objJson = jo.json;
             JObject outer = JObject.Parse(objJson);
-            string innerData = outer["data"].ToString();
-            JObject inner = JObject.Parse(innerData);
 
             string type = outer["type"].ToString();
-            string prefab = outer["prefab"].ToString();
-            GameObject obj = Instantiate(NamePrefabDict[prefab]);
-            obj.GetComponent<SaveObject>().LoadSave(objJson);
+            if (type == "setting")
+            {
+                string obj = outer["obj"].ToString();
+                if (obj == "currency")
+                {
+                    CurrencySystem.CurrentValue = (int)outer["data"];
+                }
+            }
+            else
+            {
+                string innerData = outer["data"].ToString();
+                JObject inner = JObject.Parse(innerData);
+                string prefab = outer["prefab"].ToString();
+                GameObject obj = Instantiate(NamePrefabDict[prefab]);
+                obj.GetComponent<SaveObject>().LoadSave(objJson);
+            }
         }
         Debug.Log("Loaded");
     }
