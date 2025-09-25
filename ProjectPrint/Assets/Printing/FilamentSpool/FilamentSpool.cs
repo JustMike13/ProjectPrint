@@ -76,7 +76,7 @@ public class FilamentSpool : InteractableObject
         string pf = PrefabName;
         Filament filament = new Filament
         {
-            type = "filament",
+            type = "object",
             prefab = pf,
             data = new FilamentData
             {

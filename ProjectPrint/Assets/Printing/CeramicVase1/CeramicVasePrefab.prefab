@@ -103,12 +103,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072f0ae5010daa54887b408e1c16460a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabName: CeramicVase
   hintText: []
+  ObjectName: 
+  price: 12
   canBePickedUp: 1
   id: 1
   TimeToPrint: 5
   filamentNeeded: 50
-  price: 12
 --- !u!54 &6294338558940005243
 Rigidbody:
   m_ObjectHideFlags: 0

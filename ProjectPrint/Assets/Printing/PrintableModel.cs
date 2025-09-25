@@ -1,4 +1,20 @@
 using UnityEngine;
+[System.Serializable]
+public class PrintModelData
+{
+    public Vector3 location;
+    public Quaternion rotation;
+    public Material material;
+    public bool enabled;
+}
+
+[System.Serializable]
+public class PrintModelJson
+{
+    public string type;
+    public string prefab;
+    public PrintModelData data;
+}
 
 public class PrintableModel : InteractableObject
 {
@@ -13,9 +29,9 @@ public class PrintableModel : InteractableObject
     float elapsedTime = 0;
     FilamentSpool filament;
     public FilamentSpool Filament { set { filament = value; } }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
+        SaveSystem.Subscribe(gameObject);
         EnableModel(false);
     }
 
@@ -45,5 +61,39 @@ public class PrintableModel : InteractableObject
     public void SpeedMultiplier(float speed)
     {
         TimeToPrint = TimeToPrint / speed;
+    }
+
+    public override string CreateSave()
+    {
+        string pf = PrefabName;
+        PrintModelJson model = new PrintModelJson
+        {
+            type = "object",
+            prefab = pf,
+            data = new PrintModelData
+            {
+                location = transform.position,
+                rotation = transform.localRotation,
+                material = GetComponent<MeshRenderer>().material,
+                enabled = GetComponent<MeshRenderer>().enabled
+            }
+        };
+
+        string json = JsonUtility.ToJson(model);
+        return json;
+    }
+
+    public override void LoadSave(string json)
+    {
+        PrintModelJson parsed = JsonUtility.FromJson<PrintModelJson>(json);
+        transform.localPosition = parsed.data.location;
+        transform.localRotation = parsed.data.rotation;
+        GetComponent<MeshRenderer>().material = parsed.data.material;
+
+        finished = parsed.data.enabled;
+        GetComponent<MeshRenderer>().enabled = parsed.data.enabled;
+        GetComponent<Rigidbody>().isKinematic = !parsed.data.enabled;
+        GetComponent<BoxCollider>().enabled = parsed.data.enabled;
+        Debug.Log("Loaded " + parsed.prefab);
     }
 }
