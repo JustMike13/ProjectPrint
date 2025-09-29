@@ -14,6 +14,7 @@ public class JsonObject
 [System.Serializable]
 public class jsonWrapper
 {
+    public string saveName;
     public List<JsonObject> list = new List<JsonObject>();
 }
 
@@ -70,6 +71,14 @@ public class SaveSystem : MonoBehaviour
         objects.Add(obj);
     }
 
+    static string getDateTime()
+    {
+        string dateTime = DateTime.Now.ToString();
+        dateTime = dateTime.Replace('.', '/');
+        dateTime = dateTime.Replace(' ', '-');
+        return dateTime; 
+    }
+
     static void CreateSave()
     {
         if (objects.Count == 0)
@@ -78,6 +87,8 @@ public class SaveSystem : MonoBehaviour
             return;
         }
         jsonWrapper jw = new jsonWrapper();
+        string saveName = getDateTime();
+        jw.saveName = saveName;
         jw.list.Add(new JsonObject {
             index = 0,
             json = "{ \"type\": \"setting\", \"obj\": \"currency\", \"data\": " + CurrencySystem.CurrentValue + "}"
@@ -88,7 +99,7 @@ public class SaveSystem : MonoBehaviour
             JsonObject jo = new JsonObject
             {
                 index = i,
-                json = obj.GetComponent<SaveObject>().CreateSave()
+                json = obj.GetComponent<SaveObject>().CreateSave(saveName)
             };
             jw.list.Add(jo);
         }

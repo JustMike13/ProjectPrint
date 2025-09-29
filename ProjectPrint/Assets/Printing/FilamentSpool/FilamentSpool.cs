@@ -71,8 +71,12 @@ public class FilamentSpool : InteractableObject
         InteractHintBox.AddText("Filament left: " + quantity);
     }
 
-    public override string CreateSave()
+    public override string CreateSave(string saveName)
     {
+        if (base.CreateSave(saveName) != "")
+        {
+            return "";
+        }
         string pf = PrefabName;
         Filament filament = new Filament
         {

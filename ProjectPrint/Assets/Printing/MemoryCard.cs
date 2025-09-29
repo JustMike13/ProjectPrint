@@ -39,8 +39,12 @@ public class MemoryCard : InteractableObject
         GetComponent<BoxCollider>().enabled = val;
     }
 
-    public override string CreateSave()
+    public override string CreateSave(string saveName)
     {
+        if (base.CreateSave(saveName) != "")
+        {
+            return "";
+        }
         string pf = PrefabName;
         Card card = new Card
         {

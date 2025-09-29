@@ -63,8 +63,12 @@ public class PrintableModel : InteractableObject
         TimeToPrint = TimeToPrint / speed;
     }
 
-    public override string CreateSave()
+    public override string CreateSave(string saveName)
     {
+        if (base.CreateSave(saveName) != "")
+        {
+            return "";
+        }
         string pf = PrefabName;
         PrintModelJson model = new PrintModelJson
         {
