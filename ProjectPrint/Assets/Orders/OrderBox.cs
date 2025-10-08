@@ -5,9 +5,19 @@ public class OrderBox : InteractableObject
 {
     const int placeInBoxMessage = 0;
     const int sendOrderMessage = 1;
-    [SerializeField] Order order;
-    public Order Order {  get { return order; } set { order = value; } }
-    
+    ShippingLabel shippingLabel;
+    public ShippingLabel ShippingLabel { 
+        get { return shippingLabel; } 
+        set 
+        { 
+            shippingLabel = value;
+            shippingLabel.transform.parent = LabelSpot.transform;
+            shippingLabel.transform.localPosition = Vector3.zero;
+            shippingLabel.transform.localRotation = Quaternion.identity;
+            shippingLabel.GetComponent<InteractableObject>().enabled = false;
+        } }
+    [SerializeField] GameObject LabelSpot;
+
     public override GameObject Interact(ControlBinding control)
     {
         if (ItemHolder.IsHoldingSomething())
@@ -25,12 +35,12 @@ public class OrderBox : InteractableObject
             storedObject.GetComponent<Rigidbody>().isKinematic = true;
             storedObject.GetComponent<BoxCollider>().enabled = false;
             storedObject.transform.localPosition = Vector3.zero;
-            Order.AddProduct(model);
+            ShippingLabel.GetOrder.AddProduct(model);
             return null;
         }
         else
         {
-            order.FulfillOrder();
+            ShippingLabel.GetOrder.FulfillOrder();
             base.StopHighlight();
             Destroy(this.transform.gameObject);
         }
@@ -42,19 +52,15 @@ public class OrderBox : InteractableObject
         base.StartHighlight();
         if (ItemHolder.IsHoldingSomething())
         {
-            // TODO: Add highlight to box
-            //showHighlight = true;
             base.StartHighlight(placeInBoxMessage);
         }
         if (!ItemHolder.IsHoldingSomething())
         {
-            //showHighlight = true;
             base.StartHighlight(sendOrderMessage);
         }
-        if (order != null)
+        if (ShippingLabel.GetOrder != null)
         {
-            OrderDetailsTextBox.AddText("Ordered items:\n" + order.ToString());
-                                       //+"\nItems in box:\n" + currentItems.ToString());
+            OrderDetailsTextBox.AddText("Ordered items:\n" + ShippingLabel.GetOrder.ToString());
         }
         else
         {

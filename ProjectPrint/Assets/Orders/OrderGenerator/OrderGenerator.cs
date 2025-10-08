@@ -9,43 +9,10 @@ public class OrderGenerator : InteractableObject
     [SerializeField] int maxItems = 12;
     [SerializeField] Order currentOrder;
     [SerializeField] OrderBox boxPrefab;
+    [SerializeField] ShippingLabel labelPrefab;
     [SerializeField] GameObject center;
     [SerializeField] float radius = 1;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        //GenerateOrder();
-    }
-
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.G))
-        //{
-        //    //currentOrder.FulfillOrder(GetItems());
-        //    if(box == null)
-        //    {
-        //        box = Instantiate(boxObject, defaultPosition, Quaternion.identity);
-        //        GenerateOrder();
-        //    }
-        //}
-    }
-
-    //private List<OrderItem> GetItems()
-    //{
-    //    Order dummyOrder = new Order();
-    //    foreach (StorageSpace space in storageSpaces)
-    //    {
-    //        PrintableModel model = space.GetComponentInChildren<PrintableModel>();
-    //        if (model != null) 
-    //        {
-    //            dummyOrder.AddItem(model);
-    //            HiddenObjects.HideItem(model.gameObject);
-    //        }
-    //    }
-
-    //    return dummyOrder.OrderItems;
-    //}
 
     bool IsEmpty()
     {
@@ -107,10 +74,8 @@ public class OrderGenerator : InteractableObject
             }
             currentOrder.CreateOrder(items);
         }
-        box.Order = currentOrder;
-        //if (currentOrder.OrderItems.Count == 0)
-        //{
-        //    GenerateOrder();
-        //}
+        ShippingLabel label = Instantiate(labelPrefab);
+        label.GetOrder = currentOrder;
+        box.ShippingLabel = label;
     }
 }

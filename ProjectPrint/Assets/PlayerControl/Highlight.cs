@@ -29,6 +29,11 @@ public class Highlight : SaveObject
     {
         if (i == -1)
             return;
+        if (hintText.Count < i)
+        {
+            Debug.LogWarning("Hint text index " + i + " out of range.");
+            return;
+        }
         InteractHintBox.AddText(HintText[i]);
     }
 
