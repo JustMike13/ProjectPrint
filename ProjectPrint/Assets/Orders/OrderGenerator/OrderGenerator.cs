@@ -8,12 +8,15 @@ public class OrderGenerator : InteractableObject
     [SerializeField] List<PrintableModel> Inventory = new List<PrintableModel>();
     [SerializeField] int maxItems = 12;
     [SerializeField] Order currentOrder;
-    [SerializeField] OrderBox boxPrefab;
     [SerializeField] ShippingLabel labelPrefab;
     [SerializeField] GameObject center;
     [SerializeField] float radius = 1;
 
-
+    private void Awake()
+    {
+        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
+    }
     bool IsEmpty()
     {
         Collider[] allOverlappingColliders = Physics.OverlapSphere(center.transform.position, radius);
@@ -45,14 +48,13 @@ public class OrderGenerator : InteractableObject
     {
         if (IsEmpty())
         {
-            base.StartHighlight(GenerateOrderMessage);
+            GetComponent<Highlight>().StartHighlight(GenerateOrderMessage);
         }
     }
 
     private void GenerateOrder()
     {
         List<OrderItem> items = new List<OrderItem>();
-        OrderBox box = Instantiate(boxPrefab, center.transform.position, Quaternion.identity);
         currentOrder = new Order();
         if (Inventory.Count == 0)
         {
@@ -76,6 +78,7 @@ public class OrderGenerator : InteractableObject
         }
         ShippingLabel label = Instantiate(labelPrefab);
         label.GetOrder = currentOrder;
-        box.ShippingLabel = label;
+        label.transform.position = center.transform.position;
+        label.transform.rotation = center.transform.rotation;
     }
 }

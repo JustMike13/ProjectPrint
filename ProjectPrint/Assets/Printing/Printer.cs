@@ -33,7 +33,7 @@ public class Printer : InteractableObject
     PrintableModel selectedModel;
     GameObject printedModel;
     Animator animator;
-     
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -42,6 +42,8 @@ public class Printer : InteractableObject
         screenFields.Screen.gameObject.SetActive(false);
         screenFields.IsOn = false;
         SetUpScreen();
+        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
 
     #region Screen
@@ -101,20 +103,20 @@ public class Printer : InteractableObject
     {
         return printedModel != null ? printedModel.GetComponent<PrintableModel>().IsFinished : false;
     }
-
+     
     public override void StartHighlight()
     {
         if (!isPrinting)
         {
-            base.StartHighlight(StartText);
+            GetComponent<Highlight>().StartHighlight(StartText);
         }
         else if (!ModelHasFinished())
         {
-            base.StartHighlight(RunningText);
+            GetComponent<Highlight>().StartHighlight(RunningText);
         }
         else
         {
-            base.StartHighlight(PickUpText);
+            GetComponent<Highlight>().StartHighlight(PickUpText);
         }
     }
 

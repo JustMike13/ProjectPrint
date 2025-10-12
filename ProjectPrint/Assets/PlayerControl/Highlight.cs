@@ -2,10 +2,16 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class Highlight : SaveObject
+public class Highlight : MonoBehaviour
 {
     [SerializeField] List<string> hintText = new List<string>();
     public List<string> HintText { get { return hintText; } }
+    public delegate void HighlightFunction();
+    public delegate void HighlightFunctionPar(string text);
+    HighlightFunction highlightFunc;
+    public HighlightFunction HighlightFunc { set { highlightFunc = value; } }
+    HighlightFunctionPar highlightFuncPar;
+    public HighlightFunctionPar HighlightFuncPar { set { highlightFuncPar = value; } }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,6 +25,11 @@ public class Highlight : SaveObject
     }
     public virtual void StartHighlight()
     {
+        if (highlightFunc != null)
+        {
+            highlightFunc();
+            return;
+        }
         if (hintText.Count > 0)
         {
             InteractHintBox.AddText(HintText[0]);
@@ -34,7 +45,11 @@ public class Highlight : SaveObject
             Debug.LogWarning("Hint text index " + i + " out of range.");
             return;
         }
-        InteractHintBox.AddText(HintText[i]);
+        if (highlightFunc != null)
+        {
+            highlightFuncPar(HintText[i]);
+            return;
+        }
     }
 
     public virtual void StopHighlight()

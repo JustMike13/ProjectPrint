@@ -102,7 +102,7 @@ public class PlayerInteractions : MonoBehaviour
     {
         if (lastInteracted != null && lastInteracted != newObj)
         {
-            lastInteracted.StopHighlight();
+            lastInteracted.GetComponent<Highlight>().StopHighlight();
             lastInteracted = null;
         }
         if (newObj != null)

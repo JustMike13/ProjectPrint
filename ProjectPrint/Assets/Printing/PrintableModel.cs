@@ -33,6 +33,8 @@ public class PrintableModel : InteractableObject
     {
         SaveSystem.Subscribe(gameObject);
         EnableModel(false);
+        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
 
     // Update is called once per frame

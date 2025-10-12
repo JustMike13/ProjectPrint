@@ -868,10 +868,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e253fe8867a86a4a94929d950891147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hintText: []
-  ObjectName: 
-  price: 10
-  canBePickedUp: 0
 --- !u!1 &5517168280375148009
 GameObject:
   m_ObjectHideFlags: 0
@@ -1591,6 +1587,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1977412387736978406}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8922663509322934063}
   m_SourcePrefab: {fileID: 100100000, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
 --- !u!4 &402596708295813863 stripped
 Transform:
@@ -1641,10 +1640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8919e54119dfd7a4a92dd8c079777668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hintText:
-  - (E) Pick up print
-  - Printer running
-  - (E) Start print
+  prefabName: 
   ObjectName: 
   price: 10
   canBePickedUp: 0
@@ -1683,3 +1679,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6688278, y: 0.51793265, z: 0.7507123}
   m_Center: {x: -0.08494501, y: 0.33174586, z: -0.12464386}
+--- !u!114 &8922663509322934063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806531562743229600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6937740e11175a343a140855b3c076ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Highlight
+  hintText:
+  - (E) Pick up print
+  - Printer is running...
+  - (E) Start print

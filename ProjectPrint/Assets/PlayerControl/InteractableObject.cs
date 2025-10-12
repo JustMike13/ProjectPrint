@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractableObject : Highlight
+[RequireComponent(typeof(Highlight))]
+public class InteractableObject : SaveObject
 {
     [SerializeField] string ObjectName = "";
     [SerializeField] float price = 10;
@@ -20,14 +21,13 @@ public class InteractableObject : Highlight
             hasInteracted = false;
         }
     }
-    public override void StartHighlight(int i = -1)
+    public virtual void StartHighlight(string text)
     {
-        if (i == -1)
-            return;
         hasInteracted = true;
         lastInteraction = Time.time;
-        base.StartHighlight(i);
+        InteractHintBox.AddText(text);
     }
+    public virtual void StartHighlight() { return; }
 
     public virtual GameObject Interact(ControlBinding control)
     {

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5457361570442193563}
   - component: {fileID: 7501632965609454141}
   - component: {fileID: 1005841999346016132}
+  - component: {fileID: 1624763312343443511}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -50,9 +51,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: box
-  hintText:
-  - (E) Place item in box
-  - (E) Send order
   ObjectName: box
   price: 10
   canBePickedUp: 1
@@ -105,6 +103,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.59917986, y: 0.45693296, z: 0.45986652}
   m_Center: {x: -0.00054723024, y: 0, z: 0}
+--- !u!114 &1624763312343443511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2212312099504853752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6937740e11175a343a140855b3c076ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Highlight
+  hintText:
+  - (E) Place product in box
+  - (E) Send order
 --- !u!1 &4212799393567316228
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +232,7 @@ Transform:
   m_GameObject: {fileID: 7395403396453508151}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.2304}
+  m_LocalPosition: {x: 0, y: 0, z: -0.2315}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

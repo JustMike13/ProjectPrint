@@ -26,6 +26,8 @@ public class MemoryCard : InteractableObject
     private void Awake()
     {
         SaveSystem.Subscribe(gameObject);
+        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
     public override void StartHighlight()
     {

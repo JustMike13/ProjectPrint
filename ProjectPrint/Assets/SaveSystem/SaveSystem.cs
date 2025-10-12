@@ -93,14 +93,17 @@ public class SaveSystem : MonoBehaviour
             index = 0,
             json = "{ \"type\": \"setting\", \"obj\": \"currency\", \"data\": " + CurrencySystem.CurrentValue + "}"
         });
-        int i = 1;
+        int i = 1;  
         foreach (GameObject obj in objects)
         {
+            if (obj == null) continue;
+
             JsonObject jo = new JsonObject
             {
                 index = i,
                 json = obj.GetComponent<SaveObject>().CreateSave(saveName)
             };
+            i++;
             jw.list.Add(jo);
         }
         string json = JsonUtility.ToJson(jw);
