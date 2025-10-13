@@ -3,19 +3,26 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEditor.Progress;
+using static UnityEngine.GraphicsBuffer;
 
 public class ItemHolder : MonoBehaviour
 {
     [SerializeField] static GameObject currentItem = null;
     [SerializeField] GameObject objectPlacer;
+    [SerializeField] GameObject objectMover;
     [SerializeField] InputActionAsset inputActions;
     public static ItemHolder Instance { get; private set; }
+    static bool moving = false;
+    public static bool Moving { get { return moving; } set { moving = value; } }
+    static bool movedThisFrame = false;
     InputAction RightClick;
+    InputAction MoveButton;
     private void Awake()
     {
-        // If there is an instance, and it's not me, delete myself.
         RightClick = InputSystem.actions.FindAction("RightClick");
+        MoveButton = InputSystem.actions.FindAction("MoveObject");
 
+        // If there is an instance, and it's not me, delete myself.
         if (Instance != null && Instance != this)
         {
             Destroy(this);
@@ -29,21 +36,58 @@ public class ItemHolder : MonoBehaviour
     bool prevMouse = false;
     private void Update()
     {
-        bool mouseVal = RightClick.IsPressed();
-        if ( mouseVal && currentItem != null)
+        if (!moving)
         {
-            currentItem.transform.localPosition = objectPlacer.transform.localPosition;
+            bool mouseVal = RightClick.IsPressed();
+            if ( mouseVal && currentItem != null)
+            {
+                currentItem.transform.localPosition = objectPlacer.transform.localPosition;
+            }
+            if (prevMouse && !mouseVal && currentItem != null)
+            { 
+                TakeItem();
+            }
+            prevMouse = mouseVal;
+            return;
         }
-        if (prevMouse && !mouseVal && currentItem != null)
-        { 
-            TakeItem();
+        if (currentItem != null)
+        {
+            if (objectMover == null)
+            {
+                Debug.LogError("No object mover assigned to ItemHolder");
+                return;
+            }
+            RaycastHit hit; 
+            if (Physics.Raycast(objectMover.transform.position,
+                    Vector3.down,
+                    out hit,
+                    Mathf.Infinity))
+            {
+                Vector3 hitPoint = hit.point;
+                currentItem.transform.position = hitPoint;
+                Vector3 direction = transform.parent.position - currentItem.transform.position;
+                direction.y = 0; // Ignore vertical difference
+                if (direction != Vector3.zero)
+                {
+                    Quaternion rotation = Quaternion.LookRotation(direction);
+                    currentItem.transform.rotation = rotation;
+                }
+            }
+            if (MoveButton.WasPressedThisFrame() 
+                && currentItem != null
+                && !movedThisFrame)
+            {
+                moving = false;
+                currentItem.GetComponent<BoxCollider>().enabled = true;
+                TakeItem();
+            }
+            movedThisFrame = false;
         }
-        prevMouse = mouseVal;
     }
 
     public static bool IsHoldingSomething()
     {
-        return currentItem != null;
+        return currentItem != null || moving;
     }
 
     public static bool HoldItem(GameObject item)
@@ -89,5 +133,17 @@ public class ItemHolder : MonoBehaviour
         }
 
         return null;
+    }
+
+    public static void Move(InteractableObject obj)
+    {
+        if (obj == null || !obj.CompareTag("Movable"))
+        {
+            return;
+        }
+        moving = true;
+        HoldItem(obj.gameObject);
+        movedThisFrame = true;
+        currentItem.GetComponent<BoxCollider>().enabled = false;
     }
 }

@@ -1514,6 +1514,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: printerPrototype
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
+      propertyPath: m_TagString
+      value: Movable
+      objectReference: {fileID: 0}
     - target: {fileID: 1172396749628439318, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalScale.x
       value: 11.838256

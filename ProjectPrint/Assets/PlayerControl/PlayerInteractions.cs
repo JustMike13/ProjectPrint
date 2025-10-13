@@ -22,12 +22,15 @@ public class PlayerInteractions : MonoBehaviour
     InputAction Primary;
     InputAction Interact;
     InputAction FButton;
+    InputAction MoveButton;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         Primary   = InputSystem.actions.FindAction("Attack");
         Interact = InputSystem.actions.FindAction("Interact");
         FButton = InputSystem.actions.FindAction("FButton");
+        MoveButton = InputSystem.actions.FindAction("MoveObject");
     }
 
     // Update is called once per frame
@@ -61,6 +64,16 @@ public class PlayerInteractions : MonoBehaviour
             ItemHolder.HoldItem(lastInteracted.transform.gameObject);
             lastTime = Time.time;
         }
+
+        if (MoveButton.WasPressedThisFrame() 
+            && !ItemHolder.IsHoldingSomething()
+            && Time.time - lastTime > interactDelay
+            && lastInteracted.tag == "Movable")
+        { 
+            ItemHolder.Move(lastInteracted);
+
+        }
+
     }
 
     private void ProcessFButton()
