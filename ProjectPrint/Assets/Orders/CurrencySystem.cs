@@ -9,7 +9,7 @@ public class CurrencySystem : MonoBehaviour
     static TextMeshProUGUI TextBox;
     #endregion
     #region class members
-    static float currentValue = 100;
+    static float currentValue = 300;
     static public float CurrentValue {  get { return currentValue; } set { currentValue = value; ShowCurrency(); } }
     public static CurrencySystem Instance;
     #endregion
@@ -20,12 +20,14 @@ public class CurrencySystem : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(this);
+            return;
         }
         else
         {
             Instance = this;
         }
         TextBox = GetComponent<TextMeshProUGUI>();
+        ShowCurrency();
     }
 
     public static bool CanAfford(float price)

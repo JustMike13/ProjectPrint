@@ -197,7 +197,7 @@ public class Printer : InteractableObject
                 }
             }
         }
-        else if (NotBusy() && filament != null)
+        else if (NotBusy() && memoryCard != null)
         {
             RemoveCard();
         }

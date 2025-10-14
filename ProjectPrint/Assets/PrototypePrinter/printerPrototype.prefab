@@ -1424,15 +1424,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.673
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0316992
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.567392
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b57d3185229f1df4791d5ec4087e7f08, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1644,9 +1644,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8919e54119dfd7a4a92dd8c079777668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabName: 
-  ObjectName: 
-  price: 10
+  prefabName: A1Mini
+  ObjectName: A1 Mini
+  price: 200
   canBePickedUp: 0
   memoryCard: {fileID: 0}
   printBase: {fileID: 6613759199311162563}
@@ -1655,13 +1655,13 @@ MonoBehaviour:
   failedPrint: {fileID: 2591486108463036601, guid: 8e543eb70ab13264fa5c5d378acf770c, type: 3}
   speedMultiplier: 1
   screenFields:
-    Screen: {fileID: 0}
-    NameInfo: {fileID: 0}
-    FilamentInfo: {fileID: 0}
-    MemoryCardInfo: {fileID: 0}
-    PrintButton: {fileID: 0}
-    FilamentButton: {fileID: 0}
-    MemoryCardButton: {fileID: 0}
+    Screen: {fileID: 8213974876055738343}
+    NameInfo: {fileID: 6404936118028004175}
+    FilamentInfo: {fileID: 1948707259053217189}
+    MemoryCardInfo: {fileID: 1328855367970366841}
+    PrintButton: {fileID: 1944745303062924929}
+    FilamentButton: {fileID: 5894848954744563886}
+    MemoryCardButton: {fileID: 4575360328337108655}
 --- !u!65 &1977412387736978406
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -65,7 +65,8 @@ public class PlayerInteractions : MonoBehaviour
             lastTime = Time.time;
         }
 
-        if (MoveButton.WasPressedThisFrame() 
+        if (MoveButton.WasPressedThisFrame()
+            && lastInteracted != null
             && !ItemHolder.IsHoldingSomething()
             && Time.time - lastTime > interactDelay
             && lastInteracted.tag == "Movable")

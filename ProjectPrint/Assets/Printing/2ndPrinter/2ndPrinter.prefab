@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 75018363486144856}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -1.2037998, y: -0.14723313, z: -0.521}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -73,9 +73,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8919e54119dfd7a4a92dd8c079777668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabName: 
-  ObjectName: Fast as Fuck Boy
-  price: 10
+  prefabName: P1S
+  ObjectName: P1S
+  price: 700
   canBePickedUp: 0
   memoryCard: {fileID: 0}
   printBase: {fileID: 7943755555369575528}
