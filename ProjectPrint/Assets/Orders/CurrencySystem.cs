@@ -35,16 +35,18 @@ public class CurrencySystem : MonoBehaviour
         return currentValue >= price;
     }
 
-    public static void Spend(float price)
+    public static bool Spend(float price)
     {
         if (CanAfford(price))
         {
             currentValue -= price;
             ShowCurrency();
+            return true;
         }
         else
         {
             Debug.Log("Can't afford "+ price);
+            return false;
         }
     }
 

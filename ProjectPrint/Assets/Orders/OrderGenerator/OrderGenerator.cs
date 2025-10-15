@@ -6,7 +6,8 @@ public class OrderGenerator : InteractableObject
 {
     const int GenerateOrderMessage = 0;
     [SerializeField] List<PrintableModel> Inventory = new List<PrintableModel>();
-    [SerializeField] int maxItems = 12;
+    static List<PrintableModel> InventoryStatic = new List<PrintableModel>();
+    [SerializeField] static int maxItems = 12;
     [SerializeField] Order currentOrder;
     [SerializeField] ShippingLabel labelPrefab;
     [SerializeField] GameObject center;
@@ -16,6 +17,7 @@ public class OrderGenerator : InteractableObject
     {
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
+        InventoryStatic = Inventory;
     }
     bool IsEmpty()
     {
@@ -80,5 +82,28 @@ public class OrderGenerator : InteractableObject
         label.GetOrder = currentOrder;
         label.transform.position = center.transform.position;
         label.transform.rotation = center.transform.rotation;
+    }
+
+    public static List<OrderItem> GenerateOrder(string json)
+    {
+        OrderJson orderJson = JsonUtility.FromJson<OrderJson>(json);
+        List<OrderItem> items = new List<OrderItem>();
+        foreach (OrderItemJson itemJson in orderJson.orderItemJsons)
+        {
+            PrintableModel item = InventoryStatic.Find(x => x.ID == itemJson.id);
+            if (item != null)
+            {
+                OrderItem orderItem = new OrderItem();
+                orderItem.item = item;
+                orderItem.quantity = itemJson.quantity;
+                orderItem.addedQuantity = itemJson.addedQuantity;
+                items.Add(orderItem);
+            }
+            else
+            {
+                Debug.LogWarning("Item with ID " + itemJson.id + " not found in inventory.");
+            }
+        }
+        return items;
     }
 }

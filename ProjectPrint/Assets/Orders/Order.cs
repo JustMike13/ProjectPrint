@@ -74,4 +74,36 @@ public class Order
         return result;
     }
 
+    public string CreateSave()
+    {
+        OrderJson orderJson = new OrderJson();
+        orderJson.orderItemJsons = new List<OrderItemJson>();
+        foreach (OrderItem item in OrderItems)
+        {
+            OrderItemJson itemJson = new OrderItemJson();
+            itemJson.id = item.item.ID;
+            itemJson.quantity = item.quantity;
+            itemJson.addedQuantity = item.addedQuantity;
+            orderJson.orderItemJsons.Add(itemJson);
+        }
+        return JsonUtility.ToJson(orderJson);
+    }
+
+    public void LoadSave(string json)
+    {
+        orderItems = OrderGenerator.GenerateOrder(json);
+    }
+}
+
+[System.Serializable]
+public class OrderJson
+{
+    public List<OrderItemJson> orderItemJsons;
+}
+[System.Serializable]
+public class OrderItemJson
+{
+    public int id;
+    public int quantity;
+    public int addedQuantity;
 }

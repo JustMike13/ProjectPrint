@@ -43,10 +43,9 @@ public class BoxGenerator : InteractableObject
 
     private void GenerateBox()
     {
-        OrderBox box = Instantiate(boxPrefab, center.transform.position, Quaternion.identity);
-        if (box != null)
+        if (CurrencySystem.Spend(2))
         {
-            CurrencySystem.Spend(2);
+            OrderBox box = Instantiate(boxPrefab, center.transform.position, Quaternion.identity);
         }
     }
 

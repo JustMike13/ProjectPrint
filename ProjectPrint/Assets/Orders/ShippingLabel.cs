@@ -1,3 +1,4 @@
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 [RequireComponent(typeof(Highlight))]
 public class ShippingLabel : InteractableObject
@@ -6,6 +7,7 @@ public class ShippingLabel : InteractableObject
     public Order GetOrder { get { return order; } set { order = value; } }
     private void Awake()
     {
+        SaveSystem.Subscribe(gameObject);
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
@@ -21,4 +23,49 @@ public class ShippingLabel : InteractableObject
             Debug.LogWarning("No order found for shipping label.");
         }
     }
+    public override string CreateSave(string saveName)
+    {
+        if (base.CreateSave(saveName) != "")
+        {
+            return "";
+        }
+        PrintLabelJson printLabelJson = new PrintLabelJson
+        {
+            type = "Object",
+            prefab = PrefabName,
+            data = new PrintLabelData
+            {
+                location = transform.position,
+                rotation = transform.rotation,
+                orderJson = order.CreateSave()
+            }
+        };
+
+        string json = JsonUtility.ToJson(printLabelJson);
+        return json;
+    }
+
+    public override void LoadSave(string json)
+    {
+        PrintLabelJson printLabelJson = JsonUtility.FromJson<PrintLabelJson>(json);
+        transform.localPosition = printLabelJson.data.location;
+        transform.localRotation = printLabelJson.data.rotation;
+        order = new Order();
+        order.LoadSave(printLabelJson.data.orderJson);
+    }
+}
+
+[System.Serializable]
+public class PrintLabelJson
+{
+    public string type;
+    public string prefab;
+    public PrintLabelData data;
+}
+[System.Serializable]
+public class PrintLabelData
+{
+    public Vector3 location;
+    public Quaternion rotation;
+    public string orderJson;
 }
