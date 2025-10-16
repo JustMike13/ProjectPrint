@@ -44,6 +44,7 @@ public class Printer : InteractableObject
         SetUpScreen();
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
+        SaveSystem.Subscribe(gameObject, Priority.High);
     }
 
     #region Screen
@@ -184,17 +185,7 @@ public class Printer : InteractableObject
         {
             if (memoryCard == null)
             {
-                memoryCard = ItemHolder.TakeItem<MemoryCard>();
-                if (memoryCard != null)
-                {
-                    Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
-                    if (cardSlot == null) Debug.LogError("No card slot");
-                    memoryCard.CanBePickedUp = false;
-                    memoryCard.transform.position = cardSlot.position;
-                    memoryCard.transform.localRotation = cardSlot.rotation;
-                    memoryCard.transform.parent = cardSlot;
-                    memoryCard.EnableCard(false);
-                }
+                SetMemoryCard(ItemHolder.TakeItem<MemoryCard>());
             }
         }
         else if (NotBusy() && memoryCard != null)
@@ -204,23 +195,28 @@ public class Printer : InteractableObject
         UpdateScreen();
     }
 
+    private void SetMemoryCard(MemoryCard mc)
+    {
+        memoryCard = mc;
+        if (memoryCard != null)
+        {
+            Transform cardSlot = GetComponentInChildren<CardSlot>().transform;
+            if (cardSlot == null) Debug.LogError("No card slot");
+            memoryCard.CanBePickedUp = false;
+            memoryCard.transform.position = cardSlot.position;
+            memoryCard.transform.localRotation = cardSlot.rotation;
+            memoryCard.transform.parent = cardSlot;
+            memoryCard.EnableCard(false);
+        }
+    }
+
     void FilamentInteract()
     {
         if (ItemHolder.IsHoldingSomething())
         {
             if (filament == null)
             {
-                filament = ItemHolder.TakeItem<FilamentSpool>();
-                if (filament != null)
-                {
-                    filament.CanBePickedUp = false;
-                    filament.GetComponent<Rigidbody>().isKinematic = true;
-                    filament.GetComponent<BoxCollider>().enabled = false;
-                    filament.transform.rotation = spoolHolder.transform.rotation;
-                    //filament.transform.parent = spoolHolder.transform;
-                    filament.transform.position = spoolHolder.transform.position;
-                    filament.transform.SetParent(spoolHolder.transform, true);
-                }
+                InsertFilament(ItemHolder.TakeItem<FilamentSpool>());
             }
         }
         else if (NotBusy() && filament != null)
@@ -232,6 +228,21 @@ public class Printer : InteractableObject
             filament = null;
         }
         UpdateScreen();
+    }
+
+    private void InsertFilament(FilamentSpool fs)
+    {
+        filament = fs;
+        if (filament != null)
+        {
+            filament.CanBePickedUp = false;
+            filament.GetComponent<Rigidbody>().isKinematic = true;
+            filament.GetComponent<BoxCollider>().enabled = false;
+            filament.transform.rotation = spoolHolder.transform.rotation;
+            //filament.transform.parent = spoolHolder.transform;
+            filament.transform.position = spoolHolder.transform.position;
+            filament.transform.SetParent(spoolHolder.transform, true);
+        }
     }
 
     public bool NotBusy()
@@ -249,4 +260,76 @@ public class Printer : InteractableObject
             memoryCard = null;
         }
     }
+
+    public override string CreateSave(string saveName)
+    {
+        if (base.CreateSave(saveName) != "")
+        {
+            return "";
+        }
+        string pf = PrefabName;
+        PrinterJson printerJson = new PrinterJson()
+        {
+            type = "object",
+            prefab = pf,
+            data = new PrinterData()
+            {
+                location = transform.position,
+                rotation = transform.rotation,
+                filamentJson = filament != null ? filament.CreateSave(saveName) : "",
+                memoryCardJson = memoryCard != null ? memoryCard.CreateSave(saveName) : "",
+                printedModelJson = printedModel != null ? printedModel.GetComponent<PrintableModel>().CreateSave(saveName) : "",
+                printing = isPrinting
+            }
+        };
+        string json = JsonUtility.ToJson(printerJson);
+        return json;
+    }
+
+    public override void LoadSave(string json)
+    {
+        PrinterJson printerJson = JsonUtility.FromJson<PrinterJson>(json);
+        transform.position = printerJson.data.location;
+        transform.rotation = printerJson.data.rotation;
+        if (printerJson.data.filamentJson != "")
+        {
+            FilamentJson filamentSpoolJson = JsonUtility.FromJson<FilamentJson>(printerJson.data.filamentJson);
+            GameObject filamentGO = Instantiate(SaveSystem.NamePrefabDict[filamentSpoolJson.prefab]);
+            FilamentSpool fs = filamentGO.GetComponent<FilamentSpool>();
+            fs.LoadSave(printerJson.data.filamentJson);
+            InsertFilament(fs);
+        }
+        if (printerJson.data.memoryCardJson != "")
+        {
+            CardJson cardJson = JsonUtility.FromJson<CardJson>(printerJson.data.memoryCardJson);
+            GameObject cardObj = Instantiate(SaveSystem.NamePrefabDict[cardJson.prefab]);
+            MemoryCard mc = cardObj.GetComponent<MemoryCard>();
+            mc.LoadSave(printerJson.data.memoryCardJson);
+            SetMemoryCard(mc);
+        } 
+        if (printerJson.data.printedModelJson != "")
+        {
+            StartPrinting();
+            printedModel.GetComponent<PrintableModel>().LoadSave(printerJson.data.printedModelJson);
+        }
+        isPrinting = printerJson.data.printing;
+    }
+}
+[System.Serializable]
+public class PrinterData
+{
+    public Vector3 location;
+    public Quaternion rotation;
+    public string filamentJson;
+    public string memoryCardJson;
+    public string printedModelJson;
+    public bool printing;
+}
+
+[System.Serializable]
+public class PrinterJson
+{
+    public string type;
+    public string prefab;
+    public PrinterData data;
 }

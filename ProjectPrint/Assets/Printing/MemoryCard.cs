@@ -12,7 +12,7 @@ public class CardData
 }
 
 [System.Serializable]
-public class Card
+public class CardJson
 {
     public string type;
     public string prefab;
@@ -48,7 +48,7 @@ public class MemoryCard : InteractableObject
             return "";
         }
         string pf = PrefabName;
-        Card card = new Card
+        CardJson card = new CardJson
         {
             type = "object",
             prefab = pf,
@@ -68,7 +68,7 @@ public class MemoryCard : InteractableObject
 
     public override void LoadSave(string json)
     {
-        Card parsed = JsonUtility.FromJson<Card>(json);
+        CardJson parsed = JsonUtility.FromJson<CardJson>(json);
         transform.localPosition = parsed.data.location;
         transform.localRotation = parsed.data.rotation;
         CanBePickedUp = parsed.data.canBePickedUp;

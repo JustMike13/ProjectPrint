@@ -9,7 +9,7 @@ public class FilamentData
 }
 
 [System.Serializable]
-public class Filament
+public class FilamentJson
 {
     public string type;
     public string prefab;
@@ -80,7 +80,7 @@ public class FilamentSpool : InteractableObject
             return "";
         }
         string pf = PrefabName;
-        Filament filament = new Filament
+        FilamentJson filament = new FilamentJson
         {
             type = "object",
             prefab = pf,
@@ -98,7 +98,7 @@ public class FilamentSpool : InteractableObject
 
     public override void LoadSave(string json)
     {
-        Filament parsed = JsonUtility.FromJson<Filament>(json);
+        FilamentJson parsed = JsonUtility.FromJson<FilamentJson>(json);
         transform.localPosition = parsed.data.location;
         transform.localRotation = parsed.data.rotation;
         quantity = parsed.data.quantity;
