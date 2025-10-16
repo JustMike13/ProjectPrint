@@ -18,17 +18,24 @@ public class jsonWrapper
     public List<JsonObject> list = new List<JsonObject>();
 }
 
+public enum Priority
+{
+    High = 0,
+    Low = 1
+}
+
 public class SaveSystem : MonoBehaviour
 {
     public static SaveSystem Instance;
     [SerializeField] List<GameObject> Prefabs = new List<GameObject>();
     static List<GameObject> objects = new List<GameObject>();
+    static List<GameObject> PriorityObjects = new List<GameObject>();
     static string SaveLocation = "D:\\Repos\\ProjectPrint\\ProjectPrint\\saves\\";
     InputAction Ctrl;
     InputAction SaveButton;
     InputAction LoadButton;
     public List<string> filamentList = new List<string>(); 
-    static Dictionary<string, GameObject> NamePrefabDict = new Dictionary<string, GameObject>();
+    public static Dictionary<string, GameObject> NamePrefabDict = new Dictionary<string, GameObject>();
 
     private void Awake()
     {
@@ -66,9 +73,17 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    public static void Subscribe(GameObject obj)
+    public static void Subscribe(GameObject obj, Priority priority = Priority.Low)
     {
-        objects.Add(obj);
+        if (priority == Priority.High)
+        {
+            PriorityObjects.Add(obj);
+            return;
+        }
+        else
+        {
+            objects.Add(obj);
+        }
     }
 
     static string getDateTime()
@@ -93,7 +108,22 @@ public class SaveSystem : MonoBehaviour
             index = 0,
             json = "{ \"type\": \"setting\", \"obj\": \"currency\", \"data\": " + CurrencySystem.CurrentValue + "}"
         });
-        int i = 1;  
+        int i = 1;
+        foreach (GameObject obj in PriorityObjects)
+        {
+            if (obj == null) continue;
+
+            JsonObject jo = new JsonObject
+            {
+                index = i,
+                json = obj.GetComponent<SaveObject>().CreateSave(saveName)
+            };
+            if (jo.json != "")
+            {
+                i++;
+                jw.list.Add(jo);
+            }
+        }
         foreach (GameObject obj in objects)
         {
             if (obj == null) continue;
@@ -103,8 +133,11 @@ public class SaveSystem : MonoBehaviour
                 index = i,
                 json = obj.GetComponent<SaveObject>().CreateSave(saveName)
             };
-            i++;
-            jw.list.Add(jo);
+            if (jo.json != "")
+            {
+                i++;
+                jw.list.Add(jo);
+            }
         }
         string json = JsonUtility.ToJson(jw);
         string path = SaveLocation +  "save.txt"; 
@@ -115,6 +148,10 @@ public class SaveSystem : MonoBehaviour
     static void LoadSave()
     {
         foreach (GameObject obj in objects)
+        {
+            Destroy(obj);
+        }
+        foreach (GameObject obj in PriorityObjects)
         {
             Destroy(obj);
         }

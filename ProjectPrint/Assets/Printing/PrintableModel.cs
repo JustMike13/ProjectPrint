@@ -6,6 +6,7 @@ public class PrintModelData
     public Quaternion rotation;
     public Material material;
     public bool enabled;
+    public bool finished;
 }
 
 [System.Serializable]
@@ -81,7 +82,8 @@ public class PrintableModel : InteractableObject
                 location = transform.position,
                 rotation = transform.localRotation,
                 material = GetComponent<MeshRenderer>().material,
-                enabled = GetComponent<MeshRenderer>().enabled
+                enabled = GetComponent<MeshRenderer>().enabled,
+                finished = finished
             }
         };
 
@@ -94,9 +96,12 @@ public class PrintableModel : InteractableObject
         PrintModelJson parsed = JsonUtility.FromJson<PrintModelJson>(json);
         transform.localPosition = parsed.data.location;
         transform.localRotation = parsed.data.rotation;
+        bool wasEnabled = GetComponent<MeshRenderer>().enabled;
+        GetComponent<MeshRenderer>().enabled = true;
         GetComponent<MeshRenderer>().material = parsed.data.material;
+        GetComponent<MeshRenderer>().enabled = wasEnabled;
 
-        finished = parsed.data.enabled;
+        finished = parsed.data.finished;
         GetComponent<MeshRenderer>().enabled = parsed.data.enabled;
         GetComponent<Rigidbody>().isKinematic = !parsed.data.enabled;
         GetComponent<BoxCollider>().enabled = parsed.data.enabled;

@@ -29,11 +29,11 @@ public class ShippingLabel : InteractableObject
         {
             return "";
         }
-        PrintLabelJson printLabelJson = new PrintLabelJson
+        LabelJson printLabelJson = new LabelJson
         {
             type = "Object",
             prefab = PrefabName,
-            data = new PrintLabelData
+            data = new LabelData
             {
                 location = transform.position,
                 rotation = transform.rotation,
@@ -47,7 +47,7 @@ public class ShippingLabel : InteractableObject
 
     public override void LoadSave(string json)
     {
-        PrintLabelJson printLabelJson = JsonUtility.FromJson<PrintLabelJson>(json);
+        LabelJson printLabelJson = JsonUtility.FromJson<LabelJson>(json);
         transform.localPosition = printLabelJson.data.location;
         transform.localRotation = printLabelJson.data.rotation;
         order = new Order();
@@ -56,14 +56,14 @@ public class ShippingLabel : InteractableObject
 }
 
 [System.Serializable]
-public class PrintLabelJson
+public class LabelJson
 {
     public string type;
     public string prefab;
-    public PrintLabelData data;
+    public LabelData data;
 }
 [System.Serializable]
-public class PrintLabelData
+public class LabelData
 {
     public Vector3 location;
     public Quaternion rotation;
