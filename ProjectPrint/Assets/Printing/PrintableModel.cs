@@ -1,21 +1,4 @@
 using UnityEngine;
-[System.Serializable]
-public class PrintModelData
-{
-    public Vector3 location;
-    public Quaternion rotation;
-    public Material material;
-    public bool enabled;
-    public bool finished;
-}
-
-[System.Serializable]
-public class PrintModelJson
-{
-    public string type;
-    public string prefab;
-    public PrintModelData data;
-}
 
 public class PrintableModel : InteractableObject
 {
@@ -81,7 +64,7 @@ public class PrintableModel : InteractableObject
             {
                 location = transform.position,
                 rotation = transform.localRotation,
-                material = GetComponent<MeshRenderer>().material,
+                material = filament.GetComponent<SaveObject>().PrefabName,
                 enabled = GetComponent<MeshRenderer>().enabled,
                 finished = finished
             }
@@ -98,7 +81,9 @@ public class PrintableModel : InteractableObject
         transform.localRotation = parsed.data.rotation;
         bool wasEnabled = GetComponent<MeshRenderer>().enabled;
         GetComponent<MeshRenderer>().enabled = true;
-        GetComponent<MeshRenderer>().material = parsed.data.material;
+        GameObject materialGO = Instantiate(SaveSystem.NamePrefabDict[parsed.data.material]);
+        GetComponent<MeshRenderer>().material = materialGO.GetComponent<FilamentSpool>().Color;
+        Destroy(materialGO);
         GetComponent<MeshRenderer>().enabled = wasEnabled;
 
         finished = parsed.data.finished;
@@ -107,4 +92,21 @@ public class PrintableModel : InteractableObject
         GetComponent<BoxCollider>().enabled = parsed.data.enabled;
         Debug.Log("Loaded " + parsed.prefab);
     }
+}
+[System.Serializable]
+public class PrintModelData
+{
+    public Vector3 location;
+    public Quaternion rotation;
+    public string material;
+    public bool enabled;
+    public bool finished;
+}
+
+[System.Serializable]
+public class PrintModelJson
+{
+    public string type;
+    public string prefab;
+    public PrintModelData data;
 }
