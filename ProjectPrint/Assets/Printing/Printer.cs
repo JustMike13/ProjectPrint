@@ -159,6 +159,7 @@ public class Printer : InteractableObject
         printedModel.transform.localRotation = Quaternion.identity;
         printedModel.GetComponent<PrintableModel>().SpeedMultiplier(speedMultiplier);
         printedModel.GetComponent<PrintableModel>().Filament = filament;
+        printedModel.GetComponent<PrintableModel>().filamentName = filament.GetComponent<SaveObject>().PrefabName;
         // TODO: move usefilament from model to printer
         printedModel.GetComponent<PrintableModel>().FilamentNeeded = selectedModel.FilamentNeeded;
         isPrinting = true;

@@ -12,6 +12,7 @@ public enum GameState
 
 public class ScreenManager : MonoBehaviour
 {
+    [SerializeField] GameObject PauseCanvas;
     [SerializeField] GameObject ShopCanvas;
     static ScreenManager Instance;
     private static GameState currentState = GameState.PlayMode;
@@ -31,6 +32,7 @@ public class ScreenManager : MonoBehaviour
         }
         Escape = InputSystem.actions.FindAction("Esc");
         Tab = InputSystem.actions.FindAction("Tab");
+        PauseCanvas.SetActive(false);
         ShopCanvas.SetActive(false);
     }
 
@@ -41,15 +43,13 @@ public class ScreenManager : MonoBehaviour
         {
             if (currentState == GameState.PlayMode)
             {
-                currentState = GameState.Pause;
-                //Debug.Log("Pause");
+                OpenPauseMenu();
             }
             else
             {
                 CloseShop();
                 CloseObject();
-                currentState = GameState.PlayMode;
-                //Debug.Log("Play");
+                ClosePause();
             }
         }
         if (Tab.WasPressedThisFrame()) 
@@ -63,6 +63,27 @@ public class ScreenManager : MonoBehaviour
                 CloseShop();
             }
         }
+    }
+
+    private void OpenPauseMenu()
+    {
+        if (currentState != GameState.PlayMode) return;
+        currentState = GameState.Pause;
+        //Debug.Log("Pause");
+        PauseCanvas.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    private void ClosePause()
+    {
+        if (currentState != GameState.Pause) return;
+
+        currentState = GameState.PlayMode;
+        //Debug.Log("Play");
+        PauseCanvas.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void CloseShop()

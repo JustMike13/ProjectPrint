@@ -94,6 +94,15 @@ public class SaveSystem : MonoBehaviour
         return dateTime; 
     }
 
+    public void CreateSaveUI()
+    {
+        CreateSave();
+    }
+    public void LoadSaveUI()
+    {
+        LoadSave();
+    }
+
     static void CreateSave()
     {
         if (objects.Count == 0)

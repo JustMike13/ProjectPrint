@@ -6,12 +6,13 @@ using UnityEngine.InputSystem;
 public class CurrencySystem : MonoBehaviour
 {
     #region editor fields
-    static TextMeshProUGUI TextBox;
+    [SerializeField] float startingValue = 1000;
     #endregion
     #region class members
-    static float currentValue = 300;
+    static float currentValue = 1000;
     static public float CurrentValue {  get { return currentValue; } set { currentValue = value; ShowCurrency(); } }
     public static CurrencySystem Instance;
+    static TextMeshProUGUI TextBox;
     #endregion
 
     private void Awake()
@@ -27,6 +28,7 @@ public class CurrencySystem : MonoBehaviour
             Instance = this;
         }
         TextBox = GetComponent<TextMeshProUGUI>();
+        currentValue = startingValue;
         ShowCurrency();
     }
 

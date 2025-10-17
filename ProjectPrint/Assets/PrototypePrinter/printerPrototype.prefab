@@ -1696,6 +1696,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Highlight
   hintText:
-  - (E) Pick up print
-  - Printer is running...
-  - (E) Start print
+  - (E) Pick up print\n(F) Printer screen
+  - Printer is running...\n(F) Printer screen
+  - (E) Start print\n(F) Printer screen

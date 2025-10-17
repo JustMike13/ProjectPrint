@@ -11,8 +11,10 @@ public class PrintableModel : InteractableObject
     bool finished = false; 
     public bool IsFinished { get { return finished; } }
     float elapsedTime = 0;
+    //TODO: Remove filament, keep name
     FilamentSpool filament;
     public FilamentSpool Filament { set { filament = value; } }
+    public string filamentName = "";
     void Awake()
     {
         SaveSystem.Subscribe(gameObject);
@@ -64,7 +66,7 @@ public class PrintableModel : InteractableObject
             {
                 location = transform.position,
                 rotation = transform.localRotation,
-                material = filament.GetComponent<SaveObject>().PrefabName,
+                material = filamentName,
                 enabled = GetComponent<MeshRenderer>().enabled,
                 finished = finished
             }
@@ -82,6 +84,7 @@ public class PrintableModel : InteractableObject
         bool wasEnabled = GetComponent<MeshRenderer>().enabled;
         GetComponent<MeshRenderer>().enabled = true;
         GameObject materialGO = Instantiate(SaveSystem.NamePrefabDict[parsed.data.material]);
+        filamentName = parsed.data.material;
         GetComponent<MeshRenderer>().material = materialGO.GetComponent<FilamentSpool>().Color;
         Destroy(materialGO);
         GetComponent<MeshRenderer>().enabled = wasEnabled;
