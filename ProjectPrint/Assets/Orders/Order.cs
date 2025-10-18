@@ -58,7 +58,33 @@ public class Order
                 orderItem.addedQuantity += quantity;
                 return true;
             }
-        }    
+        }
+        OrderItem oi = new OrderItem();
+        oi.quantity = 0;
+        oi.item = item;
+        oi.addedQuantity = 1;
+        OrderItems.Add(oi);
+        return true;
+    }
+
+    public bool RemoveProduct(PrintableModel item, int quantity = 1)
+    {
+        foreach (OrderItem orderItem in OrderItems)
+        {
+            if (orderItem.item.ID == item.ID)
+            {
+                if (orderItem.addedQuantity >= quantity)
+                {
+                    orderItem.addedQuantity -= quantity;
+                    if (orderItem.quantity == 0 && orderItem.addedQuantity == 0)
+                    {
+                        OrderItems.Remove(orderItem);
+                    }
+                    return true;
+                }
+                Debug.Log("Not enough quantity of " + orderItem.item.Name);
+            }
+        }
         return false;
     }
 
@@ -69,7 +95,7 @@ public class Order
         string result = "";
         foreach (OrderItem item in OrderItems)
         {
-            result = result + item.item.name + ": " + item.addedQuantity + "/" + item.quantity + "\n";
+            result = result + item.item.Name + ": " + item.addedQuantity + "/" + item.quantity + "\n";
         }
         return result;
     }

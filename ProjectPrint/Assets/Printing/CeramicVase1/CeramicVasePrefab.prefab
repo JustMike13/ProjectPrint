@@ -85,6 +85,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
       insertIndex: -1
       addedObject: {fileID: 311284953662693737}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4701871165570287584}
   m_SourcePrefab: {fileID: 100100000, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
 --- !u!1 &5624519669151426188 stripped
 GameObject:
@@ -104,13 +107,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: CeramicVase
-  hintText: []
-  ObjectName: 
+  ObjectName: Ceramic vase
   price: 12
   canBePickedUp: 1
   id: 1
   TimeToPrint: 5
   filamentNeeded: 50
+  filamentName: 
 --- !u!54 &6294338558940005243
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -118,10 +121,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5624519669151426188}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -159,3 +162,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.19730881, y: 0.30238578, z: 0.19888443}
   m_Center: {x: 0.0024699718, y: 0.1457663, z: -0.00042819977}
+--- !u!114 &4701871165570287584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5624519669151426188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6937740e11175a343a140855b3c076ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Highlight
+  hintText: []

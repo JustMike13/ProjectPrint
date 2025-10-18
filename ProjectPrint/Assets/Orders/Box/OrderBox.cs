@@ -22,6 +22,10 @@ public class OrderBox : InteractableObject
             //shippingLabel.GetComponent<Rigidbody>().isKinematic = true;
             Destroy(shippingLabel.GetComponent<Rigidbody>());
             shippingLabel.GetComponent<BoxCollider>().enabled = false;
+            foreach(PrintableModel model in ContainedModels)
+            {
+                shippingLabel.GetOrder.AddProduct(model);
+            }
         } }
     [SerializeField] GameObject LabelSpot;
 
@@ -34,6 +38,11 @@ public class OrderBox : InteractableObject
 
     public override GameObject Interact(ControlBinding control)
     {
+        if (control == ControlBinding.F)
+        {
+            OpenBoxScreen();
+            return null;
+        }
         if (ItemHolder.IsHoldingSomething())
         {
             GameObject storedObject = ItemHolder.TakeItem();
@@ -71,8 +80,34 @@ public class OrderBox : InteractableObject
         storedObject.GetComponent<Rigidbody>().isKinematic = true;
         storedObject.GetComponent<BoxCollider>().enabled = false;
         storedObject.transform.localPosition = Vector3.zero;
-        ShippingLabel.GetOrder.AddProduct(model);
+        if (shippingLabel != null)
+        {
+            ShippingLabel.GetOrder.AddProduct(model);
+        }
         ContainedModels.Add(model);
+    }
+
+    public bool RemoveObject(int pos)
+    {
+        if (pos >= ContainedModels.Count)
+        {
+            Debug.LogError("Index out of range");
+            return false;
+        }
+        GameObject obj = ContainedModels[pos].gameObject;
+        if (ItemHolder.HoldItem(obj))
+        {
+            obj.GetComponent<Renderer>().enabled = true;
+            obj.GetComponent<BoxCollider>().enabled = true;
+            if (shippingLabel != null)
+            {
+                ShippingLabel.GetOrder.RemoveProduct(obj.GetComponent<PrintableModel>());
+            }
+            ContainedModels.RemoveAt(pos);
+            BoxScreen.Instance.ShowContents(this);
+            return true;
+        }
+        return false;
     }
 
     public override void StartHighlight()
@@ -94,6 +129,17 @@ public class OrderBox : InteractableObject
         {
             OrderDetailsTextBox.AddText("Empty Box");
         }
+    }
+
+    public void OpenBoxScreen()
+    {
+        ScreenManager.OpenBox();
+        BoxScreen.Instance.ShowContents(this);
+    }
+
+    public void CloseBoxScreen()
+    {
+        ScreenManager.CloseBox();
     }
     public override string CreateSave(string saveName)
     {

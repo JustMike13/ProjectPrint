@@ -7,13 +7,15 @@ public enum GameState
     PlayMode,
     Pause,
     Shop,
-    Object
+    Object,
+    Box
 }
 
 public class ScreenManager : MonoBehaviour
 {
     [SerializeField] GameObject PauseCanvas;
     [SerializeField] GameObject ShopCanvas;
+    [SerializeField] GameObject BoxCanvas;
     static ScreenManager Instance;
     private static GameState currentState = GameState.PlayMode;
     public static GameState CurrentState => currentState;
@@ -34,6 +36,7 @@ public class ScreenManager : MonoBehaviour
         Tab = InputSystem.actions.FindAction("Tab");
         PauseCanvas.SetActive(false);
         ShopCanvas.SetActive(false);
+        BoxCanvas.SetActive(false);
     }
 
     // Update is called once per frame
@@ -50,6 +53,7 @@ public class ScreenManager : MonoBehaviour
                 CloseShop();
                 CloseObject();
                 ClosePause();
+                CloseBox();
             }
         }
         if (Tab.WasPressedThisFrame()) 
@@ -63,6 +67,7 @@ public class ScreenManager : MonoBehaviour
                 CloseShop();
             }
         }
+        BoxCanvas.SetActive(currentState == GameState.Box);
     }
 
     private void OpenPauseMenu()
@@ -114,6 +119,20 @@ public class ScreenManager : MonoBehaviour
     public static void CloseObject()
     {
         if (currentState != GameState.Object) return;
+        currentState = GameState.PlayMode;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public static void OpenBox()
+    {
+        currentState = GameState.Box;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+    public static void CloseBox()
+    {
+        if (currentState != GameState.Box) return;
         currentState = GameState.PlayMode;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
