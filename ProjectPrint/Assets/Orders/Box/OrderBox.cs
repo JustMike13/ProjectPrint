@@ -43,33 +43,54 @@ public class OrderBox : InteractableObject
             OpenBoxScreen();
             return null;
         }
-        if (ItemHolder.IsHoldingSomething())
+        if (ItemHolder.IsHolding<ShippingLabel>())
         {
-            GameObject storedObject = ItemHolder.TakeItem();
-            PrintableModel model = storedObject.GetComponent<PrintableModel>();
-            if (model == null)
-            {
-                // TODO: add visual/sound feedback
-                ShippingLabel label = storedObject.GetComponent<ShippingLabel>();
-                if (label != null)
-                {
-                    ShippingLabel = label;
-                    return null;
-                }
-                Debug.Log("Object can not be added to box.");
-                ItemHolder.HoldItem(storedObject);
-                return null;
-            }
-            StoreObject(storedObject);
+            AddLabelToBox();
             return null;
         }
-        else
+        else if (ItemHolder.IsHolding<PrintableModel>())
         {
-            ShippingLabel.GetOrder.FulfillOrder();
-            GetComponent<Highlight>().StopHighlight();
-            Destroy(this.transform.gameObject);
+            AddProductToBox();
+            return null;
         }
         return null;
+    }
+
+    public void AddProductToBox()
+    {
+        PrintableModel model = ItemHolder.TakeItem<PrintableModel>();
+        if (model == null)
+        {
+            Debug.Log("Object can not be added to box.");
+            ItemHolder.HoldItem(model.gameObject);
+            return;
+        }
+        StoreObject(model.gameObject);
+        BoxScreen.Instance.ShowContents(this);
+    }
+
+    public void AddLabelToBox()
+    {
+        // TODO: add visual/sound feedback
+        ShippingLabel label = ItemHolder.TakeItem<ShippingLabel>();
+        if (label != null)
+        {
+            ShippingLabel = label;
+            BoxScreen.Instance.ShowContents(this);
+        }
+    }
+
+    public void SendOrder()
+    {
+        if (ShippingLabel == null)
+        {
+            Debug.Log("No order to send.");
+            return;
+        }
+        ShippingLabel.GetOrder.FulfillOrder();
+        GetComponent<Highlight>().StopHighlight();
+        Destroy(this.transform.gameObject);
+        ScreenManager.CloseBox();
     }
 
     private void StoreObject(GameObject storedObject)
@@ -135,11 +156,6 @@ public class OrderBox : InteractableObject
     {
         ScreenManager.OpenBox();
         BoxScreen.Instance.ShowContents(this);
-    }
-
-    public void CloseBoxScreen()
-    {
-        ScreenManager.CloseBox();
     }
     public override string CreateSave(string saveName)
     {

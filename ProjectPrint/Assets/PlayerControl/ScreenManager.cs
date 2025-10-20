@@ -136,5 +136,6 @@ public class ScreenManager : MonoBehaviour
         currentState = GameState.PlayMode;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        BoxScreen.Instance.CloseBox();
     }
 }

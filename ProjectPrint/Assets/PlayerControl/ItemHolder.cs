@@ -90,6 +90,11 @@ public class ItemHolder : MonoBehaviour
         return currentItem != null || moving;
     }
 
+    public static bool IsHolding<T>() where T : Component
+    {
+        return (currentItem != null && currentItem.TryGetComponent<T>(out T component));
+    }    
+
     public static bool HoldItem(GameObject item)
     {
         if (currentItem != null)

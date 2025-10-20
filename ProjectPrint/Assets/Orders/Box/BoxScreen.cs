@@ -10,6 +10,9 @@ public class BoxScreen : MonoBehaviour
     const float posY = 250f;
     [SerializeField] GameObject buttonPrefab;
     [SerializeField] TextMeshProUGUI OrderDetails;
+    [SerializeField] Button SendOrderButton;
+    [SerializeField] Button AddProductButton;
+    [SerializeField] Button AddLabelButton;
     List<GameObject> buttons = new List<GameObject>();
     public static BoxScreen Instance; 
 
@@ -29,25 +32,25 @@ public class BoxScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ScreenManager.CurrentState != GameState.Box && buttons.Count > 0)
-        {
-            DestroyAllButtons();
-            OrderDetails.text = "";
-        }
+
     }
 
-    private void DestroyAllButtons()
+    public void CloseBox()
     {
+        OrderDetails.text = "";
         foreach (GameObject button in buttons)
         {
             Destroy(button);
         }
         buttons.Clear();
+        SendOrderButton.onClick.RemoveAllListeners();
+        AddProductButton.onClick.RemoveAllListeners();
+        AddLabelButton.onClick.RemoveAllListeners();
     }
 
     public void ShowContents(OrderBox box)
     {
-        DestroyAllButtons();
+        CloseBox();
         if (box.ShippingLabel != null && box.ShippingLabel.GetOrder != null)
         {
             OrderDetails.text = "Ordered items:\n" + box.ShippingLabel.GetOrder.ToString();
@@ -56,6 +59,46 @@ public class BoxScreen : MonoBehaviour
         {
             OrderDetails.text = "Empty Box";
         }
+        CreateButtons(box);
+        HandleBoxButtons(box);
+    }
+
+    private void HandleBoxButtons(OrderBox box)
+    {
+        if (box.ShippingLabel == null)
+        {
+            SendOrderButton.gameObject.SetActive(false);
+            SendOrderButton.onClick.RemoveAllListeners();
+        }
+        else
+        {
+            SendOrderButton.gameObject.SetActive(true);
+            SendOrderButton.onClick.AddListener(() => box.SendOrder());
+        }
+        if(ItemHolder.IsHolding<PrintableModel>())
+        {
+            AddProductButton.gameObject.SetActive(true);
+            AddProductButton.onClick.AddListener(() => box.AddProductToBox());
+        }
+        else
+        {
+            AddProductButton.gameObject.SetActive(false);
+            AddProductButton.onClick.RemoveAllListeners();
+        }
+        if (ItemHolder.IsHolding<ShippingLabel>())
+        {
+            AddLabelButton.gameObject.SetActive(true);
+            AddLabelButton.onClick.AddListener(() => box.AddLabelToBox());
+        }
+        else
+        {
+            AddLabelButton.gameObject.SetActive(false);
+            AddLabelButton.onClick.RemoveAllListeners();
+        }
+    }
+
+    private void CreateButtons(OrderBox box)
+    {
         List<PrintableModel> contents = box.ContainedModels;
         for (int i = 0; i < contents.Count; i++)
         {

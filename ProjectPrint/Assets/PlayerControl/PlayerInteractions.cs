@@ -38,7 +38,8 @@ public class PlayerInteractions : MonoBehaviour
     {
         if (ScreenManager.CurrentState != GameState.PlayMode)
         {
-            if (ScreenManager.CurrentState == GameState.Object)
+            if (ScreenManager.CurrentState == GameState.Object
+                || ScreenManager.CurrentState == GameState.Box)
             {
                 ProcessFButton();
             }
@@ -79,12 +80,19 @@ public class PlayerInteractions : MonoBehaviour
 
     private void ProcessFButton()
     {
-        if (FButton.WasPressedThisFrame()
-                    && lastInteracted != null
-                    && Time.time - lastTime > interactDelay)
+        if (FButton.WasPressedThisFrame())
         {
-            lastInteracted.Interact(ControlBinding.F);
-            lastTime = Time.time;
+            if (ScreenManager.CurrentState == GameState.Box)
+            {
+                ScreenManager.CloseBox();
+                return;
+            }
+            if (lastInteracted != null && Time.time - lastTime > interactDelay)
+            {
+                lastInteracted.Interact(ControlBinding.F);
+                lastTime = Time.time;
+                return;
+            }
         }
     }
 
