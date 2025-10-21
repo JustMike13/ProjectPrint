@@ -14,7 +14,7 @@ public class ItemHolder : MonoBehaviour
     public static ItemHolder Instance { get; private set; }
     static bool moving = false;
     public static bool Moving { get { return moving; } set { moving = value; } }
-    static bool movedThisFrame = false;
+    static bool pickedUpThisFrame = false;
     InputAction RightClick;
     InputAction MoveButton;
     private void Awake()
@@ -39,6 +39,11 @@ public class ItemHolder : MonoBehaviour
         if (!moving)
         {
             bool mouseVal = RightClick.IsPressed();
+            if (pickedUpThisFrame)
+            {
+                pickedUpThisFrame = mouseVal;
+                return;
+            }
             if ( mouseVal && currentItem != null)
             {
                 currentItem.transform.localPosition = objectPlacer.transform.localPosition;
@@ -75,13 +80,13 @@ public class ItemHolder : MonoBehaviour
             }
             if (MoveButton.WasPressedThisFrame() 
                 && currentItem != null
-                && !movedThisFrame)
+                && !pickedUpThisFrame)
             {
                 moving = false;
                 currentItem.GetComponent<BoxCollider>().enabled = true;
                 TakeItem();
             }
-            movedThisFrame = false;
+            pickedUpThisFrame = false;
         }
     }
 
@@ -101,6 +106,7 @@ public class ItemHolder : MonoBehaviour
         {
             return false;
         }
+        pickedUpThisFrame = true;
         currentItem = item;
         currentItem.transform.parent = Instance.transform;
         currentItem.transform.localPosition = Vector3.zero;
@@ -148,7 +154,7 @@ public class ItemHolder : MonoBehaviour
         }
         moving = true;
         HoldItem(obj.gameObject);
-        movedThisFrame = true;
+        pickedUpThisFrame = true;
         currentItem.GetComponent<BoxCollider>().enabled = false;
     }
 }

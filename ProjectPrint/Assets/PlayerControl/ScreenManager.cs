@@ -16,7 +16,7 @@ public class ScreenManager : MonoBehaviour
     [SerializeField] GameObject PauseCanvas;
     [SerializeField] GameObject ShopCanvas;
     [SerializeField] GameObject BoxCanvas;
-    static ScreenManager Instance;
+    public static ScreenManager Instance;
     private static GameState currentState = GameState.PlayMode;
     public static GameState CurrentState => currentState;
     InputAction Escape;
@@ -42,33 +42,42 @@ public class ScreenManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Escape.WasPressedThisFrame())
-        {
-            if (currentState == GameState.PlayMode)
-            {
-                OpenPauseMenu();
-            }
-            else
-            {
-                CloseShop();
-                CloseObject();
-                ClosePause();
-                CloseBox();
-            }
-        }
-        if (Tab.WasPressedThisFrame()) 
-        {
-            if (currentState == GameState.PlayMode) 
-            {
-                OpenShop();
-            }
-            else if (currentState == GameState.Shop)
-            {
-                CloseShop();
-            }
-        }
-        BoxCanvas.SetActive(currentState == GameState.Box);
+        //BoxCanvas.SetActive(currentState == GameState.Box);
     }
+
+    public void TabButtonInteraction()
+    {
+        if (currentState == GameState.PlayMode)
+        {
+            OpenShop();
+        }
+        else
+        {
+            EscButtonInteraction();
+        }
+    }
+
+    public void EscButtonInteraction()
+    {
+        switch (currentState)
+        {
+            case GameState.PlayMode:
+                OpenPauseMenu();
+                break;
+            case GameState.Object:
+                CloseObject();
+                break;
+            case GameState.Shop:
+                CloseShop();
+                break;
+            case GameState.Pause:
+                ClosePause();
+                break;
+            case GameState.Box:
+                CloseBox();
+                break;
+        }
+    } 
 
     private void OpenPauseMenu()
     {
@@ -124,16 +133,18 @@ public class ScreenManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public static void OpenBox()
+    public void OpenBox()
     {
         currentState = GameState.Box;
+        BoxCanvas.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
-    public static void CloseBox()
+    public void CloseBox()
     {
         if (currentState != GameState.Box) return;
         currentState = GameState.PlayMode;
+        BoxCanvas.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         BoxScreen.Instance.CloseBox();

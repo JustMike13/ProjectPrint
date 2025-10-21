@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 public enum ControlBinding
 {
     EMPTY,
@@ -9,7 +10,8 @@ public enum ControlBinding
     F,
     Q,
     SHIFT,
-    ESC
+    ESC,
+    Menu,
 }
 
 public class PlayerInteractions : MonoBehaviour
@@ -20,29 +22,46 @@ public class PlayerInteractions : MonoBehaviour
     private float interactDelay = 0.1f;
     public InputActionAsset inputActions;
     InputAction Primary;
+    InputAction RightClick;
     InputAction Interact;
+    InputAction MenuButton;
     InputAction FButton;
     InputAction MoveButton;
+    InputAction Escape;
+    InputAction Tab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         Primary   = InputSystem.actions.FindAction("Attack");
+        RightClick = InputSystem.actions.FindAction("RightClick");
         Interact = InputSystem.actions.FindAction("Interact");
+        MenuButton = InputSystem.actions.FindAction("MenuButton");
         FButton = InputSystem.actions.FindAction("FButton");
         MoveButton = InputSystem.actions.FindAction("MoveObject");
+        Escape = InputSystem.actions.FindAction("Esc");
+        Tab = InputSystem.actions.FindAction("Tab");
     }
 
     // Update is called once per frame
     void Update()
     {
+        // These need to run always
+        if (Escape.WasPressedThisFrame())
+        {
+            ScreenManager.Instance.EscButtonInteraction();
+        }
+
+        if (Tab.WasPressedThisFrame())
+        {
+            ScreenManager.Instance.TabButtonInteraction();
+        }
+
+        ProcessMenuButton(MenuButton, ControlBinding.Menu);
+
+        // These need to only run in PlayMode
         if (ScreenManager.CurrentState != GameState.PlayMode)
         {
-            if (ScreenManager.CurrentState == GameState.Object
-                || ScreenManager.CurrentState == GameState.Box)
-            {
-                ProcessFButton();
-            }
             return;
         }
 
@@ -50,14 +69,14 @@ public class PlayerInteractions : MonoBehaviour
         if (Interact.WasPressedThisFrame()
             && lastInteracted != null
             && Time.time - lastTime > interactDelay)
-        {
+        { 
             lastInteracted.Interact(ControlBinding.E);
             lastTime = Time.time;
         }
         ProcessHighlight();
-        ProcessFButton();
+        ProcessMenuButton(FButton, ControlBinding.F);
 
-        if (Primary.WasPressedThisFrame()
+        if (RightClick.WasPressedThisFrame()
             && lastInteracted != null
             && Time.time - lastTime > interactDelay
             && lastInteracted.CanBePickedUp)
@@ -75,21 +94,19 @@ public class PlayerInteractions : MonoBehaviour
             ItemHolder.Move(lastInteracted);
 
         }
-
     }
 
-    private void ProcessFButton()
+    private void ProcessMenuButton(InputAction button, ControlBinding control)
     {
-        if (FButton.WasPressedThisFrame())
+        if (button.WasPressedThisFrame())
         {
-            if (ScreenManager.CurrentState == GameState.Box)
+            if (ScreenManager.CurrentState != GameState.PlayMode)
             {
-                ScreenManager.CloseBox();
                 return;
             }
             if (lastInteracted != null && Time.time - lastTime > interactDelay)
             {
-                lastInteracted.Interact(ControlBinding.F);
+                lastInteracted.Interact(control);
                 lastTime = Time.time;
                 return;
             }

@@ -39,7 +39,7 @@ public class OrderBox : InteractableObject
 
     public override GameObject Interact(ControlBinding control)
     {
-        if (control == ControlBinding.F)
+        if (control == ControlBinding.Menu)
         {
             OpenBoxScreen();
             return null;
@@ -106,7 +106,7 @@ public class OrderBox : InteractableObject
         ShippingLabel.GetOrder.FulfillOrder();
         GetComponent<Highlight>().StopHighlight();
         Destroy(this.transform.gameObject);
-        ScreenManager.CloseBox();
+        ScreenManager.Instance.CloseBox();
     }
 
     private void StoreObject(GameObject storedObject)
@@ -170,7 +170,7 @@ public class OrderBox : InteractableObject
 
     public void OpenBoxScreen()
     {
-        ScreenManager.OpenBox();
+        ScreenManager.Instance.OpenBox();
         BoxScreen.Instance.ShowContents(this);
     }
     public override string CreateSave(string saveName)

@@ -75,6 +75,9 @@ public class Printer : InteractableObject
 
     private void UpdateScreen()
     {
+        if (screenFields.IsOn == false)
+            return;
+
         screenFields.FilamentButton.GetComponentInChildren<TMP_Text>().text = filament != null ? "Take filament" : "Add filament";
         screenFields.MemoryCardButton.GetComponentInChildren<TMP_Text>().text = memoryCard != null ? "Take card" : "Add card";
         screenFields.NameInfo.text = Name;
@@ -170,18 +173,27 @@ public class Printer : InteractableObject
     {
         if (control == ControlBinding.E)
         {
-            Print();
+            HandleItemInteraction();
         }
         if (control == ControlBinding.F)
+        {
+            Print();
+        }
+        if (control == ControlBinding.Menu)
         {
             ScreenOnOff();
         }
         return null;
     }
 
+    private void HandleItemInteraction()
+    {
+        MemoryCardInteract();
+        FilamentInteract();
+    }
+
     private void MemoryCardInteract()
     {
-
         if (ItemHolder.IsHoldingSomething())
         {
             if (memoryCard == null)
