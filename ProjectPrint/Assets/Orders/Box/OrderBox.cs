@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class OrderBox : InteractableObject
@@ -14,7 +15,7 @@ public class OrderBox : InteractableObject
         get { return shippingLabel; } 
         set 
         { 
-                shippingLabel = value;
+            shippingLabel = value;
             shippingLabel.transform.parent = LabelSpot.transform;
             shippingLabel.transform.localPosition = Vector3.zero;
             shippingLabel.transform.localRotation = Quaternion.identity;
@@ -78,6 +79,21 @@ public class OrderBox : InteractableObject
             ShippingLabel = label;
             BoxScreen.Instance.ShowContents(this);
         }
+    }
+    public void RemoveLabelFromBox()
+    {
+        if (shippingLabel == null)
+        {
+            Debug.Log("No label to remove.");
+            return;
+        }
+        shippingLabel.GetComponent<InteractableObject>().enabled = true;
+        shippingLabel.AddComponent<Rigidbody>();
+        shippingLabel.GetComponent<BoxCollider>().enabled = true;
+        shippingLabel.GetOrder.RemoveAllProducts();
+        ItemHolder.HoldItem(shippingLabel.gameObject);
+        shippingLabel = null;
+        BoxScreen.Instance.ShowContents(this);
     }
 
     public void SendOrder()

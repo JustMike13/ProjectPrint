@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -86,6 +87,24 @@ public class Order
             }
         }
         return false;
+    }
+
+    public void RemoveAllProducts()
+    {
+        List<OrderItem> itemsToRemove = new List<OrderItem>();
+        foreach (OrderItem orderItem in OrderItems)
+        {
+            if(orderItem.quantity == 0)
+            {
+                itemsToRemove.Add(orderItem);
+                continue;
+            }
+            orderItem.addedQuantity = 0;
+        }
+        foreach (OrderItem item in itemsToRemove)
+        {
+            OrderItems.Remove(item);
+        }
     }
 
     public override string ToString()

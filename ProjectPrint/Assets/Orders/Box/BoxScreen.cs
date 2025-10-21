@@ -69,11 +69,26 @@ public class BoxScreen : MonoBehaviour
         {
             SendOrderButton.gameObject.SetActive(false);
             SendOrderButton.onClick.RemoveAllListeners();
+            if (ItemHolder.IsHolding<ShippingLabel>())
+            {
+                AddLabelButton.gameObject.SetActive(true);
+                AddLabelButton.onClick.RemoveAllListeners();
+                AddLabelButton.GetComponentInChildren<TMP_Text>().text = "Add label to box";
+                AddLabelButton.onClick.AddListener(() => box.AddLabelToBox());
+            }
+            else
+            {
+                AddLabelButton.gameObject.SetActive(false);
+                AddLabelButton.onClick.RemoveAllListeners();
+            }
         }
         else
         {
             SendOrderButton.gameObject.SetActive(true);
             SendOrderButton.onClick.AddListener(() => box.SendOrder());
+            AddLabelButton.GetComponentInChildren<TMP_Text>().text = "Take label";
+            AddLabelButton.onClick.RemoveAllListeners();
+            AddLabelButton.onClick.AddListener(() => box.RemoveLabelFromBox());
         }
         if(ItemHolder.IsHolding<PrintableModel>())
         {
@@ -84,16 +99,6 @@ public class BoxScreen : MonoBehaviour
         {
             AddProductButton.gameObject.SetActive(false);
             AddProductButton.onClick.RemoveAllListeners();
-        }
-        if (ItemHolder.IsHolding<ShippingLabel>())
-        {
-            AddLabelButton.gameObject.SetActive(true);
-            AddLabelButton.onClick.AddListener(() => box.AddLabelToBox());
-        }
-        else
-        {
-            AddLabelButton.gameObject.SetActive(false);
-            AddLabelButton.onClick.RemoveAllListeners();
         }
     }
 
