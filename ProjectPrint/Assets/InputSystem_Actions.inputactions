@@ -545,6 +545,17 @@
                 },
                 {
                     "name": "",
+                    "id": "db150c39-81f1-4397-aaef-8f9768c5f029",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "2f16d8ad-bb0b-4133-9e95-fd1114afea98",
                     "path": "<Keyboard>/f",
                     "interactions": "Press",
@@ -556,11 +567,44 @@
                 },
                 {
                     "name": "",
+                    "id": "130aba59-eaad-45f2-9811-cfd1f6737d86",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b484216a-32e7-4391-b51a-9915bbbcac06",
                     "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MoveObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7235a977-85f4-43fa-8cf7-a885e829995c",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "MoveObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8aae3eba-635b-44d7-ae6b-110b4f53bf09",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
                     "action": "MoveObject",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -569,6 +613,17 @@
                     "name": "",
                     "id": "0dba71c8-f995-4a43-b48c-0c2b0175216f",
                     "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MenuButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9bb41a2c-fffb-413e-9c46-f66d1ed7d5df",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -1150,11 +1205,33 @@
                 },
                 {
                     "name": "",
+                    "id": "c507cad9-0ef8-48cb-abab-fa5b9bd9a22c",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Esc",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "42876388-8329-4068-ac11-93023b21a00b",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
+                    "action": "Tab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a2918d93-655a-449d-8556-cee6c054f9b3",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Tab",
                     "isComposite": false,
                     "isPartOfComposite": false

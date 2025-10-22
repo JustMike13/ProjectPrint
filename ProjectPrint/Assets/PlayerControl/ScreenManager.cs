@@ -19,8 +19,6 @@ public class ScreenManager : MonoBehaviour
     public static ScreenManager Instance;
     private static GameState currentState = GameState.PlayMode;
     public static GameState CurrentState => currentState;
-    InputAction Escape;
-    InputAction Tab;
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -32,8 +30,6 @@ public class ScreenManager : MonoBehaviour
         {
             Instance = this;
         }
-        Escape = InputSystem.actions.FindAction("Esc");
-        Tab = InputSystem.actions.FindAction("Tab");
         PauseCanvas.SetActive(false);
         ShopCanvas.SetActive(false);
         BoxCanvas.SetActive(false);
