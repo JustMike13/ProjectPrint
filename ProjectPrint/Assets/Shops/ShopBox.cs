@@ -3,9 +3,13 @@ using UnityEngine;
 public class ShopBox : InteractableObject
 {
     GameObject storedObject;
+    float minSize = 0.2f;
     public void AddToBox(GameObject obj)
     {
         Vector3 objSize = obj.GetComponent<Collider>().bounds.size;
+        if (objSize.x < minSize) objSize.x = minSize;
+        if (objSize.y < minSize) objSize.y = minSize;
+        if (objSize.z < minSize) objSize.z = minSize;
         Vector3 boxSize = this.GetComponent<Collider>().bounds.size;
 
         // Account for the box's current scale
