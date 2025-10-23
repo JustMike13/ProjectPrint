@@ -12,6 +12,7 @@ public class Shop : MonoBehaviour
 {
     [SerializeField] List<ProductPricePair> Inventory = new List<ProductPricePair> ();
     [SerializeField] GameObject buttonPrefab;
+    [SerializeField] GameObject boxPrefab;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -49,7 +50,10 @@ public class Shop : MonoBehaviour
         if (CurrencySystem.CanAfford(Inventory[pos].price))
         {
             CurrencySystem.Spend(Inventory[pos].price);
-            Instantiate(GO, ShopSpawner.Instance.transform);
+            GameObject product = Instantiate(GO, ShopSpawner.Instance.transform);
+            GameObject box = Instantiate(boxPrefab.gameObject, ShopSpawner.Instance.transform);
+            box.GetComponent<ShopBox>().AddToBox(product);
+            box.transform.parent = null;
         }
     }
 }

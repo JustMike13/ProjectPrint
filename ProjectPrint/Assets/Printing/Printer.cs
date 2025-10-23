@@ -188,8 +188,14 @@ public class Printer : InteractableObject
 
     private void HandleItemInteraction()
     {
-        MemoryCardInteract();
-        FilamentInteract();
+        if (ItemHolder.IsHolding<MemoryCard>())
+        {
+            MemoryCardInteract();
+        }
+        if (ItemHolder.IsHolding<FilamentSpool>())
+        {
+            FilamentInteract();
+        }
     }
 
     private void MemoryCardInteract()
