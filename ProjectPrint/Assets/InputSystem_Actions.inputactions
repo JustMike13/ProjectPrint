@@ -771,6 +771,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "UIButton1",
+                    "type": "Button",
+                    "id": "de289c1a-f373-4bba-93c8-10d0fc7a389a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UIButton2",
+                    "type": "Button",
+                    "id": "7457743d-fe20-4c53-ada4-c1ba2fb460d7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UIButton3",
+                    "type": "Button",
+                    "id": "1e81e23d-a572-4731-b1a4-aae80a38bbab",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1266,6 +1293,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Ctrl",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ea0d0237-f7e4-4ed0-baf3-1aa4b80d9e32",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UIButton1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f1081160-5b6e-4a5d-bd0e-49a69421e737",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UIButton2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a45ea1c8-f328-443a-9242-df97c5ef526a",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UIButton3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

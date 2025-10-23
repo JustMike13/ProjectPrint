@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class ScreenFields
 {
     bool isOn;
     public bool IsOn { get { return isOn; } set { isOn = value; } }
+    public bool ignoreButton;
     public Canvas Screen;
     public TextMeshProUGUI NameInfo;
     public TextMeshProUGUI FilamentInfo;
@@ -33,6 +35,9 @@ public class Printer : InteractableObject
     PrintableModel selectedModel;
     GameObject printedModel;
     Animator animator;
+    InputAction UIButton1;
+    InputAction UIButton2;
+    InputAction UIButton3;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -45,6 +50,9 @@ public class Printer : InteractableObject
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
         SaveSystem.Subscribe(gameObject, Priority.High);
+        UIButton1 = InputSystem.actions.FindAction("UIButton1");
+        UIButton2 = InputSystem.actions.FindAction("UIButton2");
+        UIButton3 = InputSystem.actions.FindAction("UIButton3");
     }
 
     #region Screen
@@ -62,6 +70,7 @@ public class Printer : InteractableObject
             screenFields.IsOn = true;
             UpdateScreen();
             ScreenManager.OpenObject();
+            screenFields.ignoreButton = true;
         }
     }
 
@@ -100,6 +109,25 @@ public class Printer : InteractableObject
         if (screenFields.IsOn && ScreenManager.CurrentState != GameState.Object)
         {
             ScreenOnOff();
+        }
+        if (screenFields.IsOn) 
+        {
+            if (!screenFields.ignoreButton)
+            {
+                if (UIButton1.WasPressedThisFrame())
+                {
+                    Print();
+                }
+                if (UIButton2.WasPressedThisFrame())
+                {
+                    FilamentInteract();
+                }
+                if (UIButton3.WasPressedThisFrame())
+                {
+                    MemoryCardInteract();
+                }
+            }
+            screenFields.ignoreButton = false;
         }
     }
 
