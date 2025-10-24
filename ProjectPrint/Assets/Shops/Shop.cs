@@ -13,6 +13,9 @@ public class Shop : MonoBehaviour
     [SerializeField] List<ProductPricePair> Inventory = new List<ProductPricePair> ();
     [SerializeField] GameObject buttonPrefab;
     [SerializeField] GameObject boxPrefab;
+    List<Button> buttons = new List<Button>();
+    public List<Button> Buttons { get { return buttons; } }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -34,14 +37,9 @@ public class Shop : MonoBehaviour
             {
                 int index = i; 
                 buttonComponent.onClick.AddListener(() => Buy(index));
+                buttons.Add(buttonComponent);
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void Buy(int pos)

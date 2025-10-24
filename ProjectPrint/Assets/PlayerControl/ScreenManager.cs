@@ -85,7 +85,7 @@ public class ScreenManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    private void ClosePause()
+    public void ClosePause()
     {
         if (currentState != GameState.Pause) return;
 

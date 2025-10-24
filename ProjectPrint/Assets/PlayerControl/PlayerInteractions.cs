@@ -29,6 +29,9 @@ public class PlayerInteractions : MonoBehaviour
     InputAction MoveButton;
     InputAction Escape;
     InputAction Tab;
+    InputAction UIButton1;
+    InputAction UIButton2;
+    InputAction UIButton3;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -41,6 +44,9 @@ public class PlayerInteractions : MonoBehaviour
         MoveButton = InputSystem.actions.FindAction("MoveObject");
         Escape = InputSystem.actions.FindAction("Esc");
         Tab = InputSystem.actions.FindAction("Tab");
+        UIButton1 = InputSystem.actions.FindAction("UIButton1");
+        UIButton2 = InputSystem.actions.FindAction("UIButton2");
+        UIButton3 = InputSystem.actions.FindAction("UIButton3");
     }
 
     // Update is called once per frame
@@ -58,6 +64,7 @@ public class PlayerInteractions : MonoBehaviour
         }
 
         ProcessMenuButton(MenuButton, ControlBinding.Menu);
+        HandlePauseMenuInteractions();
 
         // These need to only run in PlayMode
         if (ScreenManager.CurrentState != GameState.PlayMode)
@@ -93,6 +100,26 @@ public class PlayerInteractions : MonoBehaviour
         { 
             ItemHolder.Move(lastInteracted);
 
+        }
+    }
+
+    void HandlePauseMenuInteractions()
+    {
+        if (ScreenManager.CurrentState != GameState.Pause)
+        {
+            return;
+        }
+        if (UIButton1.WasPressedThisFrame())
+        {
+            ScreenManager.Instance.ClosePause();
+        }
+        if (UIButton2.WasPressedThisFrame())
+        {
+            SaveSystem.CreateSave();
+        }
+        if (UIButton3.WasPressedThisFrame())
+        {
+            SaveSystem.LoadSave();
         }
     }
 

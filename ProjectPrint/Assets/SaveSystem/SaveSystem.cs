@@ -103,7 +103,7 @@ public class SaveSystem : MonoBehaviour
         LoadSave();
     }
 
-    static void CreateSave()
+    public static void CreateSave()
     {
         if (objects.Count == 0)
         {
@@ -154,7 +154,7 @@ public class SaveSystem : MonoBehaviour
         Debug.Log("Saved");
     }
 
-    static void LoadSave()
+    public static void LoadSave()
     {
         foreach (GameObject obj in objects)
         {
