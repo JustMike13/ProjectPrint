@@ -45,7 +45,9 @@ public class BoxGenerator : InteractableObject
     {
         if (CurrencySystem.Spend(2))
         {
-            OrderBox box = Instantiate(boxPrefab, center.transform.position, Quaternion.identity);
+            GameObject box = AssetSystem.Create("Box", AssetType.Other);
+            box.transform.position = center.transform.position;
+            box.transform.rotation = Quaternion.identity;
         }
     }
 

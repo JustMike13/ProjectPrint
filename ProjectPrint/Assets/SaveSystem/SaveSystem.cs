@@ -158,11 +158,11 @@ public class SaveSystem : MonoBehaviour
     {
         foreach (GameObject obj in objects)
         {
-            Destroy(obj);
+            AssetSystem.Recycle(obj);
         }
         foreach (GameObject obj in PriorityObjects)
         {
-            Destroy(obj);
+            AssetSystem.Recycle(obj);
         }
         objects.Clear();
         string path = SaveLocation + "save.txt";
@@ -192,7 +192,7 @@ public class SaveSystem : MonoBehaviour
                 string innerData = outer["data"].ToString();
                 JObject inner = JObject.Parse(innerData);
                 string prefab = outer["prefab"].ToString();
-                GameObject obj = Instantiate(NamePrefabDict[prefab]);
+                GameObject obj = AssetSystem.Create(prefab);
                 obj.GetComponent<SaveObject>().LoadSave(objJson);
             }
         }

@@ -44,12 +44,13 @@ public class Shop : MonoBehaviour
 
     void Buy(int pos)
     {
-        GameObject GO = Inventory[pos].product;
+        string name = Inventory[pos].product.GetComponent<SaveObject>().PrefabName;
         if (CurrencySystem.CanAfford(Inventory[pos].price))
         {
             CurrencySystem.Spend(Inventory[pos].price);
-            GameObject product = Instantiate(GO, ShopSpawner.Instance.transform);
-            GameObject box = Instantiate(boxPrefab.gameObject, ShopSpawner.Instance.transform);
+            GameObject product = AssetSystem.Create(name);
+            GameObject box = AssetSystem.Create(boxPrefab.GetComponent<SaveObject>().PrefabName, AssetType.Other);
+            AssetSystem.AddParent(box, ShopSpawner.Instance.transform);
             box.GetComponent<ShopBox>().AddToBox(product);
             box.transform.parent = null;
         }

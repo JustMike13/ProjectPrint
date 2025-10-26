@@ -105,7 +105,17 @@ public class OrderBox : InteractableObject
         }
         ShippingLabel.GetOrder.FulfillOrder();
         GetComponent<Highlight>().StopHighlight();
-        Destroy(this.transform.gameObject);
+        foreach(var model in ContainedModels)
+        {
+            AssetSystem.Recycle(model.gameObject);
+        }
+        ContainedModels.Clear();
+        if (ShippingLabel != null)
+        {
+            AssetSystem.Recycle(ShippingLabel.gameObject);
+            shippingLabel = null;
+        }
+        AssetSystem.Recycle(this.gameObject);
         ScreenManager.Instance.CloseBox();
     }
 
@@ -210,14 +220,14 @@ public class OrderBox : InteractableObject
         transform.localRotation = parsed.data.rotation;
         if (parsed.data.labelJson != "")
         {
-            GameObject labelObj = Instantiate(SaveSystem.NamePrefabDict["ShippingLabel"]);
+            GameObject labelObj = AssetSystem.Create("ShippingLabel", AssetType.Other);
             labelObj.GetComponent<ShippingLabel>().LoadSave(parsed.data.labelJson);
             ShippingLabel = labelObj.GetComponent<ShippingLabel>();
         }
         foreach (string modelJson in parsed.data.modelList.models)
         {
             PrintModelJson parsedModel = JsonUtility.FromJson<PrintModelJson>(modelJson);
-            GameObject modelObj = Instantiate(SaveSystem.NamePrefabDict[parsedModel.prefab]);
+            GameObject modelObj = AssetSystem.Create(parsedModel.prefab, AssetType.Model);
             modelObj.GetComponent<PrintableModel>().LoadSave(modelJson);
             StoreObject(modelObj);
         }

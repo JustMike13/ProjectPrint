@@ -50,10 +50,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9bb0f6c5e60dfc48bd4e9c52573fdbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabName: box
-  ObjectName: box
+  prefabName: Box
+  ObjectName: Box
   price: 10
   canBePickedUp: 1
+  ContainedModels: []
   LabelSpot: {fileID: 7395403396453508151}
 --- !u!54 &7501632965609454141
 Rigidbody:

@@ -23,6 +23,11 @@ public class PrintableModel : InteractableObject
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
 
+    private void OnEnable()
+    {
+        finished = false;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -38,12 +43,16 @@ public class PrintableModel : InteractableObject
         }
     }
 
-    public void EnableModel(bool val)
+    public void EnableModel(bool val, bool resetTime = false)
     {
         finished = val;
         GetComponent<MeshRenderer>().enabled = val;
         GetComponent<Rigidbody>().isKinematic = !val;
         GetComponent<BoxCollider>().enabled = val;
+        if (resetTime)
+        {
+            elapsedTime = 0;
+        }
     }
 
     public void SpeedMultiplier(float speed)
@@ -83,10 +92,10 @@ public class PrintableModel : InteractableObject
         transform.localRotation = parsed.data.rotation;
         bool wasEnabled = GetComponent<MeshRenderer>().enabled;
         GetComponent<MeshRenderer>().enabled = true;
-        GameObject materialGO = Instantiate(SaveSystem.NamePrefabDict[parsed.data.material]);
+        GameObject materialGO = AssetSystem.Create(parsed.data.material, AssetType.Filament);
         filamentName = parsed.data.material;
         GetComponent<MeshRenderer>().material = materialGO.GetComponent<FilamentSpool>().Color;
-        Destroy(materialGO);
+        AssetSystem.Recycle(materialGO);
         GetComponent<MeshRenderer>().enabled = wasEnabled;
 
         finished = parsed.data.finished;

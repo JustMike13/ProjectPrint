@@ -48,7 +48,7 @@ public class ShopBox : InteractableObject
         {
             ItemHolder.Move(storedObject.GetComponent<InteractableObject>());
         }
-            Destroy(this.gameObject);
+        AssetSystem.Recycle(this.gameObject);
     }
 
     public override GameObject Interact(ControlBinding control)

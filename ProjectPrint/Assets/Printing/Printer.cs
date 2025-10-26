@@ -185,8 +185,10 @@ public class Printer : InteractableObject
         selectedModel = memoryCard.Models[0];
         bool enoughFilament = filament.Quantity >= selectedModel.FilamentNeeded;
         GameObject toPrint = enoughFilament ? selectedModel.gameObject : failedPrint.gameObject;
-        printedModel = Instantiate(toPrint, printBase.transform);
-        printedModel.GetComponent<MeshRenderer>().material = filament.Color; 
+        printedModel = AssetSystem.Create(toPrint.GetComponent<SaveObject>().PrefabName, AssetType.Model);
+        AssetSystem.AddParent(printedModel, printBase.transform);
+        printedModel.GetComponent<MeshRenderer>().material = filament.Color;
+        printedModel.GetComponent<PrintableModel>().EnableModel(false, true);
         printedModel.transform.localRotation = Quaternion.identity;
         printedModel.GetComponent<PrintableModel>().SpeedMultiplier(speedMultiplier);
         printedModel.GetComponent<PrintableModel>().Filament = filament;
@@ -341,7 +343,7 @@ public class Printer : InteractableObject
         if (printerJson.data.filamentJson != "")
         {
             FilamentJson filamentSpoolJson = JsonUtility.FromJson<FilamentJson>(printerJson.data.filamentJson);
-            GameObject filamentGO = Instantiate(SaveSystem.NamePrefabDict[filamentSpoolJson.prefab]);
+            GameObject filamentGO = AssetSystem.Create(filamentSpoolJson.prefab, AssetType.Filament);
             FilamentSpool fs = filamentGO.GetComponent<FilamentSpool>();
             fs.LoadSave(printerJson.data.filamentJson);
             InsertFilament(fs);
@@ -349,7 +351,7 @@ public class Printer : InteractableObject
         if (printerJson.data.memoryCardJson != "")
         {
             CardJson cardJson = JsonUtility.FromJson<CardJson>(printerJson.data.memoryCardJson);
-            GameObject cardObj = Instantiate(SaveSystem.NamePrefabDict[cardJson.prefab]);
+            GameObject cardObj = AssetSystem.Create(cardJson.prefab, AssetType.Card);
             MemoryCard mc = cardObj.GetComponent<MemoryCard>();
             mc.LoadSave(printerJson.data.memoryCardJson);
             SetMemoryCard(mc);

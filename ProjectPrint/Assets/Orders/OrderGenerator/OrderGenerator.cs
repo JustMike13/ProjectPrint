@@ -78,8 +78,8 @@ public class OrderGenerator : InteractableObject
             }
             currentOrder.CreateOrder(items);
         }
-        ShippingLabel label = Instantiate(labelPrefab);
-        label.GetOrder = currentOrder;
+        GameObject label = AssetSystem.Create("ShippingLabel", AssetType.Other);
+        label.GetComponent<ShippingLabel>().GetOrder = currentOrder;
         label.transform.position = center.transform.position;
         label.transform.rotation = center.transform.rotation;
     }

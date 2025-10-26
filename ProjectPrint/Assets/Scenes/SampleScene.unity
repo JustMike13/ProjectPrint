@@ -2526,6 +2526,7 @@ Transform:
   - {fileID: 1052410493}
   - {fileID: 1532051991}
   - {fileID: 898078812}
+  - {fileID: 1632332177}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1016492424 stripped
@@ -4831,6 +4832,7 @@ MonoBehaviour:
   ModelShop: {fileID: 2133722731}
   PrinterShop: {fileID: 1632115426}
   highlight: {fileID: 1230327650}
+  controllerDelay: 0.15
 --- !u!1 &1618602335
 GameObject:
   m_ObjectHideFlags: 0
@@ -5022,6 +5024,68 @@ MonoBehaviour:
     price: 700
   buttonPrefab: {fileID: 8195580825021053038, guid: cc58c2c3b64d264468365a150efce67b, type: 3}
   boxPrefab: {fileID: 8645759145103238086, guid: 42991fbeb3ae1e84e8859b5b0d439d42, type: 3}
+--- !u!1 &1632332176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1632332177}
+  - component: {fileID: 1632332178}
+  m_Layer: 0
+  m_Name: AssesSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1632332177
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632332176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1002407991}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1632332178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632332176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1040d7fb61f768142a2c35eb9326f2cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AssetSystem
+  ModelPrefabs:
+  - {fileID: 7443286835550512290, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
+  - {fileID: 5624519669151426188, guid: 140616ee94e7d194cb7bbb123a9c7fcc, type: 3}
+  - {fileID: 1148705268950307875, guid: 8e543eb70ab13264fa5c5d378acf770c, type: 3}
+  FilamentPrefabs:
+  - {fileID: 1022462675368937861, guid: 3da1cbe74dd336c44885d8666b4fc23d, type: 3}
+  - {fileID: 1184648029247885175, guid: 88eab8ba51578eb498a5a2d11083ff47, type: 3}
+  - {fileID: 2808807835878718510, guid: dff0e059b2d7769419d333c3bfe5f892, type: 3}
+  CardPrefabs:
+  - {fileID: 5803408694837536693, guid: e699e68701d839440ac71167dfb3b11d, type: 3}
+  - {fileID: 5803408694837536693, guid: 8d80acfade006f142a4908c005d7035c, type: 3}
+  PrinterPrefabs:
+  - {fileID: 1806531562743229600, guid: 586dff6a16a16554f8e15b1d9fad6789, type: 3}
+  - {fileID: 75018363486144856, guid: 523c131521b500e429e038a8bfe7e930, type: 3}
+  OtherPrefabs:
+  - {fileID: 2212312099504853752, guid: 0a7b6e76127289846b87827a582ab54f, type: 3}
+  - {fileID: 1321094981645649581, guid: a9a4cc8ab15d48a4eb752fe486c10972, type: 3}
+  - {fileID: 8645759145103238086, guid: 42991fbeb3ae1e84e8859b5b0d439d42, type: 3}
 --- !u!1 &1637856633
 GameObject:
   m_ObjectHideFlags: 0
