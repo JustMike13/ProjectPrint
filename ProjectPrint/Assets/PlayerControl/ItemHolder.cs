@@ -83,7 +83,7 @@ public class ItemHolder : MonoBehaviour
                 && !pickedUpThisFrame)
             {
                 moving = false;
-                currentItem.GetComponent<BoxCollider>().enabled = true;
+                currentItem.GetComponent<Collider>().enabled = true;
                 TakeItem();
             }
             pickedUpThisFrame = false;
@@ -155,6 +155,6 @@ public class ItemHolder : MonoBehaviour
         moving = true;
         HoldItem(obj.gameObject);
         pickedUpThisFrame = true;
-        currentItem.GetComponent<BoxCollider>().enabled = false;
+        currentItem.GetComponent<Collider>().enabled = false;
     }
 }

@@ -7,8 +7,6 @@ public class BoxStack : InteractableObject
     [SerializeField] int quantity = 10;
     private void Awake()
     {
-        //Vector3 boxSize = this.transform.localScale;
-        //baseSize = boxSize.y;
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
         ChangeSize();
