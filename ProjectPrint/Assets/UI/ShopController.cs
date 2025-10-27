@@ -6,7 +6,8 @@ enum ShopType
 {
     Filament,
     Model,
-    Printer
+    Printer,
+    Other
 }
 
 public class ShopController : MonoBehaviour
@@ -14,6 +15,7 @@ public class ShopController : MonoBehaviour
     [SerializeField] Shop FilamentShop;
     [SerializeField] Shop ModelShop;
     [SerializeField] Shop PrinterShop;
+    [SerializeField] Shop OthersShop;
     [SerializeField] GameObject highlight;
     [SerializeField] float controllerDelay = 0.15f;
     float lastMove;
@@ -27,6 +29,10 @@ public class ShopController : MonoBehaviour
         DPad = InputSystem.actions.FindAction("Navigate");
         UIButton = InputSystem.actions.FindAction("UIButton2");
         currentShop = ShopType.Filament;
+    }
+    private void OnEnable()
+    {
+        highlight.transform.position = GetCurrentShop().Buttons[currentIndex].transform.position;
     }
 
     private void Update()
@@ -72,6 +78,8 @@ public class ShopController : MonoBehaviour
                 return ModelShop;
             case ShopType.Printer:
                 return PrinterShop;
+            case ShopType.Other:
+                return OthersShop;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -90,6 +98,10 @@ public class ShopController : MonoBehaviour
             {
                 currentShop = ShopType.Printer;
             }
+            else if (currentShop == ShopType.Printer)
+            {
+                currentShop = ShopType.Other;
+            }
             lastMove = Time.time;
             if (currentIndex >= GetCurrentShop().Buttons.Count)
             {
@@ -99,7 +111,11 @@ public class ShopController : MonoBehaviour
         }
         else if (dpadInput.x < -0.5f)
         {
-            if (currentShop == ShopType.Printer)
+            if (currentShop == ShopType.Other)
+            {
+                currentShop = ShopType.Printer;
+            }
+            else if (currentShop == ShopType.Printer)
             {
                 currentShop = ShopType.Model;
             }

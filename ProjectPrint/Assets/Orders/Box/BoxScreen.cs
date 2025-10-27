@@ -118,7 +118,7 @@ public class BoxScreen : MonoBehaviour
                 ListMode(false);
             }
         }
-        else if (dpadInput.x > 0.5f)
+        else if (dpadInput.x > 0.5f && buttons.Count > 0)
         {
             ListMode();
         }
