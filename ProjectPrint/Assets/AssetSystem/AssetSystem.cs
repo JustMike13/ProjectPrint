@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[System.Serializable]
 public enum AssetType
 {
     None,
@@ -58,13 +59,15 @@ public class AssetSystem : MonoBehaviour
             }
             return go;
         }
-        if (type == AssetType.Model || type == AssetType.None) 
+        if (type == AssetType.Model || type == AssetType.None)
         {
             foreach (GameObject model in ModelPrefabs)
             {
                 if (model.GetComponent<SaveObject>().PrefabName == name)
                 {
-                    return Instantiate(model);
+                    GameObject go = Instantiate(model);
+                    go.transform.parent = null;
+                    return go;
                 }
             }
         }
@@ -74,7 +77,9 @@ public class AssetSystem : MonoBehaviour
             {
                 if (filament.GetComponent<SaveObject>().PrefabName == name)
                 {
-                    return Instantiate(filament);
+                    GameObject go = Instantiate(filament);
+                    go.transform.parent = null;
+                    return go;
                 }
             }
         }
@@ -84,7 +89,9 @@ public class AssetSystem : MonoBehaviour
             {
                 if (card.GetComponent<SaveObject>().PrefabName == name)
                 {
-                    return Instantiate(card);
+                    GameObject go = Instantiate(card);
+                    go.transform.parent = null;
+                    return go;
                 }
             }
         }
@@ -94,7 +101,9 @@ public class AssetSystem : MonoBehaviour
             {
                 if (printer.GetComponent<SaveObject>().PrefabName == name)
                 {
-                    return Instantiate(printer);
+                    GameObject go = Instantiate(printer);
+                    go.transform.parent = null;
+                    return go;
                 }
             }
         }
@@ -104,7 +113,9 @@ public class AssetSystem : MonoBehaviour
             {
                 if (other.GetComponent<SaveObject>().PrefabName == name)
                 {
-                    return Instantiate(other);
+                    GameObject go = Instantiate(other);
+                    go.transform.parent = null;
+                    return go;
                 }
             }
         }
@@ -133,5 +144,17 @@ public class AssetSystem : MonoBehaviour
         go.transform.parent = parent;
         go.transform.localPosition = Vector3.zero;
         go.transform.localRotation = Quaternion.identity;
+    }
+    public static void Purge()
+    {
+        foreach(var (key, value) in assetDictionary)
+        {
+            foreach (var item in value)
+            {
+                Destroy(item);
+            }
+            value.Clear();
+        }
+        assetDictionary.Clear();
     }
 }

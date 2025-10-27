@@ -5,31 +5,18 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Newtonsoft.Json.Linq;
-[System.Serializable]
-public class JsonObject
-{
-    public int index;
-    public string json;
-}
-[System.Serializable]
-public class jsonWrapper
-{
-    public string saveName;
-    public List<JsonObject> list = new List<JsonObject>();
-}
-
-public enum Priority
-{
-    High = 0,
-    Low = 1
-}
 
 public class SaveSystem : MonoBehaviour
 {
+    public const int HighPriority = 0;
+    public const int LowPriority = 100;
+    public const int PrinterPriority = 10;
+    public const int OrderBoxPriority = 10;
     public static SaveSystem Instance;
     [SerializeField] List<GameObject> Prefabs = new List<GameObject>();
-    static List<GameObject> objects = new List<GameObject>();
-    static List<GameObject> PriorityObjects = new List<GameObject>();
+    //static List<GameObject> objects = new List<GameObject>();
+    //static List<GameObject> PriorityObjects = new List<GameObject>();
+    static Dictionary<int, List<GameObject>> objects = new Dictionary<int, List<GameObject>>();
     static string SaveLocation = "D:\\Repos\\ProjectPrint\\ProjectPrint\\saves\\";
     InputAction Ctrl;
     InputAction SaveButton;
@@ -73,16 +60,15 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    public static void Subscribe(GameObject obj, Priority priority = Priority.Low)
+    public static void Subscribe(GameObject obj, int priority = LowPriority)
     {
-        if (priority == Priority.High)
+        if (objects.ContainsKey(priority))
         {
-            PriorityObjects.Add(obj);
-            return;
+            objects[priority].Add(obj);
         }
         else
         {
-            objects.Add(obj);
+            objects[priority] = new List<GameObject> { obj };
         }
     }
 
@@ -110,6 +96,7 @@ public class SaveSystem : MonoBehaviour
             Debug.Log("No objects to save"); 
             return;
         }
+        AssetSystem.Purge();
         jsonWrapper jw = new jsonWrapper();
         string saveName = getDateTime();
         jw.saveName = saveName;
@@ -118,34 +105,22 @@ public class SaveSystem : MonoBehaviour
             json = "{ \"type\": \"setting\", \"obj\": \"currency\", \"data\": " + CurrencySystem.CurrentValue + "}"
         });
         int i = 1;
-        foreach (GameObject obj in PriorityObjects)
+        for (int p = HighPriority; p <= LowPriority; p++)
         {
-            if (obj == null) continue;
-
-            JsonObject jo = new JsonObject
+            if (!objects.ContainsKey(p)) continue;
+            foreach (GameObject obj in objects[p])
             {
-                index = i,
-                json = obj.GetComponent<SaveObject>().CreateSave(saveName)
-            };
-            if (jo.json != "")
-            {
-                i++;
-                jw.list.Add(jo);
-            }
-        }
-        foreach (GameObject obj in objects)
-        {
-            if (obj == null) continue;
-
-            JsonObject jo = new JsonObject
-            {
-                index = i,
-                json = obj.GetComponent<SaveObject>().CreateSave(saveName)
-            };
-            if (jo.json != "")
-            {
-                i++;
-                jw.list.Add(jo);
+                if (obj == null) continue;
+                JsonObject jo = new JsonObject
+                {
+                    index = i,
+                    json = obj.GetComponent<SaveObject>().CreateSave(saveName)
+                };
+                if (jo.json != "")
+                {
+                    i++;
+                    jw.list.Add(jo);
+                }
             }
         }
         string json = JsonUtility.ToJson(jw);
@@ -156,15 +131,14 @@ public class SaveSystem : MonoBehaviour
 
     public static void LoadSave()
     {
-        foreach (GameObject obj in objects)
+        foreach (var (key, value) in objects)
         {
-            AssetSystem.Recycle(obj);
+            foreach (GameObject obj in value)
+            {
+                if (obj != null)
+                    AssetSystem.Recycle(obj);
+            }
         }
-        foreach (GameObject obj in PriorityObjects)
-        {
-            AssetSystem.Recycle(obj);
-        }
-        objects.Clear();
         string path = SaveLocation + "save.txt";
         string json = File.ReadAllText(path);
         if (json.Length < 3)
@@ -193,9 +167,22 @@ public class SaveSystem : MonoBehaviour
                 JObject inner = JObject.Parse(innerData);
                 string prefab = outer["prefab"].ToString();
                 GameObject obj = AssetSystem.Create(prefab);
+                obj.transform.parent = null;
                 obj.GetComponent<SaveObject>().LoadSave(objJson);
             }
         }
         Debug.Log("Loaded");
     }
+}
+[System.Serializable]
+public class JsonObject
+{
+    public int index;
+    public string json;
+}
+[System.Serializable]
+public class jsonWrapper
+{
+    public string saveName;
+    public List<JsonObject> list = new List<JsonObject>();
 }

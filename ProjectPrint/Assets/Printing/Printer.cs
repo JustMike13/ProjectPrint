@@ -49,7 +49,7 @@ public class Printer : InteractableObject
         SetUpScreen();
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
-        SaveSystem.Subscribe(gameObject, Priority.High);
+        SaveSystem.Subscribe(gameObject, SaveSystem.PrinterPriority);
         UIButton1 = InputSystem.actions.FindAction("UIButton1");
         UIButton2 = InputSystem.actions.FindAction("UIButton2");
         UIButton3 = InputSystem.actions.FindAction("UIButton3");

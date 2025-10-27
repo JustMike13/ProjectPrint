@@ -50,7 +50,7 @@ public class Shop : MonoBehaviour
             CurrencySystem.Spend(Inventory[pos].price);
             GameObject product = AssetSystem.Create(name);
             GameObject box = AssetSystem.Create(boxPrefab.GetComponent<SaveObject>().PrefabName, AssetType.Other);
-            AssetSystem.AddParent(box, ShopSpawner.Instance.transform);
+            box.transform.position = ShopSpawner.GetPosition();
             box.GetComponent<ShopBox>().AddToBox(product);
             box.transform.parent = null;
         }
