@@ -195,6 +195,7 @@ public class BoxScreen : MonoBehaviour
             SendOrderButton.onClick.AddListener(() => currentBox.SendOrder());
             SendOrderButton.GetComponentInChildren<ButtonPrompt>().gameObject
                 .GetComponent<Image>().enabled = interactWithList == false;
+            AddLabelButton.gameObject.SetActive(true);
             AddLabelButton.GetComponentInChildren<TMP_Text>().text = "Take label";
             AddLabelButton.onClick.RemoveAllListeners();
             AddLabelButton.onClick.AddListener(() => currentBox.RemoveLabelFromBox());
