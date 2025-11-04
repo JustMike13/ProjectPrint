@@ -9,35 +9,44 @@ public class PrintableModel : InteractableObject
     // TODO: Make price independent of model
     public float FilamentNeeded {  get { return filamentNeeded; } set { filamentNeeded = value; } }
     bool finished = false; 
-    public bool IsFinished { get { return finished; } }
+    public bool IsFinished { get { return completionPercentage == 100f; } }
+    float completionPercentage = 0f;
+    public float CompletionPercentage { get { return completionPercentage; } 
+        set 
+        {
+            completionPercentage = value;
+            material.SetFloat("_Percentage", completionPercentage / 100f);
+        } }
     float elapsedTime = 0;
+    Material material;
     //TODO: Remove filament, keep name
     FilamentSpool filament;
     public FilamentSpool Filament { set { filament = value; } }
-    public string filamentName = "";
+    string filamentName = "";
     void Awake()
     {
         SaveSystem.Subscribe(gameObject);
-        EnableModel(false);
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
+        material = GetComponent<Renderer>().material;
+        EnableModel(false);
     }
 
     private void OnEnable()
     {
-        finished = false;
+        //finished = false; 
+        CompletionPercentage = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!finished)
+        if (CompletionPercentage     < 100)
         {
             elapsedTime += Time.deltaTime;
+            CompletionPercentage = (int)((elapsedTime / TimeToPrint) * 100);
             if (elapsedTime > TimeToPrint)
             {
-                // TODO: move usefilament from model to printer
-                filament.useFilament(FilamentNeeded);
                 EnableModel(true);
             }
         }
@@ -45,8 +54,15 @@ public class PrintableModel : InteractableObject
 
     public void EnableModel(bool val, bool resetTime = false)
     {
-        finished = val;
-        GetComponent<MeshRenderer>().enabled = val;
+        //finished = val;
+        if(!val)
+        {
+            CompletionPercentage = 0f;
+        }
+        else{
+            CompletionPercentage = 100f;
+        }
+        //GetComponent<MeshRenderer>().enabled = val;
         GetComponent<Rigidbody>().isKinematic = !val;
         GetComponent<BoxCollider>().enabled = val;
         if (resetTime)
@@ -58,6 +74,16 @@ public class PrintableModel : InteractableObject
     public void SpeedMultiplier(float speed)
     {
         TimeToPrint = TimeToPrint / speed;
+    }
+
+    public void SetFilament(FilamentSpool fs)
+    {
+        filamentName = fs.GetComponent<SaveObject>().PrefabName;
+        GetComponent<MeshRenderer>().material = new Material(fs.Color);
+        material = GetComponent<MeshRenderer>().material;
+        float height = GetComponent<Renderer>().bounds.size.y;
+        material.SetFloat("_Height", height);
+        material.SetFloat("_Percentage", CompletionPercentage/ 100f);
     }
 
     public override string CreateSave(string saveName)
@@ -77,7 +103,7 @@ public class PrintableModel : InteractableObject
                 rotation = transform.localRotation,
                 material = filamentName,
                 enabled = GetComponent<MeshRenderer>().enabled,
-                finished = finished
+                completed = completionPercentage
             }
         };
 
@@ -87,14 +113,14 @@ public class PrintableModel : InteractableObject
 
     public override void LoadSave(string json)
     {
-        PrintModelJson parsed = JsonUtility.FromJson<PrintModelJson>(json);
+        PrintModelJsonOld parsed = JsonUtility.FromJson<PrintModelJsonOld>(json);
         transform.localPosition = parsed.data.location;
         transform.localRotation = parsed.data.rotation;
         bool wasEnabled = GetComponent<MeshRenderer>().enabled;
         GetComponent<MeshRenderer>().enabled = true;
         GameObject materialGO = AssetSystem.Create(parsed.data.material, AssetType.Filament);
         filamentName = parsed.data.material;
-        GetComponent<MeshRenderer>().material = materialGO.GetComponent<FilamentSpool>().Color;
+        GetComponent<MeshRenderer>().material = new Material(materialGO.GetComponent<FilamentSpool>().Color);
         AssetSystem.Recycle(materialGO);
         GetComponent<MeshRenderer>().enabled = wasEnabled;
 
@@ -112,6 +138,15 @@ public class PrintModelData
     public Quaternion rotation;
     public string material;
     public bool enabled;
+    public float completed;
+}
+[System.Serializable]
+public class PrintModelDataOld
+{
+    public Vector3 location;
+    public Quaternion rotation;
+    public string material;
+    public bool enabled;
     public bool finished;
 }
 
@@ -121,4 +156,12 @@ public class PrintModelJson
     public string type;
     public string prefab;
     public PrintModelData data;
+}
+
+[System.Serializable]
+public class PrintModelJsonOld
+{
+    public string type;
+    public string prefab;
+    public PrintModelDataOld data;
 }

@@ -38,6 +38,7 @@ public class Printer : InteractableObject
     InputAction UIButton1;
     InputAction UIButton2;
     InputAction UIButton3;
+    int completionPercentage = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -99,13 +100,24 @@ public class Printer : InteractableObject
     // Update is called once per frame
     void Update()
     {
-        if (printedModel != null && printedModel.GetComponent<PrintableModel>().IsFinished)
+        if (printedModel != null)
         {
-            animator.SetBool("Printing", false);
             printedModel.transform.localPosition = Vector3.zero;
-            printedModel.transform.rotation = Quaternion.identity;
-            UpdateScreen();
+            printedModel.transform.rotation = this.transform.rotation;
+            if (printedModel.GetComponent<PrintableModel>().IsFinished)
+            {
+                animator.SetBool("Printing", false);
+                UpdateScreen();
+            }
+            else
+            {
+                int perc = (int)printedModel.GetComponent<PrintableModel>().CompletionPercentage;
+                float filamentNeeded = printedModel.GetComponent<PrintableModel>().FilamentNeeded;
+                filament.useFilament(((float)(perc - completionPercentage)/100) * filamentNeeded);
+                completionPercentage = perc;
+            }
         }
+        
         if (screenFields.IsOn && ScreenManager.CurrentState != GameState.Object)
         {
             ScreenOnOff();
@@ -181,18 +193,18 @@ public class Printer : InteractableObject
             Debug.Log("No memory card installed");
             return;
         }
+        completionPercentage = 0;
         // TODO: UI to select from multiple models on card
         selectedModel = memoryCard.Models[0];
         bool enoughFilament = filament.Quantity >= selectedModel.FilamentNeeded;
         GameObject toPrint = enoughFilament ? selectedModel.gameObject : failedPrint.gameObject;
         printedModel = AssetSystem.Create(toPrint.GetComponent<SaveObject>().PrefabName, AssetType.Model);
         AssetSystem.AddParent(printedModel, printBase.transform);
-        printedModel.GetComponent<MeshRenderer>().material = filament.Color;
         printedModel.GetComponent<PrintableModel>().EnableModel(false, true);
         printedModel.transform.localRotation = Quaternion.identity;
         printedModel.GetComponent<PrintableModel>().SpeedMultiplier(speedMultiplier);
-        printedModel.GetComponent<PrintableModel>().Filament = filament;
-        printedModel.GetComponent<PrintableModel>().filamentName = filament.GetComponent<SaveObject>().PrefabName;
+        printedModel.GetComponent<PrintableModel>().SetFilament(filament);
+
         // TODO: move usefilament from model to printer
         printedModel.GetComponent<PrintableModel>().FilamentNeeded = selectedModel.FilamentNeeded;
         isPrinting = true;

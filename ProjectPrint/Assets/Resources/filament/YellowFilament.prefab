@@ -67,7 +67,7 @@ PrefabInstance:
     - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: color
       value: 
-      objectReference: {fileID: 2100000, guid: 5c821223df27b7241a2fd038106b2d48, type: 2}
+      objectReference: {fileID: 2100000, guid: 45f18e10ceb9b2f459757f6b9d7bb7b8, type: 2}
     - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: price
       value: 20
