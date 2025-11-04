@@ -15,12 +15,15 @@ public class ItemHolder : MonoBehaviour
     static bool moving = false;
     public static bool Moving { get { return moving; } set { moving = value; } }
     static bool pickedUpThisFrame = false;
+    static float angle = -1f;
     InputAction RightClick;
     InputAction MoveButton;
+    InputAction RotateButton;
     private void Awake()
     {
         RightClick = InputSystem.actions.FindAction("RightClick");
         MoveButton = InputSystem.actions.FindAction("MoveObject");
+        RotateButton = InputSystem.actions.FindAction("RotateObject");
 
         // If there is an instance, and it's not me, delete myself.
         if (Instance != null && Instance != this)
@@ -70,14 +73,51 @@ public class ItemHolder : MonoBehaviour
             {
                 Vector3 hitPoint = hit.point;
                 currentItem.transform.position = hitPoint;
+            }
+            if (angle == -1)
+            {
                 Vector3 direction = transform.parent.position - currentItem.transform.position;
                 direction.y = 0; // Ignore vertical difference
                 if (direction != Vector3.zero)
                 {
                     Quaternion rotation = Quaternion.LookRotation(direction);
                     currentItem.transform.rotation = rotation;
+                    angle = rotation.eulerAngles.y;
                 }
             }
+            else
+            {
+                currentItem.transform.rotation = Quaternion.Euler(0, angle, 0);
+            }
+                Quaternion objRotation = hit.collider.transform.rotation;
+            if (RotateButton.WasPressedThisFrame())
+            {
+                float[] targetRotations = new float[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    targetRotations[i] = objRotation.eulerAngles.y + i * 90;
+                    if (targetRotations[i] > 360)
+                    {
+                        targetRotations[i] -= 360;
+                    }
+                }
+                bool found = false;
+                foreach (float target in targetRotations)
+                {
+                    float angleDiff = target - angle;
+                    if (angleDiff < 5f && angleDiff > -5)
+                    {
+                        angle = target + 90;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    angle = objRotation.eulerAngles.y;
+                }
+            }
+
             if (MoveButton.WasPressedThisFrame() 
                 && currentItem != null
                 && !pickedUpThisFrame)
@@ -85,6 +125,7 @@ public class ItemHolder : MonoBehaviour
                 moving = false;
                 currentItem.GetComponent<Collider>().enabled = true;
                 TakeItem();
+                angle = -1f;
             }
             pickedUpThisFrame = false;
         }
