@@ -95,9 +95,8 @@ MonoBehaviour:
   price: 8
   canBePickedUp: 1
   id: 2
-  TimeToPrint: 3
+  TimeToPrint: 30
   filamentNeeded: 30
-  filamentName: 
 --- !u!54 &1475241786302507602
 Rigidbody:
   m_ObjectHideFlags: 0

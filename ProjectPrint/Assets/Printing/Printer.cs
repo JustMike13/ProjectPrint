@@ -113,8 +113,14 @@ public class Printer : InteractableObject
             {
                 int perc = (int)printedModel.GetComponent<PrintableModel>().CompletionPercentage;
                 float filamentNeeded = printedModel.GetComponent<PrintableModel>().FilamentNeeded;
-                filament.useFilament(((float)(perc - completionPercentage)/100) * filamentNeeded);
-                completionPercentage = perc;
+                if (filament.useFilament(((float)(perc - completionPercentage)/100) * filamentNeeded))
+                {
+                    completionPercentage = perc;
+                }
+                else
+                {
+                    printedModel.GetComponent<PrintableModel>().HasFailed = true;
+                }
             }
         }
         
@@ -196,9 +202,9 @@ public class Printer : InteractableObject
         completionPercentage = 0;
         // TODO: UI to select from multiple models on card
         selectedModel = memoryCard.Models[0];
-        bool enoughFilament = filament.Quantity >= selectedModel.FilamentNeeded;
-        GameObject toPrint = enoughFilament ? selectedModel.gameObject : failedPrint.gameObject;
-        printedModel = AssetSystem.Create(toPrint.GetComponent<SaveObject>().PrefabName, AssetType.Model);
+        //bool enoughFilament = filament.Quantity >= selectedModel.FilamentNeeded;
+        //GameObject toPrint = enoughFilament ? selectedModel.gameObject : failedPrint.gameObject;
+        printedModel = AssetSystem.Create(selectedModel.GetComponent<SaveObject>().PrefabName, AssetType.Model);
         AssetSystem.AddParent(printedModel, printBase.transform);
         printedModel.GetComponent<PrintableModel>().EnableModel(false, true);
         printedModel.transform.localRotation = Quaternion.identity;

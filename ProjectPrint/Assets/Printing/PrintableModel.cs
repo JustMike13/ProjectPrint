@@ -9,7 +9,6 @@ public class PrintableModel : InteractableObject
     // TODO: Make price independent of model
     public float FilamentNeeded {  get { return filamentNeeded; } set { filamentNeeded = value; } }
     bool finished = false; 
-    public bool IsFinished { get { return completionPercentage == 100f; } }
     float completionPercentage = 0f;
     public float CompletionPercentage { get { return completionPercentage; } 
         set 
@@ -17,13 +16,20 @@ public class PrintableModel : InteractableObject
             completionPercentage = value;
             material.SetFloat("_Percentage", completionPercentage / 100f);
         } }
+    bool hasFailed = false;
+    public bool HasFailed { set { 
+            hasFailed = value;
+            GetComponent<Rigidbody>().isKinematic = !value;
+            GetComponent<BoxCollider>().enabled = value;
+        } }
+    public bool IsFinished { get { return completionPercentage == 100f || hasFailed; } }
     float elapsedTime = 0;
     Material material;
     //TODO: Remove filament, keep name
     FilamentSpool filament;
     public FilamentSpool Filament { set { filament = value; } }
     string filamentName = "";
-    void Awake()
+    void Awake() 
     {
         SaveSystem.Subscribe(gameObject);
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
@@ -41,7 +47,7 @@ public class PrintableModel : InteractableObject
     // Update is called once per frame
     void Update()
     {
-        if (CompletionPercentage     < 100)
+        if (CompletionPercentage < 100 && !hasFailed)
         {
             elapsedTime += Time.deltaTime;
             CompletionPercentage = (int)((elapsedTime / TimeToPrint) * 100);
@@ -54,7 +60,6 @@ public class PrintableModel : InteractableObject
 
     public void EnableModel(bool val, bool resetTime = false)
     {
-        //finished = val;
         if(!val)
         {
             CompletionPercentage = 0f;
@@ -62,7 +67,6 @@ public class PrintableModel : InteractableObject
         else{
             CompletionPercentage = 100f;
         }
-        //GetComponent<MeshRenderer>().enabled = val;
         GetComponent<Rigidbody>().isKinematic = !val;
         GetComponent<BoxCollider>().enabled = val;
         if (resetTime)
