@@ -106,30 +106,33 @@ public class PrintableModel : InteractableObject
                 location = transform.position,
                 rotation = transform.localRotation,
                 material = filamentName,
-                enabled = GetComponent<MeshRenderer>().enabled,
-                completed = completionPercentage
+                enabled = GetComponent<BoxCollider>().enabled,
+                completedPercent = completionPercentage,
+                hasFailed = hasFailed
             }
         };
-
+         
         string json = JsonUtility.ToJson(model);
         return json;
     }
 
     public override void LoadSave(string json)
     {
-        PrintModelJsonOld parsed = JsonUtility.FromJson<PrintModelJsonOld>(json);
+        PrintModelJson parsed = JsonUtility.FromJson<PrintModelJson>(json);
+
+        // Set position and rotation
         transform.localPosition = parsed.data.location;
         transform.localRotation = parsed.data.rotation;
-        bool wasEnabled = GetComponent<MeshRenderer>().enabled;
-        GetComponent<MeshRenderer>().enabled = true;
-        GameObject materialGO = AssetSystem.Create(parsed.data.material, AssetType.Filament);
-        filamentName = parsed.data.material;
-        GetComponent<MeshRenderer>().material = new Material(materialGO.GetComponent<FilamentSpool>().Color);
-        AssetSystem.Recycle(materialGO);
-        GetComponent<MeshRenderer>().enabled = wasEnabled;
 
-        finished = parsed.data.finished;
-        GetComponent<MeshRenderer>().enabled = parsed.data.enabled;
+        // Set Filament and material
+        GameObject materialGO = AssetSystem.Create(parsed.data.material, AssetType.Filament);
+        SetFilament(materialGO.GetComponent<FilamentSpool>());
+        AssetSystem.Recycle(materialGO);
+        CompletionPercentage = parsed.data.completedPercent;
+
+        // Set other stats
+        hasFailed = parsed.data.hasFailed;
+        elapsedTime = CompletionPercentage/100 * TimeToPrint;
         GetComponent<Rigidbody>().isKinematic = !parsed.data.enabled;
         GetComponent<BoxCollider>().enabled = parsed.data.enabled;
         Debug.Log("Loaded " + parsed.prefab);
@@ -142,16 +145,8 @@ public class PrintModelData
     public Quaternion rotation;
     public string material;
     public bool enabled;
-    public float completed;
-}
-[System.Serializable]
-public class PrintModelDataOld
-{
-    public Vector3 location;
-    public Quaternion rotation;
-    public string material;
-    public bool enabled;
-    public bool finished;
+    public float completedPercent;
+    public bool hasFailed;
 }
 
 [System.Serializable]
@@ -160,12 +155,4 @@ public class PrintModelJson
     public string type;
     public string prefab;
     public PrintModelData data;
-}
-
-[System.Serializable]
-public class PrintModelJsonOld
-{
-    public string type;
-    public string prefab;
-    public PrintModelDataOld data;
 }

@@ -62,10 +62,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a231247d510954c4799887f28c127926, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 395400950211672764}
+      addedObject: {fileID: 1475241786302507602}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a231247d510954c4799887f28c127926, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1475241786302507602}
+      addedObject: {fileID: 395400950211672764}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a231247d510954c4799887f28c127926, type: 3}
       insertIndex: -1
       addedObject: {fileID: 588694635130077906}
@@ -78,25 +78,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a231247d510954c4799887f28c127926, type: 3}
   m_PrefabInstance: {fileID: 7749204163583105523}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &395400950211672764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7443286835550512290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 072f0ae5010daa54887b408e1c16460a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabName: CatStatue
-  ObjectName: Cat statue
-  price: 8
-  canBePickedUp: 1
-  id: 2
-  TimeToPrint: 30
-  filamentNeeded: 30
 --- !u!54 &1475241786302507602
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -124,6 +105,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &395400950211672764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7443286835550512290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 072f0ae5010daa54887b408e1c16460a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: CatStatue
+  ObjectName: Cat statue
+  price: 8
+  canBePickedUp: 1
+  id: 2
+  TimeToPrint: 60
+  filamentNeeded: 30
 --- !u!65 &588694635130077906
 BoxCollider:
   m_ObjectHideFlags: 0

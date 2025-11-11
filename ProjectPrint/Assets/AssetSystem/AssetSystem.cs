@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -125,6 +126,18 @@ public class AssetSystem : MonoBehaviour
     public static GameObject Create(string name, AssetType type = AssetType.None)
     {
         return Instance.CreateAux(name, type);
+    }
+
+    public static GameObject CreateFromJson(string json)
+    {
+        JObject outer = JObject.Parse(json);
+        string innerData = outer["data"].ToString();
+        JObject inner = JObject.Parse(innerData);
+        string prefab = outer["prefab"].ToString();
+        GameObject obj = AssetSystem.Create(prefab);
+        obj.transform.parent = null;
+        obj.GetComponent<SaveObject>().LoadSave(json);
+        return obj;
     }
 
     public static void Recycle(GameObject go)

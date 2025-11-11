@@ -194,27 +194,33 @@ public class Printer : InteractableObject
             Debug.Log("Filament Empty");
             return;
         }
-        if ( memoryCard == null )
+        if (memoryCard == null)
         {
             Debug.Log("No memory card installed");
             return;
         }
-        completionPercentage = 0;
         // TODO: UI to select from multiple models on card
         selectedModel = memoryCard.Models[0];
-        //bool enoughFilament = filament.Quantity >= selectedModel.FilamentNeeded;
-        //GameObject toPrint = enoughFilament ? selectedModel.gameObject : failedPrint.gameObject;
         printedModel = AssetSystem.Create(selectedModel.GetComponent<SaveObject>().PrefabName, AssetType.Model);
-        AssetSystem.AddParent(printedModel, printBase.transform);
-        printedModel.GetComponent<PrintableModel>().EnableModel(false, true);
-        printedModel.transform.localRotation = Quaternion.identity;
-        printedModel.GetComponent<PrintableModel>().SpeedMultiplier(speedMultiplier);
-        printedModel.GetComponent<PrintableModel>().SetFilament(filament);
+        AddModelToPrint(printedModel);
+    }
 
-        // TODO: move usefilament from model to printer
-        printedModel.GetComponent<PrintableModel>().FilamentNeeded = selectedModel.FilamentNeeded;
-        isPrinting = true;
-        animator.SetBool("Printing", true);
+    private void AddModelToPrint(GameObject model, bool fromSave = false)
+    {
+        printedModel = model;
+        AssetSystem.AddParent(printedModel, printBase.transform); 
+
+        // Let model's own LoadSave to handle these
+        if (!fromSave)
+        {
+            printedModel.GetComponent<PrintableModel>().EnableModel(false, true);
+            printedModel.transform.localRotation = Quaternion.identity;
+            printedModel.GetComponent<PrintableModel>().SetFilament(filament);
+        }
+        printedModel.GetComponent<PrintableModel>().SpeedMultiplier(speedMultiplier);
+        isPrinting = !printedModel.GetComponent<PrintableModel>().IsFinished;
+        animator.SetBool("Printing", !printedModel.GetComponent<PrintableModel>().IsFinished);
+        completionPercentage = (int)printedModel.GetComponent<PrintableModel>().CompletionPercentage;
     }
 
     public override GameObject Interact(ControlBinding control)
@@ -376,8 +382,7 @@ public class Printer : InteractableObject
         } 
         if (printerJson.data.printedModelJson != "")
         {
-            StartPrinting();
-            printedModel.GetComponent<PrintableModel>().LoadSave(printerJson.data.printedModelJson);
+            AddModelToPrint(AssetSystem.CreateFromJson(printerJson.data.printedModelJson), true);
         }
         isPrinting = printerJson.data.printing;
     }
