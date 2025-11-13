@@ -5,6 +5,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Newtonsoft.Json.Linq;
+using static UnityEngine.Rendering.DebugUI.Table;
+using System.Linq;
 
 public class SaveSystem : MonoBehaviour
 {
@@ -72,13 +74,13 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    static string getDateTime()
-    {
-        string dateTime = DateTime.Now.ToString();
-        dateTime = dateTime.Replace('.', '/');
-        dateTime = dateTime.Replace(' ', '-');
-        return dateTime; 
-    }
+    //static string getDateTime()
+    //{
+    //    string dateTime = DateTime.Now.ToString();
+    //    dateTime = dateTime.Replace('.', '/');
+    //    dateTime = dateTime.Replace(' ', '-');
+    //    return dateTime; 
+    //}
 
     public void CreateSaveUI()
     {
@@ -98,13 +100,22 @@ public class SaveSystem : MonoBehaviour
         }
         AssetSystem.Purge();
         jsonWrapper jw = new jsonWrapper();
-        string saveName = getDateTime();
+        string directory = SaveLocation + "\\" + ProfileManager.CurrentProfile;
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        string saveName = ProfileManager.CurrentProfile + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
         jw.saveName = saveName;
         jw.list.Add(new JsonObject {
             index = 0,
             json = "{ \"type\": \"setting\", \"obj\": \"currency\", \"data\": " + CurrencySystem.CurrentValue + "}"
+        }); jw.list.Add(new JsonObject
+        {
+            index = 1,
+            json = "{ \"type\": \"setting\", \"obj\": \"profile\", \"data\": \"" + ProfileManager.CurrentProfile + "\"}"
         });
-        int i = 1;
+        int i = 2;
         for (int p = HighPriority; p <= LowPriority; p++)
         {
             if (!objects.ContainsKey(p)) continue;
@@ -124,9 +135,22 @@ public class SaveSystem : MonoBehaviour
             }
         }
         string json = JsonUtility.ToJson(jw);
-        string path = SaveLocation +  "save.txt"; 
+        string path = directory + "\\" + saveName; 
         File.WriteAllText(path, json);
         Debug.Log("Saved");
+    }
+
+    static string GetLatestFile(string profile)
+    {
+        var files = Directory.GetFiles(SaveLocation + "\\" + profile, profile + "_*");
+
+        if (files.Length == 0)
+            return null;
+
+        // Sort by filename string (without extension) descending
+        return files
+            .OrderByDescending(f => Path.GetFileNameWithoutExtension(f))
+            .First();
     }
 
     public static void LoadSave()
@@ -139,7 +163,8 @@ public class SaveSystem : MonoBehaviour
                     AssetSystem.Recycle(obj);
             }
         }
-        string path = SaveLocation + "save.txt";
+        string path = GetLatestFile(ProfileManager.CurrentProfile);
+        if (path == null) return;
         string json = File.ReadAllText(path);
         if (json.Length < 3)
         {
@@ -159,6 +184,10 @@ public class SaveSystem : MonoBehaviour
                 if (obj == "currency")
                 {
                     CurrencySystem.CurrentValue = (int)outer["data"];
+                }
+                if (obj == "profile")
+                {
+                    ProfileManager.CurrentProfile = outer["data"].ToString();
                 }
             }
             else
