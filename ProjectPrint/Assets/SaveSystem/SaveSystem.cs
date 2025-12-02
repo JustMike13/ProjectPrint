@@ -10,6 +10,7 @@ using System.Linq;
 
 public class SaveSystem : MonoBehaviour
 {
+    [SerializeField] int version = 1;
     public const int HighPriority = 0;
     public const int LowPriority = 100;
     public const int PrinterPriority = 10;
@@ -106,10 +107,12 @@ public class SaveSystem : MonoBehaviour
         }
         string saveName = ProfileManager.CurrentProfile + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
         jw.saveName = saveName;
+        jw.version = Instance.version;
         jw.list.Add(new JsonObject {
             index = 0,
             json = "{ \"type\": \"setting\", \"obj\": \"currency\", \"data\": " + CurrencySystem.CurrentValue + "}"
-        }); jw.list.Add(new JsonObject
+        }); 
+        jw.list.Add(new JsonObject
         {
             index = 1,
             json = "{ \"type\": \"setting\", \"obj\": \"profile\", \"data\": \"" + ProfileManager.CurrentProfile + "\"}"
@@ -175,6 +178,12 @@ public class SaveSystem : MonoBehaviour
             Debug.Log("No save to load");
             return;
         }
+        // TODO: remove after versioning is done
+        JObject parsedJson = JObject.Parse(json);
+        int saveVersion = parsedJson["version"] != null ? parsedJson["version"].Value<int>() : 0;
+        parsedJson["version"] = saveVersion;
+        json = parsedJson.ToString();
+        // End TODO
         jsonWrapper jw = JsonUtility.FromJson<jsonWrapper>(json);
         foreach (JsonObject jo in jw.list)
         {
@@ -201,7 +210,7 @@ public class SaveSystem : MonoBehaviour
                 string prefab = outer["prefab"].ToString();
                 GameObject obj = AssetSystem.Create(prefab);
                 obj.transform.parent = null;
-                obj.GetComponent<SaveObject>().LoadSave(objJson);
+                obj.GetComponent<SaveObject>().LoadSave(objJson, saveVersion);
             }
         }
         Debug.Log("Loaded");
@@ -217,5 +226,21 @@ public class JsonObject
 public class jsonWrapper
 {
     public string saveName;
+    public int version = 0;
     public List<JsonObject> list = new List<JsonObject>();
+}
+
+[System.Serializable]
+public class SaveObjectJson<T>
+{
+    public string type;
+    public string prefab;
+    public T data;
+}
+
+[System.Serializable]
+public class SaveObjectData
+{
+    public Vector3 location;
+    public Quaternion rotation;
 }

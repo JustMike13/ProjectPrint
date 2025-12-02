@@ -15,9 +15,12 @@ public class ScreenFields
     public TextMeshProUGUI NameInfo;
     public TextMeshProUGUI FilamentInfo;
     public TextMeshProUGUI MemoryCardInfo;
+    public TextMeshProUGUI ModelInfo;
     public Button PrintButton;
     public Button FilamentButton;
     public Button MemoryCardButton;
+    public Button ModelUp;
+    public Button ModelDown;
 }
 public class Printer : InteractableObject
 {
@@ -33,6 +36,7 @@ public class Printer : InteractableObject
     [SerializeField] ScreenFields screenFields;
     bool isPrinting = false;
     PrintableModel selectedModel;
+    int modelIndex = -1;
     GameObject printedModel;
     Animator animator;
     InputAction UIButton1;
@@ -81,6 +85,8 @@ public class Printer : InteractableObject
         screenFields.PrintButton.onClick.AddListener(() => Print());
         screenFields.FilamentButton.onClick.AddListener(() => FilamentInteract());
         screenFields.MemoryCardButton.onClick.AddListener(() => MemoryCardInteract());
+        screenFields.ModelUp.onClick.AddListener(() => ChangeModel(1));
+        screenFields.ModelDown.onClick.AddListener(() => ChangeModel(-1));
     }
 
     private void UpdateScreen()
@@ -95,6 +101,7 @@ public class Printer : InteractableObject
         screenFields.MemoryCardInfo.text = memoryCard != null ? memoryCard.name : "No card";
         screenFields.PrintButton.GetComponentInChildren<TMP_Text>().text =
             NotBusy() ? (printedModel != null ? "Take print" : "Start print") : "Is printing";
+        screenFields.ModelInfo.text = memoryCard != null && modelIndex != -1 ? memoryCard.Models[modelIndex].name : "No model selected";
     }
     #endregion //Screen
     // Update is called once per frame
@@ -199,8 +206,17 @@ public class Printer : InteractableObject
             Debug.Log("No memory card installed");
             return;
         }
-        // TODO: UI to select from multiple models on card
-        selectedModel = memoryCard.Models[0];
+        if (memoryCard.Models.Count == 0)
+        {
+            Debug.Log("No models on memory card");
+            return;
+        }
+        if (modelIndex == -1)
+        {
+            Debug.Log("No model selected");
+            return;
+        }
+        selectedModel = memoryCard.Models[modelIndex];
         printedModel = AssetSystem.Create(selectedModel.GetComponent<SaveObject>().PrefabName, AssetType.Model);
         AddModelToPrint(printedModel);
     }
@@ -334,6 +350,31 @@ public class Printer : InteractableObject
         }
     }
 
+    public void ChangeModel(int x = 1)
+    {
+        if (memoryCard == null)
+        {
+            Debug.Log("Cannot change model - no memory card");
+            return;
+        }
+        if (memoryCard.Models.Count == 0)
+        {
+            Debug.Log("Cannot change model - no models on card");
+            return;
+        }
+        if (x > 0 && modelIndex < memoryCard.Models.Count - 1)
+        {
+            modelIndex++;
+            screenFields.ModelInfo.text = memoryCard.Models[modelIndex].GetComponent<InteractableObject>().Name;
+        }
+        else if (x < 0 && modelIndex > 0)
+        {
+            modelIndex -= 1;
+            screenFields.ModelInfo.text = memoryCard.Models[modelIndex].GetComponent<InteractableObject>().Name;
+        }
+    }
+
+    #region Save System
     public override string CreateSave(string saveName)
     {
         if (base.CreateSave(saveName) != "")
@@ -341,7 +382,7 @@ public class Printer : InteractableObject
             return "";
         }
         string pf = PrefabName;
-        PrinterJson printerJson = new PrinterJson()
+        SaveObjectJson<PrinterData> printerJson = new SaveObjectJson<PrinterData>()
         {
             type = "object",
             prefab = pf,
@@ -352,16 +393,17 @@ public class Printer : InteractableObject
                 filamentJson = filament != null ? filament.CreateSave(saveName) : "",
                 memoryCardJson = memoryCard != null ? memoryCard.CreateSave(saveName) : "",
                 printedModelJson = printedModel != null ? printedModel.GetComponent<PrintableModel>().CreateSave(saveName) : "",
-                printing = isPrinting
+                printing = isPrinting,
+                modelIndexVar = modelIndex
             }
         };
         string json = JsonUtility.ToJson(printerJson);
         return json;
     }
 
-    public override void LoadSave(string json)
+    public override void LoadSave(string json, int version = -1)
     {
-        PrinterJson printerJson = JsonUtility.FromJson<PrinterJson>(json);
+        var printerJson = JsonUtility.FromJson<SaveObjectJson<PrinterDataVer0>>(json);
         transform.position = printerJson.data.location;
         transform.rotation = printerJson.data.rotation;
         if (printerJson.data.filamentJson != "")
@@ -384,11 +426,14 @@ public class Printer : InteractableObject
         {
             AddModelToPrint(AssetSystem.CreateFromJson(printerJson.data.printedModelJson), true);
         }
+
+        modelIndex = printerJson.data.modelIndex;
         isPrinting = printerJson.data.printing;
     }
+    #endregion // Save System
 }
 [System.Serializable]
-public class PrinterData
+public class PrinterDataVer0
 {
     public Vector3 location;
     public Quaternion rotation;
@@ -396,12 +441,20 @@ public class PrinterData
     public string memoryCardJson;
     public string printedModelJson;
     public bool printing;
+    public virtual int modelIndex { get { return -1; } set { } }
 }
 
 [System.Serializable]
-public class PrinterJson
+public class PrinterData : PrinterDataVer0
 {
-    public string type;
-    public string prefab;
-    public PrinterData data;
+    public int modelIndexVar;
+    public override int modelIndex { get { return modelIndexVar; } set { modelIndexVar = value; } }
 }
+
+//[System.Serializable]
+//public class PrinterJson
+//{
+//    public string type;
+//    public string prefab;
+//    public PrinterData data;
+//}

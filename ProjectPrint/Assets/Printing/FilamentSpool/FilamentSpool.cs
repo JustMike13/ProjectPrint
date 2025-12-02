@@ -96,7 +96,7 @@ public class FilamentSpool : InteractableObject
         return json;
     }
 
-    public override void LoadSave(string json)
+    public override void LoadSave(string json, int version = -1)
     {
         FilamentJson parsed = JsonUtility.FromJson<FilamentJson>(json);
         transform.localPosition = parsed.data.location;

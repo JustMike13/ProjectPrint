@@ -66,7 +66,7 @@ public class MemoryCard : InteractableObject
         return json;
     }
 
-    public override void LoadSave(string json)
+    public override void LoadSave(string json, int version = -1)
     {
         CardJson parsed = JsonUtility.FromJson<CardJson>(json);
         transform.localPosition = parsed.data.location;

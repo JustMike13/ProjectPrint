@@ -122,7 +122,7 @@ MonoBehaviour:
   price: 8
   canBePickedUp: 1
   id: 2
-  TimeToPrint: 60
+  TimeToPrint: 5
   filamentNeeded: 30
 --- !u!65 &588694635130077906
 BoxCollider:

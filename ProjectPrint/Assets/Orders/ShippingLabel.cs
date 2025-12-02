@@ -45,7 +45,7 @@ public class ShippingLabel : InteractableObject
         return json;
     }
 
-    public override void LoadSave(string json)
+    public override void LoadSave(string json, int version = -1)
     {
         LabelJson printLabelJson = JsonUtility.FromJson<LabelJson>(json);
         transform.localPosition = printLabelJson.data.location;

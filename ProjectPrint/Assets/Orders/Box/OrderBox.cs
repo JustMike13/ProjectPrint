@@ -213,7 +213,7 @@ public class OrderBox : InteractableObject
         return json;
     }
 
-    public override void LoadSave(string json) 
+    public override void LoadSave(string json, int version = -1) 
     { 
         BoxJson parsed = JsonUtility.FromJson<BoxJson>(json);
         transform.localPosition = parsed.data.location;

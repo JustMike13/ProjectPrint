@@ -62,6 +62,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -83,6 +85,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -120,6 +123,7 @@ GameObject:
   - component: {fileID: 6002764595436818640}
   - component: {fileID: 4757021098203147419}
   - component: {fileID: 5218452353022685461}
+  - component: {fileID: 5877743861521230080}
   m_Layer: 0
   m_Name: MemoryCard
   m_TagString: Untagged
@@ -155,13 +159,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a66cb9afaf4f5438eb0d4a497fccbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabName: Card - Ceramic Vase
-  hintText: []
-  ObjectName: Card - Ceramic Vase
+  prefabName: MemoryCard
+  ObjectName: MemoryCard
   price: 10
   canBePickedUp: 1
   models:
   - {fileID: 752932601878350210, guid: 140616ee94e7d194cb7bbb123a9c7fcc, type: 3}
+  - {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
 --- !u!65 &4757021098203147419
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -190,10 +194,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5803408694837536693}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -210,3 +214,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5877743861521230080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803408694837536693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6937740e11175a343a140855b3c076ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Highlight
+  hintText: []

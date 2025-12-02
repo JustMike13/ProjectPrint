@@ -116,7 +116,7 @@ public class PrintableModel : InteractableObject
         return json;
     }
 
-    public override void LoadSave(string json)
+    public override void LoadSave(string json, int version = -1)
     {
         PrintModelJson parsed = JsonUtility.FromJson<PrintModelJson>(json);
 

@@ -15,6 +15,6 @@ public class SaveObject : MonoBehaviour
         return ""; 
     }
 
-    public virtual void LoadSave(string json) { }
+    public virtual void LoadSave(string json, int version = -1) { }
 
 }

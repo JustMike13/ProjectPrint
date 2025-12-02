@@ -89,7 +89,7 @@ public class ShopBox : InteractableObject
         return JsonUtility.ToJson(json);
     }
 
-    public override void LoadSave(string json)
+    public override void LoadSave(string json, int version = -1)
     {
         ShopBoxJson boxJson = JsonUtility.FromJson<ShopBoxJson>(json);
         //transform.localScale = boxJson.data.scale;

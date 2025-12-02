@@ -69,7 +69,7 @@ public class BoxStack : InteractableObject
         return JsonUtility.ToJson(saveData);
     }
 
-    public override void LoadSave(string json)
+    public override void LoadSave(string json, int version = -1)
     {
         StackJson stackJson = JsonUtility.FromJson<StackJson>(json);
         transform.position = stackJson.data.location;
