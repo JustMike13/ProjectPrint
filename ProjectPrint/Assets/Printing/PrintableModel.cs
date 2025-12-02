@@ -8,7 +8,7 @@ public class PrintableModel : InteractableObject
     [SerializeField] float filamentNeeded = 10;
     // TODO: Make price independent of model
     public float FilamentNeeded {  get { return filamentNeeded; } set { filamentNeeded = value; } }
-    bool finished = false; 
+    //bool finished = false; 
     float completionPercentage = 0f;
     public float CompletionPercentage { get { return completionPercentage; } 
         set 

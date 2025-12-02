@@ -19,7 +19,6 @@ public class SaveSystem : MonoBehaviour
     //static List<GameObject> objects = new List<GameObject>();
     //static List<GameObject> PriorityObjects = new List<GameObject>();
     static Dictionary<int, List<GameObject>> objects = new Dictionary<int, List<GameObject>>();
-    static string SaveLocation = "D:\\Repos\\ProjectPrint\\ProjectPrint\\saves\\";
     InputAction Ctrl;
     InputAction SaveButton;
     InputAction LoadButton;
@@ -57,7 +56,7 @@ public class SaveSystem : MonoBehaviour
             } 
             else if (LoadButton.WasPressedThisFrame())
             {
-                LoadSave();
+                LoadSave(ProfileManager.CurrentProfile);
             }
         }
     }
@@ -100,7 +99,7 @@ public class SaveSystem : MonoBehaviour
         }
         AssetSystem.Purge();
         jsonWrapper jw = new jsonWrapper();
-        string directory = SaveLocation + "\\" + ProfileManager.CurrentProfile;
+        string directory = GlobalSettings.SaveLocation + "\\" + ProfileManager.CurrentProfile;
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
@@ -142,7 +141,7 @@ public class SaveSystem : MonoBehaviour
 
     static string GetLatestFile(string profile)
     {
-        var files = Directory.GetFiles(SaveLocation + "\\" + profile, profile + "_*");
+        var files = Directory.GetFiles(GlobalSettings.SaveLocation + "\\" + profile, profile + "_*");
 
         if (files.Length == 0)
             return null;
@@ -153,8 +152,13 @@ public class SaveSystem : MonoBehaviour
             .First();
     }
 
-    public static void LoadSave()
+    public static void LoadSave(string profile = "")
     {
+        if (profile == "")
+        {
+            Debug.Log("No profile specified for loading save");
+            return;
+        }
         foreach (var (key, value) in objects)
         {
             foreach (GameObject obj in value)
@@ -163,7 +167,7 @@ public class SaveSystem : MonoBehaviour
                     AssetSystem.Recycle(obj);
             }
         }
-        string path = GetLatestFile(ProfileManager.CurrentProfile);
+        string path = GetLatestFile(profile);
         if (path == null) return;
         string json = File.ReadAllText(path);
         if (json.Length < 3)

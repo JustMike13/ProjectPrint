@@ -92,8 +92,6 @@ public class ShopBox : InteractableObject
     public override void LoadSave(string json)
     {
         ShopBoxJson boxJson = JsonUtility.FromJson<ShopBoxJson>(json);
-        transform.position = boxJson.data.location;
-        transform.rotation = boxJson.data.rotation;
         //transform.localScale = boxJson.data.scale;
         if (boxJson.data.storedObjectJson != "")
         {
@@ -102,6 +100,8 @@ public class ShopBox : InteractableObject
             obj.GetComponent<SaveObject>().LoadSave(boxJson.data.storedObjectJson);
             AddToBox(obj);
         }
+        transform.position = boxJson.data.location;
+        transform.rotation = boxJson.data.rotation;
     }
 }
 [System.Serializable]

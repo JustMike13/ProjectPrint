@@ -8,7 +8,8 @@ public enum GameState
     Pause,
     Shop,
     Object,
-    Box
+    Box,
+    Profile
 }
 
 public class ScreenManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class ScreenManager : MonoBehaviour
     [SerializeField] GameObject PauseCanvas;
     [SerializeField] GameObject ShopCanvas;
     [SerializeField] GameObject BoxCanvas;
+    [SerializeField] GameObject ProfileCanvas;
     public static ScreenManager Instance;
     private static GameState currentState = GameState.PlayMode;
     public static GameState CurrentState => currentState;
@@ -71,6 +73,9 @@ public class ScreenManager : MonoBehaviour
                 break;
             case GameState.Box:
                 CloseBox();
+                break;
+            case GameState.Profile:
+                CloseProfile();
                 break;
         }
     } 
@@ -144,5 +149,22 @@ public class ScreenManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         BoxScreen.Instance.CloseBox();
+    }
+    public void OpenProfile()
+    {
+        if (currentState != GameState.Pause) return;
+
+        currentState = GameState.Profile;
+        ProfileCanvas.SetActive(true);
+        PauseCanvas.SetActive(false);
+        Debug.Log("Profile Opened");
+    }
+    public void CloseProfile()
+    {
+        if (currentState != GameState.Profile) return;
+        currentState = GameState.Pause;
+        ProfileCanvas.SetActive(false);
+        PauseCanvas.SetActive(true);
+        Debug.Log("Profile closed");
     }
 }
