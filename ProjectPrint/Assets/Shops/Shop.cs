@@ -27,7 +27,7 @@ public class Shop : MonoBehaviour
             TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
             if (buttonText != null)
             {
-                buttonText.text = Inventory[i].product.GetComponent<InteractableObject>().Name
+                buttonText.text = Inventory[i].product.GetComponent<InteractableObject>().ObjectName
                     +" $" + Inventory[i].price;
             }
 

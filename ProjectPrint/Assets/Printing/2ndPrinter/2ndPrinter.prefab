@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: P1S
-  ObjectName: P1S
+  objectName: P1S printer
   price: 700
   canBePickedUp: 0
   memoryCard: {fileID: 0}
@@ -89,9 +89,12 @@ MonoBehaviour:
     NameInfo: {fileID: 5675040643541458142}
     FilamentInfo: {fileID: 4069105138398684463}
     MemoryCardInfo: {fileID: 4502430384916291990}
+    ModelInfo: {fileID: 0}
     PrintButton: {fileID: 2204483947234710577}
     FilamentButton: {fileID: 5065499753303958879}
     MemoryCardButton: {fileID: 7030022438584487505}
+    ModelUp: {fileID: 0}
+    ModelDown: {fileID: 0}
 --- !u!65 &1969432387991231616
 BoxCollider:
   m_ObjectHideFlags: 0

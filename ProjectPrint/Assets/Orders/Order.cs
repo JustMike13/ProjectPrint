@@ -83,7 +83,7 @@ public class Order
                     }
                     return true;
                 }
-                Debug.Log("Not enough quantity of " + orderItem.item.Name);
+                Debug.Log("Not enough quantity of " + orderItem.item.ObjectName);
             }
         }
         return false;
@@ -114,7 +114,7 @@ public class Order
         string result = "";
         foreach (OrderItem item in OrderItems)
         {
-            result = result + item.item.Name + ": " + item.addedQuantity + "/" + item.quantity + "\n";
+            result = result + item.item.ObjectName + ": " + item.addedQuantity + "/" + item.quantity + "\n";
         }
         return result;
     }

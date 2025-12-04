@@ -4,10 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(Highlight))]
 public class InteractableObject : SaveObject
 {
-    [SerializeField] string ObjectName = "";
+    [SerializeField] string objectName = "";
     [SerializeField] float price = 10;
     public float Price { get { return price; } }
-    public string Name { get { return ObjectName; } }
+    public string ObjectName { get { return objectName; } }
     [SerializeField] bool canBePickedUp = true;
     public bool CanBePickedUp { get { return canBePickedUp; } set { canBePickedUp = value; } }
     float lastInteraction = 0;

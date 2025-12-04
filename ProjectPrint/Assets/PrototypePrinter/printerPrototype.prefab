@@ -2678,7 +2678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: A1Mini
-  ObjectName: A1 Mini
+  objectName: A1 Mini
   price: 200
   canBePickedUp: 0
   memoryCard: {fileID: 0}

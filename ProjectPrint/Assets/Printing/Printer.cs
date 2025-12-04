@@ -96,7 +96,7 @@ public class Printer : InteractableObject
 
         screenFields.FilamentButton.GetComponentInChildren<TMP_Text>().text = filament != null ? "Take filament" : "Add filament";
         screenFields.MemoryCardButton.GetComponentInChildren<TMP_Text>().text = memoryCard != null ? "Take card" : "Add card";
-        screenFields.NameInfo.text = Name;
+        screenFields.NameInfo.text = ObjectName;
         screenFields.FilamentInfo.text = filament != null ? filament.name : "No filament";
         screenFields.MemoryCardInfo.text = memoryCard != null ? memoryCard.name : "No card";
         screenFields.PrintButton.GetComponentInChildren<TMP_Text>().text =
@@ -365,12 +365,12 @@ public class Printer : InteractableObject
         if (x > 0 && modelIndex < memoryCard.Models.Count - 1)
         {
             modelIndex++;
-            screenFields.ModelInfo.text = memoryCard.Models[modelIndex].GetComponent<InteractableObject>().Name;
+            screenFields.ModelInfo.text = memoryCard.Models[modelIndex].GetComponent<InteractableObject>().ObjectName;
         }
         else if (x < 0 && modelIndex > 0)
         {
             modelIndex -= 1;
-            screenFields.ModelInfo.text = memoryCard.Models[modelIndex].GetComponent<InteractableObject>().Name;
+            screenFields.ModelInfo.text = memoryCard.Models[modelIndex].GetComponent<InteractableObject>().ObjectName;
         }
     }
 
@@ -403,32 +403,46 @@ public class Printer : InteractableObject
 
     public override void LoadSave(string json, int version = -1)
     {
-        var printerJson = JsonUtility.FromJson<SaveObjectJson<PrinterDataVer0>>(json);
-        transform.position = printerJson.data.location;
-        transform.rotation = printerJson.data.rotation;
-        if (printerJson.data.filamentJson != "")
+        if (version > 0)
         {
-            FilamentJson filamentSpoolJson = JsonUtility.FromJson<FilamentJson>(printerJson.data.filamentJson);
+            SaveObjectJson<PrinterData> printerJson = JsonUtility.FromJson<SaveObjectJson<PrinterData>>(json);
+            transform.position = printerJson.data.location;
+            transform.rotation = printerJson.data.rotation;
+            LoadData(printerJson.data);
+        }
+        else
+        {
+            SaveObjectJson<PrinterDataVer0> printerJson = JsonUtility.FromJson<SaveObjectJson<PrinterDataVer0>>(json);
+            transform.position = printerJson.data.location;
+            transform.rotation = printerJson.data.rotation;
+            LoadData(printerJson.data);
+        }
+    }
+    void LoadData(PrinterDataVer0 data)
+    {
+        if (data.filamentJson != "")
+        {
+            FilamentJson filamentSpoolJson = JsonUtility.FromJson<FilamentJson>(data.filamentJson);
             GameObject filamentGO = AssetSystem.Create(filamentSpoolJson.prefab, AssetType.Filament);
             FilamentSpool fs = filamentGO.GetComponent<FilamentSpool>();
-            fs.LoadSave(printerJson.data.filamentJson);
+            fs.LoadSave(data.filamentJson);
             InsertFilament(fs);
         }
-        if (printerJson.data.memoryCardJson != "")
+        if (data.memoryCardJson != "")
         {
-            CardJson cardJson = JsonUtility.FromJson<CardJson>(printerJson.data.memoryCardJson);
+            CardJson cardJson = JsonUtility.FromJson<CardJson>(data.memoryCardJson);
             GameObject cardObj = AssetSystem.Create(cardJson.prefab, AssetType.Card);
             MemoryCard mc = cardObj.GetComponent<MemoryCard>();
-            mc.LoadSave(printerJson.data.memoryCardJson);
+            mc.LoadSave(data.memoryCardJson);
             SetMemoryCard(mc);
-        } 
-        if (printerJson.data.printedModelJson != "")
+        }
+        if (data.printedModelJson != "")
         {
-            AddModelToPrint(AssetSystem.CreateFromJson(printerJson.data.printedModelJson), true);
+            AddModelToPrint(AssetSystem.CreateFromJson(data.printedModelJson), true);
         }
 
-        modelIndex = printerJson.data.modelIndex;
-        isPrinting = printerJson.data.printing;
+        modelIndex = data.modelIndex;
+        isPrinting = data.printing;
     }
     #endregion // Save System
 }

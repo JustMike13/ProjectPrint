@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: CeramicVase
-  ObjectName: Ceramic vase
+  objectName: Ceramic Vase
   price: 12
   canBePickedUp: 1
   id: 1

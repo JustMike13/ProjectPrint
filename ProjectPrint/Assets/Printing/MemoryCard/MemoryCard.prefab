@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: MemoryCard
-  ObjectName: MemoryCard
+  objectName: Memory card
   price: 10
   canBePickedUp: 1
   models:

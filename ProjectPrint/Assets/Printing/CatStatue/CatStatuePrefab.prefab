@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: CatStatue
-  ObjectName: Cat statue
+  objectName: Cat Statue
   price: 8
   canBePickedUp: 1
   id: 2

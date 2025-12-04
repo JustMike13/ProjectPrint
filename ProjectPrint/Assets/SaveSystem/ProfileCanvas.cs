@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -9,6 +11,7 @@ public class ProfileCanvas : MonoBehaviour
     [SerializeField] Button button;
     [SerializeField] Vector2 buttonPos = new Vector2(0, 200);
     [SerializeField] int buttonSpacing = 50;
+    List<Button> buttonList = new List<Button>();
 
     void Awake()
     {
@@ -20,11 +23,21 @@ public class ProfileCanvas : MonoBehaviour
         {
             Instance = this;
         }
-            UpdateButtons();
+        UpdateButtons();
+    }
+
+    private void OnEnable()
+    {
+        UpdateButtons();
     }
 
     private void UpdateButtons()
     {
+        foreach (Button button in buttonList)
+        {
+            Destroy(button.gameObject);
+        }
+        buttonList.Clear();
         int i = 0;
         foreach (string profile in ProfileManager.ListOfProfiles)
         {
@@ -34,6 +47,7 @@ public class ProfileCanvas : MonoBehaviour
             newButton.GetComponentInChildren<TMP_Text>().text = profile;
             string capturedProfile = profile; // Capture the current profile in a local variable
             newButton.onClick.AddListener(() => ProfileManager.Instance.ChangeProfile(capturedProfile));
+            buttonList.Add(newButton);
             Debug.Log("Created button for profile: " + profile);
             i++;
         }
