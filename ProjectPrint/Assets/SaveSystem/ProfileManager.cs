@@ -23,17 +23,16 @@ struct ProfileList
 
 public class ProfileManager : MonoBehaviour
 {
-    static ProfileManager Instance;
+    const string DefaultProfileVal = "DefaultProfile";
+    public static ProfileManager Instance;
     static ProfileList profiles;
     public static string CurrentProfile
     {
         get { return profiles.currentProfile; }
         set { profiles.currentProfile = value; }
     }
-    [SerializeField] string defaultProfile = "DefaultProfile";
-    [SerializeField] Button button;
-    [SerializeField] Vector2 buttonPos = new Vector2(0, 200);
-    [SerializeField] int buttonSpacing = 50;
+    public static List<string> ListOfProfiles { get { return profiles.profileList; } }
+    [SerializeField] string defaultProfile = DefaultProfileVal;
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -45,27 +44,18 @@ public class ProfileManager : MonoBehaviour
             Instance = this;
             CurrentProfile = defaultProfile;
             LoadProfiles();
-            UpdateButtons();
         }
-    }
-
-    private void UpdateButtons()
-    {
-        int i = 0;
-        foreach (string profile in profiles.profileList)
+        if (defaultProfile != DefaultProfileVal)
         {
-            Button newButton = Instantiate(button, transform);
-            newButton.transform.localPosition = new Vector2(buttonPos.x, buttonPos.y - (i * buttonSpacing));
-            newButton.gameObject.SetActive(true);
-            newButton.GetComponentInChildren<TMP_Text>().text = profile;
-            string capturedProfile = profile; // Capture the current profile in a local variable
-            newButton.onClick.AddListener(() => ChangeProfile(capturedProfile));
-            Debug.Log("Created button for profile: " + profile);
-            i++;
+            if (!profiles.profileList.Contains(defaultProfile))
+            {
+                profiles.profileList.Add(defaultProfile);
+                profiles.currentProfile = defaultProfile;
+            }
         }
     }
 
-    void ChangeProfile(string profileName)
+    public void ChangeProfile(string profileName)
     {
         if (!profiles.profileList.Contains(profileName))
         {
@@ -93,10 +83,5 @@ public class ProfileManager : MonoBehaviour
                 Debug.Log("Loaded profile: " + dirName);
             }
         }
-    }
-
-    void AddProfile(string profileName)
-    {
-        profiles.Add(profileName);
     }
 }
