@@ -73,6 +73,10 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
+      propertyPath: colorName
+      value: Blue
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270285958854256787, guid: 078f0b21af190f249b50f90cd8b59a6a, type: 3}
       propertyPath: ObjectName
       value: Blue Filament
       objectReference: {fileID: 0}

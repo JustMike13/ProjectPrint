@@ -133,7 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoxStack
   prefabName: BoxStack
-  ObjectName: 
+  objectName: Packing boxes
   price: 20
   canBePickedUp: 1
   quantity: 10

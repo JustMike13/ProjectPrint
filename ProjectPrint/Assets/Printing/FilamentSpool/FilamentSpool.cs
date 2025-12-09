@@ -26,6 +26,7 @@ public class FilamentSpool : InteractableObject
     [SerializeField] GameObject filament;
     [SerializeField, Range(0, maxQuantity)] float quantity;
     public float Quantity {  get { return quantity; } set { quantity = value;  } }
+    [SerializeField] string colorName;
     [SerializeField] Material color;
     [SerializeField] Material baseColor;
     #endregion //editor fields 
@@ -34,6 +35,7 @@ public class FilamentSpool : InteractableObject
     #endregion //editor fields
     #region getters and setters
     public Material Color { get { return color; } }
+    public string ColorName { get { return colorName; } }
     #endregion
 
     private void Awake()

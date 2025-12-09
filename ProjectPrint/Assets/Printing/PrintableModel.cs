@@ -15,6 +15,11 @@ public class PrintableModel : InteractableObject
         {
             completionPercentage = value;
             material.SetFloat("_Percentage", completionPercentage / 100f);
+            if (completionPercentage == 100f)
+            {
+                GetComponent<MeshRenderer>().material = FilamentSystem.GetColor(filamentName);
+                material = GetComponent<MeshRenderer>().material;
+            }
         } }
     bool hasFailed = false;
     public bool HasFailed { set { 
@@ -25,10 +30,8 @@ public class PrintableModel : InteractableObject
     public bool IsFinished { get { return completionPercentage == 100f || hasFailed; } }
     float elapsedTime = 0;
     Material material;
-    //TODO: Remove filament, keep name
-    FilamentSpool filament;
-    public FilamentSpool Filament { set { filament = value; } }
     string filamentName = "";
+
     void Awake() 
     {
         SaveSystem.Subscribe(gameObject);
@@ -80,10 +83,10 @@ public class PrintableModel : InteractableObject
         TimeToPrint = TimeToPrint / speed;
     }
 
-    public void SetFilament(FilamentSpool fs)
+    public void SetFilament(string colorName)
     {
-        filamentName = fs.GetComponent<SaveObject>().PrefabName;
-        GetComponent<MeshRenderer>().material = new Material(fs.Color);
+        filamentName = colorName;
+        GetComponent<MeshRenderer>().material = FilamentSystem.GetNewColor(colorName);
         material = GetComponent<MeshRenderer>().material;
         float height = GetComponent<Renderer>().bounds.size.y;
         material.SetFloat("_Height", height);
@@ -125,9 +128,7 @@ public class PrintableModel : InteractableObject
         transform.localRotation = parsed.data.rotation;
 
         // Set Filament and material
-        GameObject materialGO = AssetSystem.Create(parsed.data.material, AssetType.Filament);
-        SetFilament(materialGO.GetComponent<FilamentSpool>());
-        AssetSystem.Recycle(materialGO);
+        SetFilament(parsed.data.material);
         CompletionPercentage = parsed.data.completedPercent;
 
         // Set other stats

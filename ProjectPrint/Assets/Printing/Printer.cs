@@ -231,7 +231,7 @@ public class Printer : InteractableObject
         {
             printedModel.GetComponent<PrintableModel>().EnableModel(false, true);
             printedModel.transform.localRotation = Quaternion.identity;
-            printedModel.GetComponent<PrintableModel>().SetFilament(filament);
+            printedModel.GetComponent<PrintableModel>().SetFilament(filament.ColorName);
         }
         printedModel.GetComponent<PrintableModel>().SpeedMultiplier(speedMultiplier);
         isPrinting = !printedModel.GetComponent<PrintableModel>().IsFinished;

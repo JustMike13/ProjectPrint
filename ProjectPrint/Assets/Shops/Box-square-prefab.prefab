@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopBox
   prefabName: ShopBox
-  ObjectName: Delivered Box
+  objectName: Shop Box
   price: 0
   canBePickedUp: 1
 --- !u!65 &3566069566515813085
