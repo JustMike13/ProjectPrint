@@ -31,6 +31,7 @@ public class PrintableModel : InteractableObject
     float elapsedTime = 0;
     Material material;
     string filamentName = "";
+    public string FilamentName { get { return filamentName; } }
 
     void Awake() 
     {
@@ -59,6 +60,11 @@ public class PrintableModel : InteractableObject
                 EnableModel(true);
             }
         }
+    }
+
+    public override string ToString()
+    {
+        return filamentName + " " + ObjectName;
     }
 
     public void EnableModel(bool val, bool resetTime = false)

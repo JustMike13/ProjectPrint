@@ -40,4 +40,6 @@ public class FilamentSystem : MonoBehaviour
         }
         return null;
     }
+
+    public static List<string> GetColorList() => new List<string>(filamentDictionary.Keys);
 }

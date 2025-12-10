@@ -227,7 +227,7 @@ public class BoxScreen : MonoBehaviour
             TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
             if (buttonText != null)
             {
-                buttonText.text = "Take " + contents[i].ObjectName;
+                buttonText.text = "Take " + contents[i].ToString();
             }
 
             // Add listener to the button

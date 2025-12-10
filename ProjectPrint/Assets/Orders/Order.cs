@@ -34,7 +34,7 @@ public class Order
     {
         foreach (OrderItem orderItem in OrderItems)
         {
-            if (orderItem.item.ID == item.ID)
+            if (orderItem.item.ID == item.ID && orderItem.color == item.FilamentName)
             {
                 orderItem.quantity = orderItem.quantity + quantity;
                 return;
@@ -43,6 +43,7 @@ public class Order
         OrderItem orderItem1 = new OrderItem();
         orderItem1.item = item;
         orderItem1.quantity = quantity;
+        orderItem1.color = item.FilamentName;
         OrderItems.Add(orderItem1);
     }
     public void AddItem(OrderItem item)
@@ -54,7 +55,7 @@ public class Order
     {
         foreach(OrderItem orderItem in OrderItems)
         {
-            if (orderItem.item.ID == item.ID)
+            if (orderItem.item.ID == item.ID && orderItem.color == item.FilamentName)
             {
                 orderItem.addedQuantity += quantity;
                 return true;
@@ -64,6 +65,7 @@ public class Order
         oi.quantity = 0;
         oi.item = item;
         oi.addedQuantity = 1;
+        oi.color = item.FilamentName;
         OrderItems.Add(oi);
         return true;
     }
@@ -72,7 +74,7 @@ public class Order
     {
         foreach (OrderItem orderItem in OrderItems)
         {
-            if (orderItem.item.ID == item.ID)
+            if (orderItem.item.ID == item.ID && orderItem.color == item.FilamentName)
             {
                 if (orderItem.addedQuantity >= quantity)
                 {
@@ -114,7 +116,7 @@ public class Order
         string result = "";
         foreach (OrderItem item in OrderItems)
         {
-            result = result + item.item.ObjectName + ": " + item.addedQuantity + "/" + item.quantity + "\n";
+            result = result + item.color + " " + item.item.ObjectName + ": " + item.addedQuantity + "/" + item.quantity + "\n";
         }
         return result;
     }

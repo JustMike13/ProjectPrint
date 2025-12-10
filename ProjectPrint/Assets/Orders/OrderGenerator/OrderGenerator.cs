@@ -1,6 +1,8 @@
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 public class OrderGenerator : InteractableObject
 {
@@ -68,9 +70,14 @@ public class OrderGenerator : InteractableObject
             foreach (PrintableModel item in Inventory)
             {
                 int quantity = (int)UnityEngine.Random.Range(0, maxItems / Inventory.Count);
+                Random rand = new Random();
+                int index = rand.Next(FilamentSystem.GetColorList().Count); // generates a number between 0 and list.Count - 1
+                string randomColor = FilamentSystem.GetColorList()[index];
                 OrderItem orderItem = new OrderItem();
                 orderItem.item = item;
                 orderItem.quantity = quantity;
+                orderItem.color = randomColor;
+
                 if (quantity > 0)
                 {
                     items.Add(orderItem);
