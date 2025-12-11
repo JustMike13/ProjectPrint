@@ -127,6 +127,7 @@ public class Order
         orderJson.orderItemJsons = new List<OrderItemJson>();
         foreach (OrderItem item in OrderItems)
         {
+            if (item.quantity == 0) continue;
             OrderItemJson itemJson = new OrderItemJson();
             itemJson.id = item.item.ID;
             itemJson.quantity = item.quantity;

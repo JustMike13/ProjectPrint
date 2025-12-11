@@ -23,6 +23,10 @@ public class ShippingLabel : InteractableObject
             Debug.LogWarning("No order found for shipping label.");
         }
     }
+    public override void Recycle()
+    {
+        order = null;
+    }
     public override string CreateSave(string saveName)
     {
         if (base.CreateSave(saveName) != "")

@@ -100,10 +100,11 @@ public class OrderGenerator : InteractableObject
             PrintableModel item = InventoryStatic.Find(x => x.ID == itemJson.id);
             if (item != null)
             {
+                if (itemJson.quantity == 0) continue;
                 OrderItem orderItem = new OrderItem();
                 orderItem.item = item;
                 orderItem.quantity = itemJson.quantity;
-                orderItem.addedQuantity = itemJson.addedQuantity;
+                orderItem.addedQuantity = 0;
                 items.Add(orderItem);
             }
             else

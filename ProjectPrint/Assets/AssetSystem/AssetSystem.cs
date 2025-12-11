@@ -147,6 +147,7 @@ public class AssetSystem : MonoBehaviour
         {
             assetDictionary[name] = new List<GameObject>();
         }
+        go.GetComponent<SaveObject>().Recycle();
         assetDictionary[name].Add(go);
         go.transform.parent = Instance.transform;
         go.SetActive(false);

@@ -17,4 +17,6 @@ public class SaveObject : MonoBehaviour
 
     public virtual void LoadSave(string json, int version = -1) { }
 
+    public virtual void Recycle() { }
+
 }

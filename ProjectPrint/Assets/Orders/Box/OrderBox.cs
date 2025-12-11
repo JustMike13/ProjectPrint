@@ -37,6 +37,20 @@ public class OrderBox : InteractableObject
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
 
+    public override void Recycle()
+    {
+        if (shippingLabel != null)
+        {
+            AssetSystem.Recycle(shippingLabel.gameObject);
+            shippingLabel = null;
+        }
+        foreach(PrintableModel model in ContainedModels)
+        {
+            AssetSystem.Recycle(model.gameObject);
+        }
+        ContainedModels.Clear();
+    }
+
     public override GameObject Interact(ControlBinding control)
     {
         if (control == ControlBinding.Menu)
@@ -80,7 +94,7 @@ public class OrderBox : InteractableObject
             BoxScreen.Instance.ShowContents(this);
         }
     }
-    public void RemoveLabelFromBox()
+    public void RemoveLabelFromBox(bool pickUp = true)
     {
         if (shippingLabel == null)
         {
@@ -91,7 +105,7 @@ public class OrderBox : InteractableObject
         shippingLabel.AddComponent<Rigidbody>();
         shippingLabel.GetComponent<BoxCollider>().enabled = true;
         shippingLabel.GetOrder.RemoveAllProducts();
-        ItemHolder.HoldItem(shippingLabel.gameObject);
+        if (pickUp) ItemHolder.HoldItem(shippingLabel.gameObject);
         shippingLabel = null;
         BoxScreen.Instance.ShowContents(this);
     }
