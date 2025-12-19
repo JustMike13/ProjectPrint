@@ -375,6 +375,25 @@ public class Printer : InteractableObject
     }
 
     #region Save System
+    public override void Recycle()
+    {
+        if (printedModel != null)
+        {
+            AssetSystem.Recycle(printedModel);
+            printedModel = null;
+        }
+        if (memoryCard != null)
+        {
+            AssetSystem.Recycle(memoryCard.gameObject);
+            memoryCard = null;
+        }
+        if (filament != null)
+        {
+            AssetSystem.Recycle(filament.gameObject);
+            filament = null;
+        }
+    }
+
     public override string CreateSave(string saveName)
     {
         if (base.CreateSave(saveName) != "")

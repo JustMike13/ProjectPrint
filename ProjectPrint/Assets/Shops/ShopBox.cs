@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShopBox : InteractableObject
@@ -44,7 +45,7 @@ public class ShopBox : InteractableObject
             Debug.Log("You need free hands to unpack");
             return;
         }
-        storedObject.SetActive(true);
+        storedObject.SetActive(true); 
         if (storedObject.GetComponent<InteractableObject>().CanBePickedUp)
         {
             ItemHolder.HoldItem(storedObject);
@@ -65,6 +66,15 @@ public class ShopBox : InteractableObject
             Unpack();
         }
         return null;
+    }
+    #region Save System
+    public override void Recycle()
+    {
+        if (storedObject != null)
+        {
+            AssetSystem.Recycle(storedObject);
+            storedObject = null;
+        }
     }
 
     public override string CreateSave(string saveName)
@@ -103,6 +113,8 @@ public class ShopBox : InteractableObject
         transform.position = boxJson.data.location;
         transform.rotation = boxJson.data.rotation;
     }
+
+    #endregion Save System
 }
 [System.Serializable]
 public class ShopBoxData

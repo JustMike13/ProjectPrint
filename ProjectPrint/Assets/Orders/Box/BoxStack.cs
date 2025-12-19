@@ -17,8 +17,8 @@ public class BoxStack : InteractableObject
     {
         if (quantity <= 0)
         {
-            Destroy(this.gameObject);
-            return;
+            AssetSystem.Recycle(this.gameObject); 
+            quantity = 10;
         }
         Vector3 parentScale = transform.parent != null ? transform.parent.localScale : Vector3.one;
         transform.localScale = new Vector3(1/parentScale.x, quantity * 2 / parentScale.y, 1 / parentScale.z);
