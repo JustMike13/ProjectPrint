@@ -80,7 +80,7 @@ public class ProfileManager : MonoBehaviour
             {
                 string dirName = Path.GetFileName(dir);
                 profiles.profileList.Add(dirName);
-                Debug.Log("Loaded profile: " + dirName);
+                //Debug.Log("Loaded profile: " + dirName);
             }
         }
     }

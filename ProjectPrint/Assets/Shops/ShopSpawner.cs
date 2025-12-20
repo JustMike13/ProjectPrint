@@ -5,8 +5,8 @@ using UnityEngine.UIElements;
 public class ShopSpawner : MonoBehaviour
 {
     public static ShopSpawner Instance;
-    public static float width = 2;
-    public static float length = 3;
+    public static float width = 1;
+    public static float length = 1f;
 
     private void Awake()
     {
