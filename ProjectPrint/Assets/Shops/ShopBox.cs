@@ -12,30 +12,64 @@ public class ShopBox : InteractableObject
     }
     public void AddToBox(GameObject obj)
     {
-        Vector3 objSize = obj.GetComponent<Collider>().bounds.size;
+        // Get the size of the object
+        Vector3 objSize = obj.GetComponent<BoxCollider>().size;
+
+        // Account for the object's scale
+        objSize.x = objSize.x * obj.transform.localScale.x;
+        objSize.y = objSize.y * obj.transform.localScale.y;
+        objSize.z = objSize.z * obj.transform.localScale.z;
+        
+        // Check minimum size
         if (objSize.x < minSize) objSize.x = minSize;
         if (objSize.y < minSize) objSize.y = minSize;
         if (objSize.z < minSize) objSize.z = minSize;
-        Vector3 boxSize = this.GetComponent<Collider>().bounds.size;
-
-        // Account for the box's current scale
-        Vector3 boxScale = this.transform.localScale;
+        Vector3 boxSize = this.GetComponent<BoxCollider>().size;
 
         // Calculate the scale factor needed
         Vector3 scaleFactor = new Vector3(
-            boxScale.x * objSize.x / boxSize.x,
-            boxScale.y * objSize.y / boxSize.y,
-            boxScale.z * objSize.z / boxSize.z
+            objSize.x / boxSize.x,
+            objSize.y / boxSize.y,
+            objSize.z / boxSize.z
         );
 
+        // Scale the box
+        scaleFactor = OrientBoxSides(scaleFactor);
         transform.localScale = scaleFactor * 1.2f;
 
+        // Place the object in the box
         obj.transform.SetParent(this.transform);
         obj.transform.localPosition = Vector3.zero;
         obj.SetActive(false);
-        //obj.GetComponent<Collider>().enabled = false;
-        //obj.GetComponent<MeshRenderer>().enabled = false;
         storedObject = obj;
+    }
+
+    /// <summary>
+    /// Make sure the bos's seam is always along the longest side
+    /// </summary>
+    /// <param name="boxScale">The original Vector3</param>
+    /// <returns>The updated Vector3</returns>
+    Vector3 OrientBoxSides(Vector3 boxScale)
+    {
+        if(boxScale.x < boxScale.y)
+        {
+            float aux = boxScale.x;
+            boxScale.x = boxScale.y;
+            boxScale.y = aux;
+        }
+        if(boxScale.x < boxScale.z)
+        {
+            float aux = boxScale.x;
+            boxScale.x = boxScale.z;
+            boxScale.z = aux;
+        }
+        if (boxScale.z < boxScale.y)
+        {
+            float aux = boxScale.z;
+            boxScale.z = boxScale.y;
+            boxScale.y = aux;
+        }
+        return boxScale;
     }
 
     public void Unpack()
