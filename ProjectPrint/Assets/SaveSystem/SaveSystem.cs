@@ -57,7 +57,7 @@ public class SaveSystem : MonoBehaviour
             } 
             else if (LoadButton.WasPressedThisFrame())
             {
-                LoadSave(ProfileManager.CurrentProfile);
+                LoadSave(new ProfileName(ProfileManager.CurrentProfile));
             }
         }
     }
@@ -88,7 +88,7 @@ public class SaveSystem : MonoBehaviour
     }
     public void LoadSaveUI()
     {
-        LoadSave();
+        LoadSave(new ProfileName(ProfileManager.CurrentProfile));
     }
 
     public static void CreateSave()
@@ -155,9 +155,9 @@ public class SaveSystem : MonoBehaviour
             .First();
     }
 
-    public static void LoadSave(string profile = "")
+    public static void LoadSave(SaveNameBase saveName)
     {
-        if (profile == "")
+        if (saveName.Name == "")
         {
             Debug.Log("No profile specified for loading save");
             return;
@@ -170,7 +170,15 @@ public class SaveSystem : MonoBehaviour
                     AssetSystem.Recycle(obj);
             }
         }
-        string path = GetLatestFile(profile);
+        string path = null;
+        if (saveName is SavefileName savefileName)
+        {
+            path = saveName.Name;
+        }
+        else if (saveName is ProfileName profile)
+        {
+            path = GetLatestFile(saveName.Name);
+        }
         if (path == null) return;
         string json = File.ReadAllText(path);
         if (json.Length < 3)
@@ -203,7 +211,7 @@ public class SaveSystem : MonoBehaviour
                     ProfileManager.CurrentProfile = outer["data"].ToString();
                 }
             }
-            else
+            else if (type != "tutorial")
             {
                 string innerData = outer["data"].ToString();
                 JObject inner = JObject.Parse(innerData);
@@ -243,4 +251,34 @@ public class SaveObjectData
 {
     public Vector3 location;
     public Quaternion rotation;
+}
+
+public class SaveNameBase
+{
+    protected string name = "";
+    public string Name { get { return name; } }
+}
+
+public class ProfileName : SaveNameBase
+{
+    public ProfileName(string name)
+    {
+        this.name = name;
+    }
+}
+
+public class SavefileName : SaveNameBase
+{
+    public SavefileName(string name)
+    {
+        this.name = name;
+    }
+}
+
+public class NewGameName : SaveNameBase
+{
+    public NewGameName(string name)
+    {
+        this.name = name;
+    }
 }

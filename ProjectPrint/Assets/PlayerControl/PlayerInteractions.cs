@@ -119,7 +119,7 @@ public class PlayerInteractions : MonoBehaviour
         }
         if (UIButton3.WasPressedThisFrame())
         {
-            SaveSystem.LoadSave();
+            SaveSystem.LoadSave(new ProfileName(ProfileManager.CurrentProfile));
         }
     }
 

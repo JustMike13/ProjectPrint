@@ -55,7 +55,7 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    public void ChangeProfile(string profileName)
+    public void ChangeProfile(string profileName, bool loadSave = true)
     {
         if (!profiles.profileList.Contains(profileName))
         {
@@ -63,7 +63,10 @@ public class ProfileManager : MonoBehaviour
             return;
         }
         CurrentProfile = profileName;
-        SaveSystem.LoadSave(profileName);
+        if (loadSave)
+        {
+            SaveSystem.LoadSave(new ProfileName(profileName));
+        }
         Debug.Log("Changed to profile: " + profileName);
     }
 
@@ -82,6 +85,15 @@ public class ProfileManager : MonoBehaviour
                 profiles.profileList.Add(dirName);
                 //Debug.Log("Loaded profile: " + dirName);
             }
+        }
+    }
+
+    internal void CreateNewProfile(string name, bool switchToProfile = true)
+    {
+        profiles.Add(name);
+        if (switchToProfile)
+        {
+            ChangeProfile(name, false);
         }
     }
 }
