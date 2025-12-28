@@ -46,7 +46,7 @@ public class ProfileCanvas : MonoBehaviour
             newButton.gameObject.SetActive(true);
             newButton.GetComponentInChildren<TMP_Text>().text = profile;
             string capturedProfile = profile; // Capture the current profile in a local variable
-            newButton.onClick.AddListener(() => ProfileManager.Instance.ChangeProfile(capturedProfile));
+            newButton.onClick.AddListener(() => ProfileManager.ChangeProfile(capturedProfile));
             buttonList.Add(newButton);
             Debug.Log("Created button for profile: " + profile);
             i++;

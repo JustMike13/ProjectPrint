@@ -5,6 +5,7 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] SaveFileData sfd;
     [SerializeField] Canvas NewGameCanvas;
+    [SerializeField] Canvas LoadProfileCanvas;
 
     public void ShowNewGameCanvas()
     {
@@ -12,12 +13,16 @@ public class MainMenu : MonoBehaviour
     }
     public void ContinueLastGame()
     {
-        sfd.SaveName = new SavefileName("Continue");
+        string path = GlobalSettings.SaveLocation + "currentProfile.txt";
+        sfd.SaveName = new ProfileName(System.IO.File.ReadAllText(path));
         SceneManager.LoadScene("MainScene");
     }
     public void LoadSavedGame()
     {
-        sfd.SaveName = new ProfileName("Load Game");
-        SceneManager.LoadScene("MainScene");
+        LoadProfileCanvas.transform.gameObject.SetActive(true);
+    }
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

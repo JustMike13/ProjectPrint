@@ -55,18 +55,26 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    public void ChangeProfile(string profileName, bool loadSave = true)
+    public static void ChangeProfile(string profileName, bool loadSave = true)
     {
         if (!profiles.profileList.Contains(profileName))
         {
             Debug.Log("Profile does not exist: " + profileName);
             return;
         }
-        CurrentProfile = profileName;
-        if (loadSave)
+        if (profileName == CurrentProfile)
         {
-            SaveSystem.LoadSave(new ProfileName(profileName));
+            Debug.Log("Profile is already selected: " + profileName);
+            return;
         }
+        CurrentProfile = profileName;
+        //if (loadSave)
+        //{
+        //    // TODO: Remove SaveSystem dependency
+        //    SaveSystem.LoadSave(new ProfileName(profileName));
+        //}
+        string path = GlobalSettings.SaveLocation + "\\" + "currentProfile.txt";
+        File.WriteAllText(path, profileName);
         Debug.Log("Changed to profile: " + profileName);
     }
 

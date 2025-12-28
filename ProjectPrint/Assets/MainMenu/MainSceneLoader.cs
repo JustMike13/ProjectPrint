@@ -12,6 +12,7 @@ public class MainSceneLoader : MonoBehaviour
         }
         else if (sfd.SaveName is ProfileName)
         {
+            SaveSystem.LoadSave(sfd.SaveName);
             Debug.Log("profile " + sfd.SaveName.Name + " loaded");
         }
         else if (sfd.SaveName is NewGameName)

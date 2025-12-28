@@ -180,6 +180,7 @@ public class SaveSystem : MonoBehaviour
             path = GetLatestFile(saveName.Name);
         }
         if (path == null) return;
+        ProfileManager.ChangeProfile(saveName.Name); 
         string json = File.ReadAllText(path);
         if (json.Length < 3)
         {

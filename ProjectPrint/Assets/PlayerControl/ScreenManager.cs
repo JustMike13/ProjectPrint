@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 public enum GameState
 {
     PlayMode,
@@ -166,5 +167,10 @@ public class ScreenManager : MonoBehaviour
         ProfileCanvas.SetActive(false);
         PauseCanvas.SetActive(true);
         Debug.Log("Profile closed");
+    }
+    public void ExitGame()
+    {
+        SaveSystem.CreateSave();
+        SceneManager.LoadScene("MenuScene");
     }
 }
