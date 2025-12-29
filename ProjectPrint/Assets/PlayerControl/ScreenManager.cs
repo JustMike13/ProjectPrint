@@ -158,7 +158,6 @@ public class ScreenManager : MonoBehaviour
         currentState = GameState.Profile;
         ProfileCanvas.SetActive(true);
         PauseCanvas.SetActive(false);
-        Debug.Log("Profile Opened");
     }
     public void CloseProfile()
     {
@@ -166,7 +165,6 @@ public class ScreenManager : MonoBehaviour
         currentState = GameState.Pause;
         ProfileCanvas.SetActive(false);
         PauseCanvas.SetActive(true);
-        Debug.Log("Profile closed");
     }
     public void ExitGame()
     {

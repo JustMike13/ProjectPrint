@@ -191,8 +191,18 @@ public class SaveSystem : MonoBehaviour
         JObject parsedJson = JObject.Parse(json);
         int saveVersion = parsedJson["version"] != null ? parsedJson["version"].Value<int>() : 0;
         parsedJson["version"] = saveVersion;
-        json = parsedJson.ToString();
         // End TODO
+
+        // TODO: only necessary for older save files, remove later
+        // Perform simple textual migration on the whole JSON to rename legacy prefab names:
+        // Replace all occurrences of the old card names with the new unified "MemoryCard" prefab name.
+        string migrated = parsedJson.ToString();
+        migrated = migrated
+            .Replace("Card - Ceramic Vase", "MemoryCard")
+            .Replace("Card - Cat Statue", "MemoryCard");
+        json = migrated;
+        // End TODO
+
         jsonWrapper jw = JsonUtility.FromJson<jsonWrapper>(json);
         foreach (JsonObject jo in jw.list)
         {
