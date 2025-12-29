@@ -123,7 +123,7 @@ public class SaveSystem : MonoBehaviour
             if (!objects.ContainsKey(p)) continue;
             foreach (GameObject obj in objects[p])
             {
-                if (obj == null) continue;
+                if (obj == null || obj.transform.parent == AssetSystem.Instance.gameObject.transform) continue;
                 JsonObject jo = new JsonObject
                 {
                     index = i,
