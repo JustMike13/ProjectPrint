@@ -166,6 +166,7 @@ MonoBehaviour:
   models:
   - {fileID: 752932601878350210, guid: 140616ee94e7d194cb7bbb123a9c7fcc, type: 3}
   - {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
+  - {fileID: 7429227087316786181, guid: daa8e4a0efb379546835587b984e28ee, type: 3}
 --- !u!65 &4757021098203147419
 BoxCollider:
   m_ObjectHideFlags: 0

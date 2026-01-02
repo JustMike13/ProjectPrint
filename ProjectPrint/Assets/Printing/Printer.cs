@@ -4,29 +4,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
-[System.Serializable]
-public class ScreenFields
-{
-    bool isOn;
-    public bool IsOn { get { return isOn; } set { isOn = value; } }
-    public bool ignoreButton;
-    public Canvas Screen;
-    public TextMeshProUGUI NameInfo;
-    public TextMeshProUGUI FilamentInfo;
-    public TextMeshProUGUI MemoryCardInfo;
-    public TextMeshProUGUI ModelInfo;
-    public Button PrintButton;
-    public Button FilamentButton;
-    public Button MemoryCardButton;
-    public Button ModelUp;
-    public Button ModelDown;
-}
 public class Printer : InteractableObject
 {
+    #region Constants
     const int PickUpText = 0;
     const int RunningText = 1;
     const int StartText = 2;
+    #endregion Constants
+    #region Inspector Fields
     [SerializeField] MemoryCard memoryCard;
     [SerializeField] GameObject printBase;
     [SerializeField] FilamentSpool filament;
@@ -34,6 +21,9 @@ public class Printer : InteractableObject
     [SerializeField] PrintableModel failedPrint;
     [SerializeField] float speedMultiplier = 1.0f;
     [SerializeField] ScreenFields screenFields;
+    [SerializeField] PrinterAxys printerAxys;
+    #endregion Inspector Fields
+    #region Members
     bool isPrinting = false;
     PrintableModel selectedModel;
     int modelIndex = -1;
@@ -42,8 +32,10 @@ public class Printer : InteractableObject
     InputAction UIButton1;
     InputAction UIButton2;
     InputAction UIButton3;
-    int completionPercentage = 0;
-
+    int completionPercentage = 0; 
+    bool moveHotend = false;
+    HotEndMovement hotEndMovement;
+    #endregion Members
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -58,6 +50,15 @@ public class Printer : InteractableObject
         UIButton1 = InputSystem.actions.FindAction("UIButton1");
         UIButton2 = InputSystem.actions.FindAction("UIButton2");
         UIButton3 = InputSystem.actions.FindAction("UIButton3");
+        hotEndMovement = new HotEndMovement
+        {
+            xTarget = printerAxys.xAxys.transform.localPosition.x,
+            yTarget = printerAxys.xAxys.transform.localPosition.y,
+            xDirection = 0,
+            yDirection = 0,
+            xSpeed = 0,
+            ySpeed = 0
+        };
     }
 
     #region Screen
@@ -113,7 +114,8 @@ public class Printer : InteractableObject
             printedModel.transform.rotation = this.transform.rotation;
             if (printedModel.GetComponent<PrintableModel>().IsFinished)
             {
-                animator.SetBool("Printing", false);
+                //animator.SetBool("Printing", false);
+                moveHotend = false;
                 UpdateScreen();
             }
             else
@@ -129,6 +131,22 @@ public class Printer : InteractableObject
                     printedModel.GetComponent<PrintableModel>().HasFailed = true;
                 }
             }
+        }
+
+        //if (!moveHotend)
+        if (!NotBusy())
+        {
+            // Compute yPos as the value at completionPercentage% between zAxysLimits.x and topLimit
+            float topLimit = printerAxys.zAxysLimits.x + printedModel.GetComponent<PrintableModel>().Size.y;
+            float yPos = Mathf.Lerp(printerAxys.zAxysLimits.x, 
+                topLimit,
+                completionPercentage / 100f); 
+            printerAxys.zAxys.transform.localPosition = new Vector3(
+                printerAxys.zAxys.transform.localPosition.x, 
+                yPos,
+                printerAxys.zAxys.transform.localPosition.z
+            );
+            HotendMovement();
         }
         
         if (screenFields.IsOn && ScreenManager.CurrentState != GameState.Object)
@@ -235,7 +253,8 @@ public class Printer : InteractableObject
         }
         printedModel.GetComponent<PrintableModel>().SpeedMultiplier(speedMultiplier);
         isPrinting = !printedModel.GetComponent<PrintableModel>().IsFinished;
-        animator.SetBool("Printing", !printedModel.GetComponent<PrintableModel>().IsFinished);
+        //animator.SetBool("Printing", !printedModel.GetComponent<PrintableModel>().IsFinished);
+        moveHotend = !printedModel.GetComponent<PrintableModel>().IsFinished;
         completionPercentage = (int)printedModel.GetComponent<PrintableModel>().CompletionPercentage;
     }
 
@@ -328,7 +347,6 @@ public class Printer : InteractableObject
             filament.GetComponent<Rigidbody>().isKinematic = true;
             filament.GetComponent<BoxCollider>().enabled = false;
             filament.transform.rotation = spoolHolder.transform.rotation;
-            //filament.transform.parent = spoolHolder.transform;
             filament.transform.position = spoolHolder.transform.position;
             filament.transform.SetParent(spoolHolder.transform, true);
         }
@@ -337,6 +355,83 @@ public class Printer : InteractableObject
     public bool NotBusy()
     {
         return (!isPrinting || ModelHasFinished());
+    }
+
+    void MoveHotend()
+    {
+        Vector3 modelSize = printedModel.GetComponent<PrintableModel>().Size;
+        float xTarget = Random.Range(-modelSize.x/2, modelSize.x / 2);
+        float xDirection = xTarget > printerAxys.xAxys.transform.localPosition.x ? 1 : -1;
+
+        float yTarget = Random.Range(-modelSize.y / 2, modelSize.y / 2);
+        float yDirection = yTarget > printerAxys.yAxys.transform.localPosition.y ? 1 : -1;
+
+        float speed = Random.Range(printerAxys.speedLimit * 0.3f, printerAxys.speedLimit);
+
+        hotEndMovement.xTarget = xTarget;
+        hotEndMovement.yTarget = yTarget;
+        hotEndMovement.xDirection = xDirection;
+        hotEndMovement.yDirection = yDirection;
+        hotEndMovement.xSpeed = speed;
+        hotEndMovement.ySpeed = speed;
+    }
+
+    void HotendMovement()
+    {
+        bool xmovement = MoveXAxis();
+        bool ymovement = MoveYAxis();
+        if (!xmovement && !ymovement)
+        {
+            MoveHotend();
+        }
+    }
+    bool MoveXAxis() { 
+        if (printerAxys.xAxys.transform.localPosition.x == hotEndMovement.xTarget)
+        {
+            return false;
+        }
+        float newValue = printerAxys.xAxys.transform.localPosition.x + 
+            hotEndMovement.xDirection * hotEndMovement.xSpeed * Time.deltaTime;
+
+        float finalValue;
+        if ((newValue - hotEndMovement.xTarget) * hotEndMovement.xDirection > 0)
+        {
+            finalValue = hotEndMovement.xTarget;
+        }
+        else
+        {
+            finalValue = newValue;
+        }
+        printerAxys.xAxys.transform.localPosition =
+            new Vector3(finalValue,
+                        printerAxys.xAxys.transform.localPosition.y,
+                        printerAxys.xAxys.transform.localPosition.z);
+        return true;
+    }
+    bool MoveYAxis()
+    {
+        if (printerAxys.yAxys.transform.localPosition.z == hotEndMovement.yTarget)
+        {
+            return false;
+        }
+        float newValue = printerAxys.yAxys.transform.localPosition.z +
+            hotEndMovement.yDirection * hotEndMovement.ySpeed * Time.deltaTime;
+
+        float finalValue;
+        if ((newValue - hotEndMovement.yTarget) * hotEndMovement.yDirection > 0)
+        {
+            finalValue = hotEndMovement.yTarget;
+        }
+        else
+        {
+            finalValue = newValue;
+        }
+        printerAxys.yAxys.transform.localPosition =
+            new Vector3(printerAxys.yAxys.transform.localPosition.x,
+                        printerAxys.yAxys.transform.localPosition.y, 
+                        finalValue
+                        );
+        return true;
     }
 
     internal void RemoveCard()
@@ -491,3 +586,43 @@ public class PrinterData : PrinterDataVer0
 //    public string prefab;
 //    public PrinterData data;
 //}
+
+
+[System.Serializable]
+public class PrinterAxys
+{
+    public GameObject xAxys;
+    public Vector2 xAxysLimits;
+    public GameObject yAxys;
+    public Vector2 yAxysLimits;
+    public GameObject zAxys;
+    public Vector2 zAxysLimits;
+    public float speedLimit = 100.0f;
+}
+[System.Serializable]
+public class ScreenFields
+{
+    bool isOn;
+    public bool IsOn { get { return isOn; } set { isOn = value; } }
+    public bool ignoreButton;
+    public Canvas Screen;
+    public TextMeshProUGUI NameInfo;
+    public TextMeshProUGUI FilamentInfo;
+    public TextMeshProUGUI MemoryCardInfo;
+    public TextMeshProUGUI ModelInfo;
+    public Button PrintButton;
+    public Button FilamentButton;
+    public Button MemoryCardButton;
+    public Button ModelUp;
+    public Button ModelDown;
+}
+
+public class HotEndMovement
+{
+    public float xTarget;
+    public float xDirection;
+    public float xSpeed;
+    public float yTarget;
+    public float yDirection;
+    public float ySpeed;
+}

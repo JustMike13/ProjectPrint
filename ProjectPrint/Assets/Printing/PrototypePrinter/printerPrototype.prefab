@@ -2699,6 +2699,10 @@ MonoBehaviour:
     MemoryCardButton: {fileID: 4575360328337108655}
     ModelUp: {fileID: 4315669605912372013}
     ModelDown: {fileID: 1725968216765720090}
+  axysLimits:
+    xAxys: {x: 0.026, y: -0.472}
+    yAxys: {x: 0, y: 0}
+    zAxys: {x: -0.339, y: 0.017}
 --- !u!65 &1977412387736978406
 BoxCollider:
   m_ObjectHideFlags: 0
