@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4814109438438464477
+--- !u!1001 &2958435103640215320
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -8,67 +8,63 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 3.322567
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2.239997
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: -7511558181221131132, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ba5024d9848676f42b894c0f4b0e733d, type: 2}
-    - target: {fileID: 919132149155446097, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - target: {fileID: 919132149155446097, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       propertyPath: m_Name
       value: CeramicVasePrefab
       objectReference: {fileID: 0}
@@ -76,50 +72,31 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 752932601878350210}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+      addedObject: {fileID: 8114814487853119264}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6294338558940005243}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+      addedObject: {fileID: 1465786221377396319}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 311284953662693737}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
+      addedObject: {fileID: 8225046307349157847}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4701871165570287584}
-  m_SourcePrefab: {fileID: 100100000, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
---- !u!1 &5624519669151426188 stripped
+      addedObject: {fileID: 7429227087316786181}
+  m_SourcePrefab: {fileID: 100100000, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
+--- !u!1 &2724414838935151177 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ee57263a002a1c04f9601db4fea9aeba, type: 3}
-  m_PrefabInstance: {fileID: 4814109438438464477}
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 82dadefd07a82834bb71e8f6c530abd6, type: 3}
+  m_PrefabInstance: {fileID: 2958435103640215320}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &752932601878350210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5624519669151426188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 072f0ae5010daa54887b408e1c16460a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabName: CeramicVase
-  objectName: Ceramic Vase
-  price: 12
-  canBePickedUp: 1
-  id: 1
-  TimeToPrint: 8
-  filamentNeeded: 50
---- !u!54 &6294338558940005243
+--- !u!54 &8114814487853119264
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5624519669151426188}
+  m_GameObject: {fileID: 2724414838935151177}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -140,13 +117,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &311284953662693737
+--- !u!65 &1465786221377396319
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5624519669151426188}
+  m_GameObject: {fileID: 2724414838935151177}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -159,18 +136,37 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.19730881, y: 0.30238578, z: 0.19888443}
-  m_Center: {x: 0.0024699718, y: 0.1457663, z: -0.00042819977}
---- !u!114 &4701871165570287584
+  m_Size: {x: 0.206882, y: 0.31002855, z: 0.20753121}
+  m_Center: {x: 0.0010800362, y: 0.15481532, z: -0.0010458231}
+--- !u!114 &8225046307349157847
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5624519669151426188}
+  m_GameObject: {fileID: 2724414838935151177}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6937740e11175a343a140855b3c076ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Highlight
   hintText: []
+--- !u!114 &7429227087316786181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2724414838935151177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 072f0ae5010daa54887b408e1c16460a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: CeramicVase
+  objectName: Ceramic Vase
+  price: 12
+  canBePickedUp: 1
+  id: 1
+  TimeToPrint: 10
+  filamentNeeded: 50
