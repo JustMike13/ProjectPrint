@@ -19,7 +19,7 @@ public class PrintableModel : InteractableObject
             {
                 GetComponent<MeshRenderer>().material = FilamentSystem.GetColor(filamentName);
                 material = GetComponent<MeshRenderer>().material;
-                material.SetFloat("_Height", Size.y);
+                material.SetFloat("_Height", 100f);
             }
         } }
     bool hasFailed = false;
@@ -98,7 +98,7 @@ public class PrintableModel : InteractableObject
         filamentName = colorName;
         GetComponent<MeshRenderer>().material = FilamentSystem.GetNewColor(colorName);
         material = GetComponent<MeshRenderer>().material;
-        material.SetFloat("_Height", size.y);
+        material.SetFloat("_Height", size.y * 1.05f);
         material.SetFloat("_Percentage", CompletionPercentage/ 100f);
     }
 

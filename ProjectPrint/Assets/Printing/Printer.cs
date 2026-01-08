@@ -59,6 +59,7 @@ public class Printer : InteractableObject
             xSpeed = 0,
             ySpeed = 0
         };
+        ResetAxys();
     }
 
     #region Screen
@@ -117,6 +118,7 @@ public class Printer : InteractableObject
                 //animator.SetBool("Printing", false);
                 moveHotend = false;
                 UpdateScreen();
+                ResetAxys();
             }
             else
             {
@@ -146,9 +148,9 @@ public class Printer : InteractableObject
                 yPos,
                 printerAxys.zAxys.transform.localPosition.z
             );
-            HotendMovement();
         }
-        
+        HotendMovement();
+
         if (screenFields.IsOn && ScreenManager.CurrentState != GameState.Object)
         {
             ScreenOnOff();
@@ -357,13 +359,25 @@ public class Printer : InteractableObject
         return (!isPrinting || ModelHasFinished());
     }
 
+    void ResetAxys()
+    {
+        hotEndMovement.xTarget = printerAxys.xAxysLimits.x;
+        hotEndMovement.xDirection = printerAxys.xAxys.transform.localPosition.x > hotEndMovement.xTarget ? -1 : 1;
+        hotEndMovement.yTarget = printerAxys.yAxysLimits.y;
+        hotEndMovement.yDirection = printerAxys.yAxys.transform.localPosition.y > hotEndMovement.yTarget ? -1 : 1;
+        hotEndMovement.xSpeed = 0.5f;
+        hotEndMovement.ySpeed = 0.5f;
+    }
+
     void MoveHotend()
     {
         Vector3 modelSize = printedModel.GetComponent<PrintableModel>().Size;
-        float xTarget = Random.Range(-modelSize.x/2, modelSize.x / 2);
+        float xCenter = (printerAxys.xAxysLimits.x + printerAxys.xAxysLimits.y) / 2;
+        float xTarget = Random.Range(xCenter - modelSize.x/2, xCenter + modelSize.x / 2);
         float xDirection = xTarget > printerAxys.xAxys.transform.localPosition.x ? 1 : -1;
 
-        float yTarget = Random.Range(-modelSize.y / 2, modelSize.y / 2);
+        float yCenter = (printerAxys.yAxysLimits.x + printerAxys.yAxysLimits.y) / 2;
+        float yTarget = Random.Range(yCenter - modelSize.y / 2, yCenter + modelSize.y / 2);
         float yDirection = yTarget > printerAxys.yAxys.transform.localPosition.y ? 1 : -1;
 
         float speed = Random.Range(printerAxys.speedLimit * 0.3f, printerAxys.speedLimit);
@@ -371,7 +385,7 @@ public class Printer : InteractableObject
         hotEndMovement.xTarget = xTarget;
         hotEndMovement.yTarget = yTarget;
         hotEndMovement.xDirection = xDirection;
-        hotEndMovement.yDirection = yDirection;
+        hotEndMovement.yDirection = yDirection; 
         hotEndMovement.xSpeed = speed;
         hotEndMovement.ySpeed = speed;
     }
@@ -380,7 +394,7 @@ public class Printer : InteractableObject
     {
         bool xmovement = MoveXAxis();
         bool ymovement = MoveYAxis();
-        if (!xmovement && !ymovement)
+        if (!xmovement && !ymovement && !NotBusy())
         {
             MoveHotend();
         }
