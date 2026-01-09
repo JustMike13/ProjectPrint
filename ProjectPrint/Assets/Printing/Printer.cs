@@ -138,16 +138,7 @@ public class Printer : InteractableObject
         //if (!moveHotend)
         if (!NotBusy())
         {
-            // Compute yPos as the value at completionPercentage% between zAxysLimits.x and topLimit
-            float topLimit = printerAxys.zAxysLimits.x + printedModel.GetComponent<PrintableModel>().Size.y;
-            float yPos = Mathf.Lerp(printerAxys.zAxysLimits.x, 
-                topLimit,
-                completionPercentage / 100f); 
-            printerAxys.zAxys.transform.localPosition = new Vector3(
-                printerAxys.zAxys.transform.localPosition.x, 
-                yPos,
-                printerAxys.zAxys.transform.localPosition.z
-            );
+            MoveZAxys();
         }
         HotendMovement();
 
@@ -174,6 +165,20 @@ public class Printer : InteractableObject
             }
             screenFields.ignoreButton = false;
         }
+    }
+
+    private void MoveZAxys()
+    {
+        // Compute yPos as the value at completionPercentage% between zAxysLimits.x and topLimit
+        float topLimit = printerAxys.zAxysLimits.x + printedModel.GetComponent<PrintableModel>().Size.y;
+        float yPos = Mathf.Lerp(printerAxys.zAxysLimits.x,
+            topLimit,
+            completionPercentage / 100f);
+        printerAxys.zAxys.transform.localPosition = new Vector3(
+            printerAxys.zAxys.transform.localPosition.x,
+            yPos,
+            printerAxys.zAxys.transform.localPosition.z
+        );
     }
 
     bool ModelHasFinished()
@@ -365,8 +370,8 @@ public class Printer : InteractableObject
         hotEndMovement.xDirection = printerAxys.xAxys.transform.localPosition.x > hotEndMovement.xTarget ? -1 : 1;
         hotEndMovement.yTarget = printerAxys.yAxysLimits.y;
         hotEndMovement.yDirection = printerAxys.yAxys.transform.localPosition.y > hotEndMovement.yTarget ? -1 : 1;
-        hotEndMovement.xSpeed = 0.5f;
-        hotEndMovement.ySpeed = 0.5f;
+        hotEndMovement.xSpeed = printerAxys.resetSpeed;
+        hotEndMovement.ySpeed = printerAxys.resetSpeed;
     }
 
     void MoveHotend()
@@ -394,9 +399,25 @@ public class Printer : InteractableObject
     {
         bool xmovement = MoveXAxis();
         bool ymovement = MoveYAxis();
-        if (!xmovement && !ymovement && !NotBusy())
+        if (!NotBusy())
         {
-            MoveHotend();
+            if (!xmovement && !ymovement)
+            {
+                MoveHotend();
+            }
+            MoveZAxys();
+        }
+        else
+        {
+            if (printerAxys.zAxys.transform.localPosition.y < printerAxys.zAxysLimits.y)
+            {
+                printerAxys.zAxys.transform.localPosition += new Vector3(0, printerAxys.resetSpeed * Time.deltaTime, 0);
+            }
+            if (printerAxys.zAxys.transform.localPosition.y > printerAxys.zAxysLimits.y)
+            {
+                Vector3 pos = printerAxys.zAxys.transform.localPosition;
+                printerAxys.zAxys.transform.localPosition = new Vector3(pos.x, printerAxys.zAxysLimits.y, pos.z);
+            }
         }
     }
     bool MoveXAxis() { 
@@ -612,6 +633,7 @@ public class PrinterAxys
     public GameObject zAxys;
     public Vector2 zAxysLimits;
     public float speedLimit = 100.0f;
+    public float resetSpeed;
 }
 [System.Serializable]
 public class ScreenFields
