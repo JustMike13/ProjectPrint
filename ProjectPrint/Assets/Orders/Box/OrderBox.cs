@@ -195,7 +195,7 @@ public class OrderBox : InteractableObject
     public void OpenBoxScreen()
     {
         ScreenManager.Instance.OpenBox();
-        BoxScreen.Instance.ShowContents(this);
+        BoxScreen.Instance.ShowContents(this); // TODO: Remove Instance
     }
     public override string CreateSave(string saveName)
     {

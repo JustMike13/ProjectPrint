@@ -8,7 +8,7 @@ public enum GameState
     PlayMode,
     Pause,
     Shop,
-    Object,
+    Printer,
     Box,
     Profile
 }
@@ -19,6 +19,7 @@ public class ScreenManager : MonoBehaviour
     [SerializeField] GameObject ShopCanvas;
     [SerializeField] GameObject BoxCanvas;
     [SerializeField] GameObject ProfileCanvas;
+    [SerializeField] GameObject PrinterCanvas;
     public static ScreenManager Instance;
     private static GameState currentState = GameState.PlayMode;
     public static GameState CurrentState => currentState;
@@ -36,6 +37,7 @@ public class ScreenManager : MonoBehaviour
         PauseCanvas.SetActive(false);
         ShopCanvas.SetActive(false);
         BoxCanvas.SetActive(false);
+        PrinterCanvas.SetActive(false);
     }
 
     // Update is called once per frame
@@ -63,8 +65,8 @@ public class ScreenManager : MonoBehaviour
             case GameState.PlayMode:
                 OpenPauseMenu();
                 break;
-            case GameState.Object:
-                CloseObject();
+            case GameState.Printer:
+                ClosePrinter();
                 break;
             case GameState.Shop:
                 CloseShop();
@@ -121,15 +123,19 @@ public class ScreenManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    public static void OpenObject()
+    public static void OpenPrinter(Printer printer)
     {
-        currentState = GameState.Object;
+        currentState = GameState.Printer;
+        Instance.PrinterCanvas.SetActive(true);
+        PrinterScreen.AssignPrinter(printer);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
-    public static void CloseObject()
+    public static void ClosePrinter()
     {
-        if (currentState != GameState.Object) return;
+        if (currentState != GameState.Printer) return;
+        PrinterScreen.RemovePrinter();
+        Instance.PrinterCanvas.SetActive(false);
         currentState = GameState.PlayMode;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

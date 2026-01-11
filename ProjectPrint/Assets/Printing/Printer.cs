@@ -20,7 +20,6 @@ public class Printer : InteractableObject
     [SerializeField] GameObject spoolHolder;
     [SerializeField] PrintableModel failedPrint;
     [SerializeField] float speedMultiplier = 1.0f;
-    [SerializeField] ScreenFields screenFields;
     [SerializeField] PrinterAxys printerAxys;
     #endregion Inspector Fields
     #region Members
@@ -35,15 +34,15 @@ public class Printer : InteractableObject
     int completionPercentage = 0; 
     bool moveHotend = false;
     HotEndMovement hotEndMovement;
+    public delegate void UpdateScreenType();
+    UpdateScreenType updateScreen;
+    public UpdateScreenType UpdateScreen { set => updateScreen = value; }
     #endregion Members
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         animator = GetComponent<Animator>();
         memoryCard = GetComponentInChildren<MemoryCard>();
-        screenFields.Screen.gameObject.SetActive(false);
-        screenFields.IsOn = false;
-        SetUpScreen();
         GetComponent<Highlight>().HighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
         SaveSystem.Subscribe(gameObject, SaveSystem.PrinterPriority);
@@ -63,48 +62,11 @@ public class Printer : InteractableObject
     }
 
     #region Screen
-    private void ScreenOnOff()
-    {
-        if (screenFields.IsOn)
-        {
-            screenFields.Screen.gameObject.SetActive(false);
-            screenFields.IsOn = false;
-            ScreenManager.CloseObject();
-        }
-        else
-        {
-            screenFields.Screen.gameObject.SetActive(true);
-            screenFields.IsOn = true;
-            UpdateScreen();
-            ScreenManager.OpenObject();
-            screenFields.ignoreButton = true;
-        }
-    }
 
-    private void SetUpScreen()
-    {
-        UpdateScreen();
-        screenFields.PrintButton.onClick.AddListener(() => Print());
-        screenFields.FilamentButton.onClick.AddListener(() => FilamentInteract());
-        screenFields.MemoryCardButton.onClick.AddListener(() => MemoryCardInteract());
-        screenFields.ModelUp.onClick.AddListener(() => ChangeModel(1));
-        screenFields.ModelDown.onClick.AddListener(() => ChangeModel(-1));
-    }
-
-    private void UpdateScreen()
-    {
-        if (screenFields.IsOn == false)
-            return;
-
-        screenFields.FilamentButton.GetComponentInChildren<TMP_Text>().text = filament != null ? "Take filament" : "Add filament";
-        screenFields.MemoryCardButton.GetComponentInChildren<TMP_Text>().text = memoryCard != null ? "Take card" : "Add card";
-        screenFields.NameInfo.text = ObjectName;
-        screenFields.FilamentInfo.text = filament != null ? filament.name : "No filament";
-        screenFields.MemoryCardInfo.text = memoryCard != null ? memoryCard.name : "No card";
-        screenFields.PrintButton.GetComponentInChildren<TMP_Text>().text =
-            NotBusy() ? (printedModel != null ? "Take print" : "Start print") : "Is printing";
-        screenFields.ModelInfo.text = memoryCard != null && modelIndex != -1 ? memoryCard.Models[modelIndex].name : "No model selected";
-    }
+    public string HasFilament() => filament == null ? "" : filament.ObjectName;
+    public string HasCard() => memoryCard == null ? "" : memoryCard.ObjectName;
+    public string SelectedModel() => memoryCard == null || modelIndex == -1 ? "" : memoryCard.Models[modelIndex].name;
+    public bool HasModel() => printedModel != null;
     #endregion //Screen
     // Update is called once per frame
     void Update()
@@ -117,7 +79,7 @@ public class Printer : InteractableObject
             {
                 //animator.SetBool("Printing", false);
                 moveHotend = false;
-                UpdateScreen();
+                updateScreen?.Invoke();
                 ResetAxys();
             }
             else
@@ -142,29 +104,26 @@ public class Printer : InteractableObject
         }
         HotendMovement();
 
-        if (screenFields.IsOn && ScreenManager.CurrentState != GameState.Object)
-        {
-            ScreenOnOff();
-        }
-        if (screenFields.IsOn) 
-        {
-            if (!screenFields.ignoreButton)
-            {
-                if (UIButton1.WasPressedThisFrame())
-                {
-                    Print();
-                }
-                if (UIButton2.WasPressedThisFrame())
-                {
-                    FilamentInteract();
-                }
-                if (UIButton3.WasPressedThisFrame())
-                {
-                    MemoryCardInteract();
-                }
-            }
-            screenFields.ignoreButton = false;
-        }
+        // TODO: Move to PrinterScreen
+        //if (screenFields.IsOn) 
+        //{
+        //    if (!screenFields.ignoreButton)
+        //    {
+        //        if (UIButton1.WasPressedThisFrame())
+        //        {
+        //            Print();
+        //        }
+        //        if (UIButton2.WasPressedThisFrame())
+        //        {
+        //            FilamentInteract();
+        //        }
+        //        if (UIButton3.WasPressedThisFrame())
+        //        {
+        //            MemoryCardInteract();
+        //        }
+        //    }
+        //    screenFields.ignoreButton = false;
+        //}
     }
 
     private void MoveZAxys()
@@ -202,7 +161,7 @@ public class Printer : InteractableObject
         }
     }
 
-    void Print()
+    public void Print()
     {
         if (!isPrinting)
         {
@@ -216,7 +175,7 @@ public class Printer : InteractableObject
                 isPrinting = false;
             }
         }
-        UpdateScreen();
+        updateScreen?.Invoke();
     }
 
     void StartPrinting()
@@ -277,7 +236,7 @@ public class Printer : InteractableObject
         }
         if (control == ControlBinding.Menu)
         {
-            ScreenOnOff();
+            ScreenManager.OpenPrinter(this);
         }
         return null;
     }
@@ -294,7 +253,7 @@ public class Printer : InteractableObject
         }
     }
 
-    private void MemoryCardInteract()
+    public void MemoryCardInteract()
     {
         if (ItemHolder.IsHoldingSomething())
         {
@@ -307,7 +266,7 @@ public class Printer : InteractableObject
         {
             RemoveCard();
         }
-        UpdateScreen();
+        updateScreen?.Invoke();
     }
 
     private void SetMemoryCard(MemoryCard mc)
@@ -325,7 +284,7 @@ public class Printer : InteractableObject
         }
     }
 
-    void FilamentInteract()
+    public void FilamentInteract()
     {
         if (ItemHolder.IsHoldingSomething())
         {
@@ -342,7 +301,7 @@ public class Printer : InteractableObject
             ItemHolder.HoldItem(filament.gameObject);
             filament = null;
         }
-        UpdateScreen();
+        updateScreen?.Invoke();
     }
 
     private void InsertFilament(FilamentSpool fs)
@@ -495,13 +454,12 @@ public class Printer : InteractableObject
         if (x > 0 && modelIndex < memoryCard.Models.Count - 1)
         {
             modelIndex++;
-            screenFields.ModelInfo.text = memoryCard.Models[modelIndex].GetComponent<InteractableObject>().ObjectName;
         }
         else if (x < 0 && modelIndex > 0)
         {
             modelIndex -= 1;
-            screenFields.ModelInfo.text = memoryCard.Models[modelIndex].GetComponent<InteractableObject>().ObjectName;
         }
+        updateScreen?.Invoke();
     }
 
     #region Save System
@@ -614,15 +572,6 @@ public class PrinterData : PrinterDataVer0
     public override int modelIndex { get { return modelIndexVar; } set { modelIndexVar = value; } }
 }
 
-//[System.Serializable]
-//public class PrinterJson
-//{
-//    public string type;
-//    public string prefab;
-//    public PrinterData data;
-//}
-
-
 [System.Serializable]
 public class PrinterAxys
 {
@@ -634,23 +583,6 @@ public class PrinterAxys
     public Vector2 zAxysLimits;
     public float speedLimit = 100.0f;
     public float resetSpeed;
-}
-[System.Serializable]
-public class ScreenFields
-{
-    bool isOn;
-    public bool IsOn { get { return isOn; } set { isOn = value; } }
-    public bool ignoreButton;
-    public Canvas Screen;
-    public TextMeshProUGUI NameInfo;
-    public TextMeshProUGUI FilamentInfo;
-    public TextMeshProUGUI MemoryCardInfo;
-    public TextMeshProUGUI ModelInfo;
-    public Button PrintButton;
-    public Button FilamentButton;
-    public Button MemoryCardButton;
-    public Button ModelUp;
-    public Button ModelDown;
 }
 
 public class HotEndMovement
