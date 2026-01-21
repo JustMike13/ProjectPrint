@@ -27,7 +27,8 @@ public class PrintableModel : InteractableObject
             hasFailed = value;
             GetComponent<Rigidbody>().isKinematic = !value;
             GetComponent<BoxCollider>().enabled = value;
-        } }
+        } 
+        get { return hasFailed; } }
     public bool IsFinished { get { return completionPercentage == 100f || hasFailed; } }
     float elapsedTime = 0;
     Material material;
@@ -39,7 +40,7 @@ public class PrintableModel : InteractableObject
     void Awake() 
     {
         SaveSystem.Subscribe(gameObject);
-        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
         material = GetComponent<Renderer>().material;
         size = GetComponent<Renderer>().bounds.size;
@@ -70,7 +71,15 @@ public class PrintableModel : InteractableObject
     {
         return filamentName + " " + ObjectName;
     }
-
+    public override void StartHighlight()
+    {
+        ScreenHint hint = new ScreenHint
+        {
+            Hint = ToString(),
+            RightClickHint = "Pick up model"
+        };
+        ScreenHints.AddHints(hint);
+    }
     public void EnableModel(bool val, bool resetTime = false)
     {
         if(!val)
@@ -102,6 +111,7 @@ public class PrintableModel : InteractableObject
         material.SetFloat("_Percentage", CompletionPercentage/ 100f);
     }
 
+    #region SaveSystem
     public override string CreateSave(string saveName)
     {
         if (base.CreateSave(saveName) != "")
@@ -147,6 +157,7 @@ public class PrintableModel : InteractableObject
         GetComponent<BoxCollider>().enabled = parsed.data.enabled;
         Debug.Log("Loaded " + parsed.prefab);
     }
+    #endregion SaveSystem
 }
 [System.Serializable]
 public class PrintModelData

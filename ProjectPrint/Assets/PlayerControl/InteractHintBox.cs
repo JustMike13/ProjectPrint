@@ -29,16 +29,16 @@ public class InteractHintBox : MonoBehaviour
     {
         if (textAddedAt != -1 && Time.time - textAddedAt > highlightTime)
         {
-            RemoveText();
+            //RemoveText();
         }
-    }
+    } 
 
     public static void AddText(string text)
     {
         if (ScreenManager.CurrentState != GameState.PlayMode) return;
 
         textAddedAt = Time.time;
-        HintTextBox.text = text;
+        //HintTextBox.text = text;
     }
 
     public static void RemoveText()

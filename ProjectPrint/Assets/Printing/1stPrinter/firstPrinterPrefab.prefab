@@ -1071,7 +1071,7 @@ GameObject:
   - component: {fileID: 7811123186076682320}
   m_Layer: 0
   m_Name: firstPrinterPrefab
-  m_TagString: Untagged
+  m_TagString: Movable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1108,9 +1108,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Highlight
   hintText:
-  - (E) Pick up print\n(F) Printer screen
-  - Printer is running...\n(F) Printer screen
-  - (E) Start print\n(F) Printer screen
+  - Print finished
+  - Printer is running...
+  - Printer is ready
+  - No memory card
+  - No filament
+  - Insert card
+  - Load filament
+  - Print failed
+  - Pick up print
+  - Check display
+  - No model selected
+  - Start print
+  - Move printer
 --- !u!65 &6812446084929021068
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1154,18 +1164,6 @@ MonoBehaviour:
   spoolHolder: {fileID: 7685720386469661824}
   failedPrint: {fileID: 2591486108463036601, guid: 8e543eb70ab13264fa5c5d378acf770c, type: 3}
   speedMultiplier: 1
-  screenFields:
-    ignoreButton: 0
-    Screen: {fileID: 4807457715883128760}
-    NameInfo: {fileID: 7221635625629813095}
-    FilamentInfo: {fileID: 5029851648344621229}
-    MemoryCardInfo: {fileID: 7428826399032718904}
-    ModelInfo: {fileID: 6019491461999343716}
-    PrintButton: {fileID: 2314137376283186862}
-    FilamentButton: {fileID: 6362381343990305406}
-    MemoryCardButton: {fileID: 358619357326376165}
-    ModelUp: {fileID: 5755519428162997214}
-    ModelDown: {fileID: 2218649127035674684}
   printerAxys:
     xAxys: {fileID: 1117661110978631217}
     xAxysLimits: {x: 0.102, y: -0.494}
@@ -1174,6 +1172,7 @@ MonoBehaviour:
     zAxys: {fileID: 6673513150330721744}
     zAxysLimits: {x: -0.363, y: 0.088}
     speedLimit: 2
+    resetSpeed: 0
 --- !u!1 &2636746391839624826
 GameObject:
   m_ObjectHideFlags: 0

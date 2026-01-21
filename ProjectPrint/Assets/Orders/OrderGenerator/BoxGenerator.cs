@@ -10,7 +10,7 @@ public class BoxGenerator : InteractableObject
 
     private void Awake()
     {
-        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
     bool IsEmpty()

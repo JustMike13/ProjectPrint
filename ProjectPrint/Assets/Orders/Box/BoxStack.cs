@@ -7,7 +7,7 @@ public class BoxStack : InteractableObject
     [SerializeField] int quantity = 10;
     private void Awake()
     {
-        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
         ChangeSize();
         SaveSystem.Subscribe(this.gameObject, SaveSystem.LowPriority);

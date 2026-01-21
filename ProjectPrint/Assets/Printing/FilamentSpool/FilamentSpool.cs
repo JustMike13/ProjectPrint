@@ -41,7 +41,7 @@ public class FilamentSpool : InteractableObject
     private void Awake()
     {
         SaveSystem.Subscribe(this.gameObject);
-        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
 

@@ -83,18 +83,6 @@ MonoBehaviour:
   spoolHolder: {fileID: 7145441122131081598}
   failedPrint: {fileID: 2591486108463036601, guid: 8e543eb70ab13264fa5c5d378acf770c, type: 3}
   speedMultiplier: 1.5
-  screenFields:
-    ignoreButton: 0
-    Screen: {fileID: 4195143735441084417}
-    NameInfo: {fileID: 5675040643541458142}
-    FilamentInfo: {fileID: 4069105138398684463}
-    MemoryCardInfo: {fileID: 4502430384916291990}
-    ModelInfo: {fileID: 2130571296227801267}
-    PrintButton: {fileID: 2204483947234710577}
-    FilamentButton: {fileID: 5065499753303958879}
-    MemoryCardButton: {fileID: 7030022438584487505}
-    ModelUp: {fileID: 2096697369747663835}
-    ModelDown: {fileID: 2678391231819238792}
   printerAxys:
     xAxys: {fileID: 0}
     xAxysLimits: {x: 0, y: 0}
@@ -102,6 +90,8 @@ MonoBehaviour:
     yAxysLimits: {x: 0, y: 0}
     zAxys: {fileID: 7458940751678866773}
     zAxysLimits: {x: -0.28, y: 0.4}
+    speedLimit: 100
+    resetSpeed: 0
 --- !u!65 &1969432387991231616
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -136,9 +126,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Highlight
   hintText:
-  - (E) Pick up print\n(F) Printer screen
-  - Printer is running...\n(F) Printer screen
-  - (E) Start print\n(F) Printer screen
+  - Print finished
+  - Printer is running...
+  - Printer is ready
+  - No memory card
+  - No filament
+  - Insert card
+  - Load filament
+  - Print failed
+  - Pick up print
+  - Check display
+  - No model selected
+  - Start print
+  - Move printer
 --- !u!1 &151699511755287595
 GameObject:
   m_ObjectHideFlags: 0

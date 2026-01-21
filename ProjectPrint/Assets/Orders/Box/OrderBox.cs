@@ -33,7 +33,7 @@ public class OrderBox : InteractableObject
     private void Awake()
     {
         SaveSystem.Subscribe(gameObject, SaveSystem.OrderBoxPriority);
-        GetComponent<Highlight>().HighlightFunc = StartHighlight;
+        GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
         GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
 

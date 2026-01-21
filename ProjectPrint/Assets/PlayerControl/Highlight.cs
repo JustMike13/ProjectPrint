@@ -6,28 +6,19 @@ public class Highlight : MonoBehaviour
 {
     [SerializeField] List<string> hintText = new List<string>();
     public List<string> HintText { get { return hintText; } }
-    public delegate void HighlightFunction();
+    public delegate void VoidHighlightFunction();
+    VoidHighlightFunction voidHighlightFunc;
+    public VoidHighlightFunction VoidHighlightFunc { set { voidHighlightFunc = value; } }
+    // TODO: Remove parameterized method
     public delegate void HighlightFunctionPar(string text);
-    HighlightFunction highlightFunc;
-    public HighlightFunction HighlightFunc { set { highlightFunc = value; } }
     HighlightFunctionPar highlightFuncPar;
     public HighlightFunctionPar HighlightFuncPar { set { highlightFuncPar = value; } }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    // end TO DO
     public virtual void StartHighlight()
     {
-        if (highlightFunc != null)
+        if (voidHighlightFunc != null)
         {
-            highlightFunc();
+            voidHighlightFunc();
             return;
         }
         if (hintText.Count > 0)
@@ -45,7 +36,7 @@ public class Highlight : MonoBehaviour
             Debug.LogWarning("Hint text index " + i + " out of range.");
             return;
         }
-        if (highlightFunc != null)
+        if (voidHighlightFunc != null)
         {
             highlightFuncPar(HintText[i]);
             return;

@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,9 +10,19 @@ using Random = UnityEngine.Random;
 public class Printer : InteractableObject
 {
     #region Constants
-    const int PickUpText = 0;
+    const int PrintDoneText = 0;
     const int RunningText = 1;
-    const int StartText = 2;
+    const int ReadyText = 2;
+    const int MissingCardText = 3;
+    const int MissingFilamentText = 4;
+    const int AddCardText = 5;
+    const int AddFilamentText = 6;
+    const int PrintFailedText = 7;
+    const int PickUpPrintText = 8;
+    const int OpenScreenText = 9;
+    const int NoModelSelectedText = 10;
+    const int StartPrint = 11;
+    const int MoveText = 12;
     #endregion Constants
     #region Inspector Fields
     [SerializeField] MemoryCard memoryCard;
@@ -43,8 +54,7 @@ public class Printer : InteractableObject
     {
         animator = GetComponent<Animator>();
         memoryCard = GetComponentInChildren<MemoryCard>();
-        GetComponent<Highlight>().HighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
+        GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
         SaveSystem.Subscribe(gameObject, SaveSystem.PrinterPriority);
         UIButton1 = InputSystem.actions.FindAction("UIButton1");
         UIButton2 = InputSystem.actions.FindAction("UIButton2");
@@ -147,18 +157,56 @@ public class Printer : InteractableObject
      
     public override void StartHighlight()
     {
+        string hintText = "";
+        ScreenHint hint = new ScreenHint();
+        hint.ClickHint = GetComponent<Highlight>().HintText[OpenScreenText];
+        hint.RightClickHint = GetComponent<Highlight>().HintText[MoveText];
+
         if (!isPrinting)
         {
-            GetComponent<Highlight>().StartHighlight(StartText);
+            if (memoryCard == null)
+            {
+                hint.Hint = GetComponent<Highlight>().HintText[MissingCardText] + "\n";
+                if (ItemHolder.IsHolding<MemoryCard>())
+                {
+                    hint.EHint = GetComponent<Highlight>().HintText[AddCardText];
+                }
+            }
+            else if (modelIndex == -1)
+            {
+                hint.Hint = GetComponent<Highlight>().HintText[NoModelSelectedText] + "\n";
+            }
+            if (filament == null)
+            {
+                hint.Hint += GetComponent<Highlight>().HintText[MissingFilamentText];
+                if (ItemHolder.IsHolding<FilamentSpool>())
+                {
+                    hint.EHint = GetComponent<Highlight>().HintText[AddFilamentText];
+                }
+            }
+            if (hint.Hint == "")
+            {
+                hint.Hint = GetComponent<Highlight>().HintText[ReadyText];
+                hint.FHint = GetComponent<Highlight>().HintText[StartPrint];
+            }
         }
         else if (!ModelHasFinished())
         {
-            GetComponent<Highlight>().StartHighlight(RunningText);
+            hint.Hint = GetComponent<Highlight>().HintText[RunningText];
         }
         else
         {
-            GetComponent<Highlight>().StartHighlight(PickUpText);
+            if (printedModel.GetComponent<PrintableModel>().HasFailed)
+            {
+                hint.Hint = GetComponent<Highlight>().HintText[PrintFailedText];
+            }
+            else
+            {
+                hint.Hint = GetComponent<Highlight>().HintText[PrintDoneText];
+            }
+            hint.FHint = GetComponent<Highlight>().HintText[PickUpPrintText];
         }
+        ScreenHints.AddHints(hint);
     }
 
     public void Print()
