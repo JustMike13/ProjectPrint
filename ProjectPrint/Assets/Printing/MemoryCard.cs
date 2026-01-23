@@ -27,12 +27,6 @@ public class MemoryCard : InteractableObject
     {
         SaveSystem.Subscribe(gameObject);
         GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
-    }
-    public override void StartHighlight()
-    {
-        base.StartHighlight();
-        InteractHintBox.AddText("Model on card: " + models[0].name);
     }
     public void EnableCard(bool val)
     {

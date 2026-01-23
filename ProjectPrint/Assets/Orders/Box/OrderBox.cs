@@ -34,7 +34,6 @@ public class OrderBox : InteractableObject
     {
         SaveSystem.Subscribe(gameObject, SaveSystem.OrderBoxPriority);
         GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
 
     public override void Recycle()
@@ -173,23 +172,30 @@ public class OrderBox : InteractableObject
 
     public override void StartHighlight()
     {
-        base.StartHighlight();
-        if (ItemHolder.IsHoldingSomething())
+        ScreenHint hint = new ScreenHint();
+        hint.Hint = "Box";
+        hint.ClickHint = "Look inside box";
+        if (ItemHolder.IsHolding<PrintableModel>())
         {
-            GetComponent<Highlight>().StartHighlight(placeInBoxMessage);
+            hint.EHint = GetComponent<Highlight>().HintText[placeInBoxMessage];
+        }
+        else if (ItemHolder.IsHolding<ShippingLabel>())
+        {
+            hint.EHint = "Add label to box";
         }
         if (!ItemHolder.IsHoldingSomething())
         {
-            GetComponent<Highlight>().StartHighlight(sendOrderMessage);
+            hint.RightClickHint = "Pick up";
         }
         if (ShippingLabel != null && ShippingLabel.GetOrder != null)
         {
-            OrderDetailsTextBox.AddText("Ordered items:\n" + ShippingLabel.GetOrder.ToString());
+            hint.Contents = "Ordered items:\n" + ShippingLabel.GetOrder.ToString();
         }
         else
         {
-            OrderDetailsTextBox.AddText("Empty Box");
+            hint.Contents = "The box is empty.";
         }
+        ScreenHints.AddHints(hint);
     }
 
     public void OpenBoxScreen()

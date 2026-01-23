@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2481986753385070366
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6251236717942475880}
+  m_Layer: 0
+  m_Name: OrderCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6251236717942475880
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2481986753385070366}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: 0, y: 1.5842676, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7044878996920751822}
+  m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
 --- !u!1 &6251421005432877827
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,7 +40,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7271407578333235348}
-  - component: {fileID: 7951522140230402417}
+  - component: {fileID: 8147615648410594799}
+  - component: {fileID: 5910571094655594364}
+  - component: {fileID: 5559084855624983589}
   m_Layer: 0
   m_Name: OrderGenerator
   m_TagString: Untagged
@@ -30,12 +63,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5873474453476299049}
   - {fileID: 4162674169195819100}
-  - {fileID: 8371472029430704749}
+  - {fileID: 7044878996920751822}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7951522140230402417
+--- !u!114 &8147615648410594799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,17 +76,53 @@ MonoBehaviour:
   m_GameObject: {fileID: 6251421005432877827}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b34622ab4a49a114298812634786f1fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 6937740e11175a343a140855b3c076ce, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  hintText:
-  - Generate an order
-  Inventory: []
-  maxItems: 12
-  boxPrefab: {fileID: 5457361570442193563, guid: 0a7b6e76127289846b87827a582ab54f, type: 3}
-  center: {fileID: 8546761931665701082}
-  radius: 0.35
---- !u!1 &7037945801595915447
+  m_EditorClassIdentifier: Assembly-CSharp::Highlight
+  hintText: []
+--- !u!65 &5910571094655594364
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6251421005432877827}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6935091, y: 0.077427804, z: 0.3041196}
+  m_Center: {x: -0.101089954, y: 0.0065307915, z: 0.57970715}
+--- !u!65 &5559084855624983589
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6251421005432877827}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6935091, y: 0.077427804, z: 0.3041196}
+  m_Center: {x: -0.101089954, y: 0.0065307915, z: 0.57970715}
+--- !u!1 &7224336726522854014
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -62,47 +130,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5873474453476299049}
-  - component: {fileID: 4840833330406019746}
-  - component: {fileID: 7265035028367987575}
-  - component: {fileID: 7024240337752419856}
+  - component: {fileID: 7044878996920751822}
+  - component: {fileID: 4235579622076063765}
+  - component: {fileID: 7331007475499099690}
   m_Layer: 0
-  m_Name: Platform
+  m_Name: OrderPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5873474453476299049
+--- !u!4 &7044878996920751822
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7037945801595915447}
+  m_GameObject: {fileID: 7224336726522854014}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.70121473, y: 0.09341856, z: 0.7339594}
+  m_LocalScale: {x: 0.4846516, y: 0.09341856, z: 0.32087237}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6251236717942475880}
   m_Father: {fileID: 7271407578333235348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &4840833330406019746
+--- !u!33 &4235579622076063765
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7037945801595915447}
+  m_GameObject: {fileID: 7224336726522854014}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7265035028367987575
+--- !u!23 &7331007475499099690
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7037945801595915447}
+  m_GameObject: {fileID: 7224336726522854014}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -116,6 +184,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -137,31 +207,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7024240337752419856
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7037945801595915447}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8405955671415893677
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,8 +225,9 @@ GameObject:
   - component: {fileID: 1380040074543591306}
   - component: {fileID: 3943971564085856009}
   - component: {fileID: 6080573661221931252}
+  - component: {fileID: 1694987328104824357}
   m_Layer: 0
-  m_Name: Button
+  m_Name: OrderButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -225,6 +276,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -246,6 +299,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -265,12 +319,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.4993865, y: 1.4389664, z: 1.6242129}
+  m_Center: {x: -0.201431, y: 0.21948348, z: 0.08814359}
 --- !u!114 &6080573661221931252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,41 +337,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b34622ab4a49a114298812634786f1fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabName: 
+  objectName: 
+  price: 10
+  canBePickedUp: 0
+  Inventory:
+  - {fileID: 395400950211672764, guid: 2c7afff25fc6201449697f48d9861ea6, type: 3}
+  - {fileID: 752932601878350210, guid: 140616ee94e7d194cb7bbb123a9c7fcc, type: 3}
+  labelPrefab: {fileID: 8103485487434207600, guid: a9a4cc8ab15d48a4eb752fe486c10972, type: 3}
+  center: {fileID: 2481986753385070366}
+  radius: 0.1
+--- !u!114 &1694987328104824357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8405955671415893677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6937740e11175a343a140855b3c076ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Highlight
   hintText:
-  - Generate an order
-  Inventory: []
-  maxItems: 12
-  boxPrefab: {fileID: 5457361570442193563, guid: 0a7b6e76127289846b87827a582ab54f, type: 3}
-  center: {fileID: 8546761931665701082}
-  radius: 0.35
---- !u!1 &8546761931665701082
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8371472029430704749}
-  m_Layer: 0
-  m_Name: Center
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8371472029430704749
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8546761931665701082}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.285, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7271407578333235348}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  - (E) Generate order

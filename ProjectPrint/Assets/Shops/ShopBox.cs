@@ -9,6 +9,7 @@ public class ShopBox : InteractableObject
     private void Awake()
     {
         SaveSystem.Subscribe(gameObject, SaveSystem.HighPriority);
+        GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
     }
     public void AddToBox(GameObject obj)
     {
@@ -100,6 +101,25 @@ public class ShopBox : InteractableObject
             Unpack();
         }
         return null;
+    }
+    public override void StartHighlight()
+    {
+        ScreenHint hint = new ScreenHint();
+        hint.Hint = ObjectName;
+        hint.FHint = "Unpack";
+        if (!ItemHolder.IsHoldingSomething())
+        {
+            hint.RightClickHint = "Pick up";
+        }
+        if (storedObject != null)
+        {
+            hint.Contents = "Label on box:\n" + storedObject.GetComponent<InteractableObject>().ObjectName;
+        }
+        else
+        {
+            Debug.LogError("No contents in package");
+        }
+        ScreenHints.AddHints(hint);
     }
     #region Save System
     public override void Recycle()

@@ -157,7 +157,6 @@ public class Printer : InteractableObject
      
     public override void StartHighlight()
     {
-        string hintText = "";
         ScreenHint hint = new ScreenHint();
         hint.ClickHint = GetComponent<Highlight>().HintText[OpenScreenText];
         hint.RightClickHint = GetComponent<Highlight>().HintText[MoveText];

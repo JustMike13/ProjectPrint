@@ -42,7 +42,6 @@ public class FilamentSpool : InteractableObject
     {
         SaveSystem.Subscribe(this.gameObject);
         GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
 
     private void ShowFilamentSize()
@@ -71,8 +70,11 @@ public class FilamentSpool : InteractableObject
 
     public override void StartHighlight()
     {
-        base.StartHighlight();
-        InteractHintBox.AddText("Filament left: " + quantity);
+        ScreenHint hint = new ScreenHint { 
+            Hint = "Filament left: " + quantity,
+            RightClickHint = "Pick up"
+        };
+        ScreenHints.AddHints(hint);
     }
 
     public override string CreateSave(string saveName)

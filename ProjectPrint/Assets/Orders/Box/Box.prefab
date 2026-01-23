@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: Box
-  ObjectName: Box
+  objectName: Box
   price: 10
   canBePickedUp: 1
   ContainedModels: []
@@ -117,8 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Highlight
   hintText:
-  - (E) Place product in box
-  - (E) Send order
+  - Place product in box
 --- !u!1 &4212799393567316228
 GameObject:
   m_ObjectHideFlags: 0

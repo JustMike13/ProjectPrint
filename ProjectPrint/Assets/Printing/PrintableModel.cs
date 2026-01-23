@@ -41,7 +41,6 @@ public class PrintableModel : InteractableObject
     {
         SaveSystem.Subscribe(gameObject);
         GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
         material = GetComponent<Renderer>().material;
         size = GetComponent<Renderer>().bounds.size;
         EnableModel(false);

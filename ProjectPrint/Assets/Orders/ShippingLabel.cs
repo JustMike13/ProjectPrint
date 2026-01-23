@@ -9,19 +9,21 @@ public class ShippingLabel : InteractableObject
     {
         SaveSystem.Subscribe(gameObject);
         GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
     public override void StartHighlight()
     {
-        GetComponent<Highlight>().StartHighlight(0);
+        ScreenHint hint = new ScreenHint();
+        hint.Hint = "Shipping label";
+        hint.RightClickHint = "Pick up";
         if (order != null)
         {
-            OrderDetailsTextBox.AddText("Ordered items:\n" + order.ToString());
+            hint.Contents = "Ordered items:\n" + order.ToString();
         }
         else
         {
             Debug.LogWarning("No order found for shipping label.");
         }
+        ScreenHints.AddHints(hint);
     }
     public override void Recycle()
     {

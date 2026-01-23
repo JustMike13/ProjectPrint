@@ -5,7 +5,6 @@ public class TrashCan : InteractableObject
     private void Awake()
     {
         GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
     }
     public override GameObject Interact(ControlBinding control)
     {
@@ -18,7 +17,12 @@ public class TrashCan : InteractableObject
     }
     public override void StartHighlight()
     {
-        base.StartHighlight();
-        InteractHintBox.AddText("(E) Throw item into trash can");
+        ScreenHint hint = new ScreenHint();
+        if (ItemHolder.IsHoldingSomething())
+        {
+            hint.EHint = "Throw item into trash can";
+        }
+        hint.Hint = "Trash can";
+        ScreenHints.AddHints(hint);
     }
 }

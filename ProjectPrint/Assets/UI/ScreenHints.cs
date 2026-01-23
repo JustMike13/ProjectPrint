@@ -31,14 +31,14 @@ public class ScreenHints : MonoBehaviour
             return;
         }
         Instance = this;
-        RemoveText();
+        RemoveHints();
     }
 
     private void Update()
     {
         if (textAddedAt != -1 && Time.time - textAddedAt > highlightTime)
         {
-            RemoveText();
+            RemoveHints();
         }
     }
 
@@ -77,7 +77,7 @@ public class ScreenHints : MonoBehaviour
         Instance.ControlsBox.text = controls;
     }
 
-    public static void RemoveText()
+    public static void RemoveHints()
     {
         Instance.HintTextBox.text = "";
         Instance.ContentsBox.text = "";

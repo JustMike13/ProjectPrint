@@ -10,24 +10,19 @@ public class InteractableObject : SaveObject
     public string ObjectName { get { return objectName; } }
     [SerializeField] bool canBePickedUp = true;
     public bool CanBePickedUp { get { return canBePickedUp; } set { canBePickedUp = value; } }
-    float lastInteraction = 0;
-    private float highlightTime = 1f;
-    private bool hasInteracted;
 
-    private void Update()
+    private void Awake()
     {
-        if (hasInteracted && lastInteraction - Time.time > highlightTime)
-        {
-            hasInteracted = false;
-        }
+        GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
     }
-    public virtual void StartHighlight(string text)
+    public virtual void StartHighlight()
     {
-        hasInteracted = true;
-        lastInteraction = Time.time;
-        InteractHintBox.AddText(text);
+        ScreenHint hint = new ScreenHint { 
+            Hint = objectName,
+            RightClickHint = CanBePickedUp ? "Pick up" : "Move"
+        };
+        ScreenHints.AddHints(hint);
     }
-    public virtual void StartHighlight() { return; }
 
     public virtual GameObject Interact(ControlBinding control)
     {

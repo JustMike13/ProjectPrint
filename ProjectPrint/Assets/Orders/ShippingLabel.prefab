@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShippingLabel
   prefabName: ShippingLabel
-  ObjectName: Label
+  objectName: 
   price: 0
   canBePickedUp: 1
 --- !u!54 &-683030735829482153
@@ -112,8 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6937740e11175a343a140855b3c076ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Highlight
-  hintText:
-  - Pick up shipping label
+  hintText: []
 --- !u!1 &5035397364549671430
 GameObject:
   m_ObjectHideFlags: 0

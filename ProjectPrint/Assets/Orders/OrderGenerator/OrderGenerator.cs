@@ -18,7 +18,6 @@ public class OrderGenerator : InteractableObject
     private void Awake()
     {
         GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
         InventoryStatic = Inventory;
     }
     bool IsEmpty()
@@ -50,10 +49,7 @@ public class OrderGenerator : InteractableObject
     }
     public override void StartHighlight()
     {
-        if (IsEmpty())
-        {
-            GetComponent<Highlight>().StartHighlight(GenerateOrderMessage);
-        }
+        ScreenHints.AddHints(new ScreenHint { Hint = "Order generator", EHint = "Generate order" });
     }
 
     private void GenerateOrder()

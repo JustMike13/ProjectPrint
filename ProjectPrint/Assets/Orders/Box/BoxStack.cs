@@ -8,7 +8,6 @@ public class BoxStack : InteractableObject
     private void Awake()
     {
         GetComponent<Highlight>().VoidHighlightFunc = StartHighlight;
-        GetComponent<Highlight>().HighlightFuncPar = StartHighlight;
         ChangeSize();
         SaveSystem.Subscribe(this.gameObject, SaveSystem.LowPriority);
     }
@@ -44,8 +43,11 @@ public class BoxStack : InteractableObject
 
     public override void StartHighlight()
     {
-        base.StartHighlight();
-        InteractHintBox.AddText("Stack of " + quantity + " boxes\n (F) Grab a box");
+        ScreenHint hint = new ScreenHint();
+        hint.Hint = "Stack of " + quantity + " boxes";
+        hint.FHint = "Grab a box";
+        hint.RightClickHint = "Pick up";
+        ScreenHints.AddHints(hint);
     }
 
     public override string CreateSave(string saveName)
