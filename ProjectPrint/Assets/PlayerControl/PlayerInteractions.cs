@@ -160,8 +160,19 @@ public class PlayerInteractions : MonoBehaviour
             {
                 hl.StartHighlight();
             }
+
+            if (IsTopSurface(hit.normal) && ItemHolder.IsMovingSomething) // threshold in degrees
+            {
+                ItemHolder.MovingPosition = hit.point;
+            }
         }
         UpdateLastInteracted(intObj);
+    }
+
+    private bool IsTopSurface(Vector3 normal, float maxAngleDeg = 10f)
+    {
+        // returns true when the surface normal is within maxAngleDeg of Vector3.up
+        return Vector3.Angle(normal, Vector3.up) <= maxAngleDeg;
     }
 
     void UpdateLastInteracted(InteractableObject newObj = null)

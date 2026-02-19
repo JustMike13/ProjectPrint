@@ -13,9 +13,27 @@ public class ItemHolder : MonoBehaviour
     [SerializeField] InputActionAsset inputActions;
     public static ItemHolder Instance { get; private set; }
     static bool moving = false;
-    public static bool Moving { get { return moving; } set { moving = value; } }
+    public static bool IsMovingSomething { get { return moving; } 
+        set 
+        { 
+            moving = value; 
+            if (!moving)
+            {
+                MovingPosition = Vector3.zero;
+            }
+        } }
     static bool pickedUpThisFrame = false;
     static float angle = -1f;
+    static Vector3 movingPosition = Vector3.zero;
+    static float positionSetAt = 0f;
+    public static Vector3 MovingPosition { get { return movingPosition; } 
+        set 
+        { 
+            movingPosition = value; 
+            positionSetAt = Time.time;
+        } }
+    private float positionDelay = 0.1f;
+    bool prevMouse = false;
     InputAction RightClick;
     InputAction MoveButton;
     InputAction RotateButton;
@@ -36,7 +54,7 @@ public class ItemHolder : MonoBehaviour
         }
     }
 
-    bool prevMouse = false;
+
     private void Update()
     {
         if (!moving)
@@ -58,21 +76,25 @@ public class ItemHolder : MonoBehaviour
             prevMouse = mouseVal;
             return;
         }
-        if (currentItem != null)
+        else if (currentItem != null)
         {
             if (objectMover == null)
             {
                 Debug.LogError("No object mover assigned to ItemHolder");
                 return;
             }
-            RaycastHit hit; 
-            if (Physics.Raycast(objectMover.transform.position,
-                    Vector3.down,
-                    out hit,
-                    Mathf.Infinity))
+            RaycastHit hit;
+            bool hasHit = Physics.Raycast(objectMover.transform.position,
+                        Vector3.down,
+                        out hit,
+                        Mathf.Infinity);
+            if (movingPosition == Vector3.zero)
             {
-                Vector3 hitPoint = hit.point;
-                currentItem.transform.position = hitPoint;
+                currentItem.transform.position = hit.point;
+            }
+            else
+            {
+                currentItem.transform.position = movingPosition;
             }
             if (angle == -1)
             {
@@ -89,36 +111,10 @@ public class ItemHolder : MonoBehaviour
             {
                 currentItem.transform.rotation = Quaternion.Euler(0, angle, 0);
             }
-                Quaternion objRotation = hit.collider.transform.rotation;
-            if (RotateButton.WasPressedThisFrame())
-            {
-                float[] targetRotations = new float[4];
-                for (int i = 0; i < 4; i++)
-                {
-                    targetRotations[i] = objRotation.eulerAngles.y + i * 90;
-                    if (targetRotations[i] > 360)
-                    {
-                        targetRotations[i] -= 360;
-                    }
-                }
-                bool found = false;
-                foreach (float target in targetRotations)
-                {
-                    float angleDiff = target - angle;
-                    if (angleDiff < 5f && angleDiff > -5)
-                    {
-                        angle = target + 90;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    angle = objRotation.eulerAngles.y;
-                }
-            }
 
-            if (MoveButton.WasPressedThisFrame() 
+            HandleRotation(hit.collider.transform.rotation);
+
+            if (MoveButton.WasPressedThisFrame()
                 && currentItem != null
                 && !pickedUpThisFrame)
             {
@@ -126,8 +122,48 @@ public class ItemHolder : MonoBehaviour
                 currentItem.GetComponent<Collider>().enabled = true;
                 TakeItem();
                 angle = -1f;
+                MovingPosition = Vector3.zero;
             }
             pickedUpThisFrame = false;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (Time.time - positionSetAt > positionDelay)
+        {
+            movingPosition = Vector3.zero;
+        }
+    }
+
+    private void HandleRotation(Quaternion objRotation)
+    {
+        if (RotateButton.WasPressedThisFrame())
+        {
+            float[] targetRotations = new float[4];
+            for (int i = 0; i < 4; i++)
+            {
+                targetRotations[i] = objRotation.eulerAngles.y + i * 90;
+                if (targetRotations[i] > 360)
+                {
+                    targetRotations[i] -= 360;
+                }
+            }
+            bool found = false;
+            foreach (float target in targetRotations)
+            {
+                float angleDiff = target - angle;
+                if (angleDiff < 5f && angleDiff > -5)
+                {
+                    angle = target + 90;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                angle = objRotation.eulerAngles.y;
+            }
         }
     }
 
