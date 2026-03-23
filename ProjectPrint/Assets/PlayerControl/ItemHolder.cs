@@ -183,12 +183,17 @@ public class ItemHolder : MonoBehaviour
         {
             return false;
         }
+        InteractableObject intObj = item.GetComponent<InteractableObject>();
+        if (intObj != null)
+        {
+            intObj.OnPickUp();
+        }
         pickedUpThisFrame = true;
         currentItem = item;
         currentItem.transform.parent = Instance.transform;
         currentItem.transform.localPosition = Vector3.zero;
         //currentItem.transform.localScale = Vector3.one;
-        //currentItem.transform.rotation = Quaternion.identity;
+        //currentItem.transform.rotation = Quaternion.identity; 
         Rigidbody rb = currentItem.GetComponent<Rigidbody>();
         if (rb != null)
         {

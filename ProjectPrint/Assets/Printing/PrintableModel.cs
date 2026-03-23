@@ -14,6 +14,10 @@ public class PrintableModel : InteractableObject
         set 
         {
             completionPercentage = value;
+            if (completionPercentage > 100f)
+            {
+                completionPercentage = 100f;
+            }
             material.SetFloat("_Percentage", completionPercentage / 100f);
             if (completionPercentage == 100f)
             {
@@ -59,10 +63,10 @@ public class PrintableModel : InteractableObject
         {
             elapsedTime += Time.deltaTime;
             CompletionPercentage = (int)((elapsedTime / TimeToPrint) * 100);
-            if (elapsedTime > TimeToPrint)
-            {
-                EnableModel(true);
-            }
+            //if (elapsedTime > TimeToPrint)
+            //{
+            //    EnableModel(true);
+            //}
         }
     }
 
@@ -85,9 +89,6 @@ public class PrintableModel : InteractableObject
         {
             CompletionPercentage = 0f;
         }
-        else{
-            CompletionPercentage = 100f;
-        }
         GetComponent<Rigidbody>().isKinematic = !val;
         GetComponent<BoxCollider>().enabled = val;
         if (resetTime)
@@ -108,6 +109,11 @@ public class PrintableModel : InteractableObject
         material = GetComponent<MeshRenderer>().material;
         material.SetFloat("_Height", size.y * 1.05f);
         material.SetFloat("_Percentage", CompletionPercentage/ 100f);
+    }
+
+    public override void OnPickUp()
+    {
+        EnableModel(true);
     }
 
     #region SaveSystem

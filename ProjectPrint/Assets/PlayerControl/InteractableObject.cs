@@ -28,4 +28,6 @@ public class InteractableObject : SaveObject
     {
         return null;
     }
+
+    public virtual void OnPickUp() { }
 }

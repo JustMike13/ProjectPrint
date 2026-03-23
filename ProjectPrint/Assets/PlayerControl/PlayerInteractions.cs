@@ -147,21 +147,26 @@ public class PlayerInteractions : MonoBehaviour
         if (Physics.Raycast(transform.position,
                     transform.TransformDirection(Vector3.forward),
                     out hit,
-                    maxInteractDistance))
+                    Mathf.Infinity))
         {
-            intObj = hit.collider.gameObject.GetComponent<InteractableObject>();
-            if (intObj != null)
+            if (hit.distance <= maxInteractDistance)
             {
-                //intobj.StartHighlight();
-                UpdateLastInteracted(intObj);
-            }
-            Highlight hl = hit.collider.gameObject.GetComponent<Highlight>();
-            if (hl != null)
-            {
-                hl.StartHighlight();
+                intObj = hit.collider.gameObject.GetComponent<InteractableObject>();
+                if (intObj != null)
+                {
+                    //intobj.StartHighlight();
+                    UpdateLastInteracted(intObj);
+                }
+                Highlight hl = hit.collider.gameObject.GetComponent<Highlight>();
+                if (hl != null)
+                {
+                    hl.StartHighlight();
+                }
             }
 
-            if (IsTopSurface(hit.normal) && ItemHolder.IsMovingSomething) // threshold in degrees
+            if (IsTopSurface(hit.normal) 
+                && ItemHolder.IsMovingSomething 
+                && HorizontalDis(hit.point, transform.position) <= maxInteractDistance)
             {
                 ItemHolder.MovingPosition = hit.point;
             }
@@ -173,6 +178,13 @@ public class PlayerInteractions : MonoBehaviour
     {
         // returns true when the surface normal is within maxAngleDeg of Vector3.up
         return Vector3.Angle(normal, Vector3.up) <= maxAngleDeg;
+    }
+
+    // Helper: horizontal distance ignoring Y axis
+    private float HorizontalDis(Vector3 a, Vector3 b)
+    {
+        Vector2 da = new Vector2(a.x - b.x, a.z - b.z);
+        return da.magnitude;
     }
 
     void UpdateLastInteracted(InteractableObject newObj = null)
