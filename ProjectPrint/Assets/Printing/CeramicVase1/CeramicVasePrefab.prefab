@@ -168,5 +168,5 @@ MonoBehaviour:
   price: 12
   canBePickedUp: 1
   id: 1
-  TimeToPrint: 10
+  TimeToPrint: 5
   filamentNeeded: 50

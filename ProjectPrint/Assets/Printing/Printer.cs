@@ -166,22 +166,10 @@ public class Printer : InteractableObject
             if (memoryCard == null)
             {
                 hint.Hint = GetComponent<Highlight>().HintText[MissingCardText] + "\n";
-                if (ItemHolder.IsHolding<MemoryCard>())
-                {
-                    hint.EHint = GetComponent<Highlight>().HintText[AddCardText];
-                }
             }
             else if (modelIndex == -1)
             {
                 hint.Hint = GetComponent<Highlight>().HintText[NoModelSelectedText] + "\n";
-            }
-            if (filament == null)
-            {
-                hint.Hint += GetComponent<Highlight>().HintText[MissingFilamentText];
-                if (ItemHolder.IsHolding<FilamentSpool>())
-                {
-                    hint.EHint = GetComponent<Highlight>().HintText[AddFilamentText];
-                }
             }
             if (hint.Hint == "")
             {
@@ -204,6 +192,25 @@ public class Printer : InteractableObject
                 hint.Hint = GetComponent<Highlight>().HintText[PrintDoneText];
             }
             hint.FHint = GetComponent<Highlight>().HintText[PickUpPrintText];
+        }
+
+        if (filament == null)
+        {
+            if (!isPrinting)
+            {
+                hint.Hint += GetComponent<Highlight>().HintText[MissingFilamentText];
+            }
+            if (ItemHolder.IsHolding<FilamentSpool>())
+            {
+                hint.EHint = GetComponent<Highlight>().HintText[AddFilamentText];
+            }
+        }
+        if (memoryCard == null)
+        {
+            if (ItemHolder.IsHolding<MemoryCard>())
+            {
+                hint.EHint = GetComponent<Highlight>().HintText[AddCardText];
+            }
         }
         ScreenHints.AddHints(hint);
     }
