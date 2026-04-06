@@ -27,12 +27,7 @@ public class PrintableModel : InteractableObject
             }
         } }
     bool hasFailed = false;
-    public bool HasFailed { set { 
-            hasFailed = value;
-            GetComponent<Rigidbody>().isKinematic = !value;
-            GetComponent<BoxCollider>().enabled = value;
-        } 
-        get { return hasFailed; } }
+    public bool HasFailed { set { hasFailed = value;} get { return hasFailed; } }
     public bool IsFinished { get { return completionPercentage == 100f || hasFailed; } }
     float elapsedTime = 0;
     Material material;
@@ -40,6 +35,7 @@ public class PrintableModel : InteractableObject
     public string FilamentName { get { return filamentName; } }
     Vector3 size = Vector3.zero;
     public Vector3 Size { get { return size; } }
+    GameObject spagetti = null;
 
     void Awake() 
     {
@@ -114,6 +110,34 @@ public class PrintableModel : InteractableObject
     public override void OnPickUp()
     {
         EnableModel(true);
+    }
+
+    public void AddSpagetti()
+    {
+        spagetti = AssetSystem.Create("Spagetti", AssetType.Other);
+        spagetti.transform.parent = transform;
+        spagetti.transform.localPosition = new Vector3(0, size.y / 2, 0);
+        spagetti.transform.localRotation = Quaternion.identity;
+
+        var spagRenderer = spagetti.GetComponent<Renderer>();
+        if (spagRenderer != null && material != null)
+        {
+                var spagMat = spagRenderer.material;
+            // Prefer "Color" property if present, fall back to "_Color"
+            if (spagMat.HasProperty("_Color"))
+            {
+                spagMat.SetColor("_Color", material.color);
+            }
+        }
+    }
+
+    public override void Recycle()
+    {
+        if (spagetti != null)
+        {
+            AssetSystem.Recycle(spagetti); 
+            spagetti = null;
+        }
     }
 
     #region SaveSystem

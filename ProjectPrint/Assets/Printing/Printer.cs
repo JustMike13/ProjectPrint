@@ -32,6 +32,7 @@ public class Printer : InteractableObject
     [SerializeField] PrintableModel failedPrint;
     [SerializeField] float speedMultiplier = 1.0f;
     [SerializeField] PrinterAxys printerAxys;
+    [SerializeField] float failChance = 0.05f;
     #endregion Inspector Fields
     #region Members
     bool isPrinting = false;
@@ -48,6 +49,7 @@ public class Printer : InteractableObject
     public delegate void UpdateScreenType();
     UpdateScreenType updateScreen;
     public UpdateScreenType UpdateScreen { set => updateScreen = value; }
+    float failPercentage = 0;
     #endregion Members
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -75,7 +77,7 @@ public class Printer : InteractableObject
 
     public string HasFilament() => filament == null ? "" : filament.ObjectName;
     public string HasCard() => memoryCard == null ? "" : memoryCard.ObjectName;
-    public string SelectedModel() => memoryCard == null || modelIndex == -1 ? "" : memoryCard.Models[modelIndex].name;
+    public string SelectedModel() => memoryCard == null || modelIndex == -1 ? "" : memoryCard.Models[modelIndex].ObjectName;
     public bool HasModel() => printedModel != null;
     #endregion //Screen
     // Update is called once per frame
@@ -94,16 +96,7 @@ public class Printer : InteractableObject
             }
             else
             {
-                int perc = (int)printedModel.GetComponent<PrintableModel>().CompletionPercentage;
-                float filamentNeeded = printedModel.GetComponent<PrintableModel>().FilamentNeeded;
-                if (filament.useFilament(((float)(perc - completionPercentage)/100) * filamentNeeded))
-                {
-                    completionPercentage = perc;
-                }
-                else
-                {
-                    printedModel.GetComponent<PrintableModel>().HasFailed = true;
-                }
+                HandleCompletion();
             }
         }
 
@@ -113,27 +106,26 @@ public class Printer : InteractableObject
             MoveZAxys();
         }
         HotendMovement();
+    }
 
-        // TODO: Move to PrinterScreen
-        //if (screenFields.IsOn) 
-        //{
-        //    if (!screenFields.ignoreButton)
-        //    {
-        //        if (UIButton1.WasPressedThisFrame())
-        //        {
-        //            Print();
-        //        }
-        //        if (UIButton2.WasPressedThisFrame())
-        //        {
-        //            FilamentInteract();
-        //        }
-        //        if (UIButton3.WasPressedThisFrame())
-        //        {
-        //            MemoryCardInteract();
-        //        }
-        //    }
-        //    screenFields.ignoreButton = false;
-        //}
+    private void HandleCompletion()
+    {
+        int perc = (int)printedModel.GetComponent<PrintableModel>().CompletionPercentage;
+        float filamentNeeded = printedModel.GetComponent<PrintableModel>().FilamentNeeded;
+        bool enoughFilament = filament.useFilament(((float)(perc - completionPercentage) / 100) * filamentNeeded);
+        bool hasFailed = ShouldFail((float)perc / 100);
+        if (enoughFilament && !hasFailed)
+        {
+            completionPercentage = perc;
+        }
+        else
+        {
+            printedModel.GetComponent<PrintableModel>().HasFailed = true; 
+            if (hasFailed)
+            {
+                printedModel.GetComponent<PrintableModel>().AddSpagetti();
+            }
+        }
     }
 
     private void MoveZAxys()
@@ -257,6 +249,22 @@ public class Printer : InteractableObject
         selectedModel = memoryCard.Models[modelIndex];
         printedModel = AssetSystem.Create(selectedModel.GetComponent<SaveObject>().PrefabName, AssetType.Model);
         AddModelToPrint(printedModel);
+        HandleFailureRate();
+    }
+
+    private void HandleFailureRate()
+    {
+        failPercentage = 0;
+        float rand = Random.Range(0f, 1f);
+        if (rand < failChance)
+        {
+            failPercentage = Random.Range(0.2f, 0.8f);
+        }
+    }
+
+    private bool ShouldFail(float percentage)
+    {
+        return failPercentage != 0 && failPercentage < percentage;
     }
 
     private void AddModelToPrint(GameObject model, bool fromSave = false)
