@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 7271407578333235348}
   - component: {fileID: 8147615648410594799}
   - component: {fileID: 5910571094655594364}
-  - component: {fileID: 5559084855624983589}
   m_Layer: 0
   m_Name: OrderGenerator
   m_TagString: Untagged
@@ -99,29 +98,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.6935091, y: 0.077427804, z: 0.3041196}
-  m_Center: {x: -0.101089954, y: 0.0065307915, z: 0.57970715}
---- !u!65 &5559084855624983589
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6251421005432877827}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6935091, y: 0.077427804, z: 0.3041196}
-  m_Center: {x: -0.101089954, y: 0.0065307915, z: 0.57970715}
+  m_Size: {x: 0.6813445, y: 0.077427804, z: 0.34508848}
+  m_Center: {x: -0.09500766, y: 0.0065307915, z: 0.26968586}
 --- !u!1 &7224336726522854014
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,7 +127,7 @@ Transform:
   m_GameObject: {fileID: 7224336726522854014}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.279}
   m_LocalScale: {x: 0.4846516, y: 0.09341856, z: 0.32087237}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -211,6 +189,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8405955671415893677
 GameObject:
@@ -242,7 +221,7 @@ Transform:
   m_GameObject: {fileID: 8405955671415893677}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3898, y: 0.023, z: 0}
+  m_LocalPosition: {x: -0.3898, y: 0.023, z: 0.279}
   m_LocalScale: {x: 0.11121864, y: 0.11621058, z: 0.12007}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -303,6 +282,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &3943971564085856009
 BoxCollider:
