@@ -11,7 +11,7 @@ public enum ControlBinding
     Q,
     SHIFT,
     ESC,
-    Menu,
+    MENU,
 }
 
 public class PlayerInteractions : MonoBehaviour
@@ -63,7 +63,7 @@ public class PlayerInteractions : MonoBehaviour
             ScreenManager.Instance.TabButtonInteraction();
         }
 
-        ProcessMenuButton(MenuButton, ControlBinding.Menu);
+        ProcessMenuButton(MenuButton, ControlBinding.MENU);
         HandlePauseMenuInteractions();
 
         // These need to only run in PlayMode

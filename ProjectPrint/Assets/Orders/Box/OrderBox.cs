@@ -52,7 +52,7 @@ public class OrderBox : InteractableObject
 
     public override GameObject Interact(ControlBinding control)
     {
-        if (control == ControlBinding.Menu)
+        if (control == ControlBinding.MENU)
         {
             OpenBoxScreen();
             return null;

@@ -296,7 +296,7 @@ public class Printer : InteractableObject
         {
             Print();
         }
-        if (control == ControlBinding.Menu)
+        if (control == ControlBinding.MENU)
         {
             ScreenManager.OpenPrinter(this);
         }

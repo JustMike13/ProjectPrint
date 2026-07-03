@@ -10,7 +10,9 @@ public enum GameState
     Shop,
     Printer,
     Box,
-    Profile
+    Profile,
+    Focus,
+    Unfocus
 }
 
 public class ScreenManager : MonoBehaviour
@@ -20,9 +22,12 @@ public class ScreenManager : MonoBehaviour
     [SerializeField] GameObject BoxCanvas;
     [SerializeField] GameObject ProfileCanvas;
     [SerializeField] GameObject PrinterCanvas;
+    [SerializeField] GameObject ComputerCanvas;
     public static ScreenManager Instance;
     private static GameState currentState = GameState.PlayMode;
     public static GameState CurrentState => currentState;
+    static bool focusOpened = false;
+    static bool focusOn = false;
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -80,9 +85,22 @@ public class ScreenManager : MonoBehaviour
             case GameState.Profile:
                 CloseProfile();
                 break;
+            case GameState.Focus:
+                CloseFocus();
+                break;
         }
     } 
 
+    private void SetPlayMode()
+    {
+        currentState = GameState.PlayMode;
+        PauseCanvas.SetActive(false);
+        ShopCanvas.SetActive(false);
+        BoxCanvas.SetActive(false);
+        PrinterCanvas.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     private void OpenPauseMenu()
     {
         if (currentState != GameState.PlayMode) return;
@@ -97,7 +115,7 @@ public class ScreenManager : MonoBehaviour
     {
         if (currentState != GameState.Pause) return;
 
-        currentState = GameState.PlayMode;
+        SetPlayMode();
         //Debug.Log("Play");
         PauseCanvas.SetActive(false);
         Cursor.visible = false;
@@ -108,7 +126,7 @@ public class ScreenManager : MonoBehaviour
     {
         if (currentState != GameState.Shop) return;
 
-        currentState = GameState.PlayMode;
+        SetPlayMode();
         ShopCanvas.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -136,7 +154,7 @@ public class ScreenManager : MonoBehaviour
         if (currentState != GameState.Printer) return;
         PrinterScreen.RemovePrinter();
         Instance.PrinterCanvas.SetActive(false);
-        currentState = GameState.PlayMode;
+        Instance.SetPlayMode();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -151,7 +169,7 @@ public class ScreenManager : MonoBehaviour
     public void CloseBox()
     {
         if (currentState != GameState.Box) return;
-        currentState = GameState.PlayMode;
+        SetPlayMode();
         BoxCanvas.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -171,6 +189,37 @@ public class ScreenManager : MonoBehaviour
         currentState = GameState.Pause;
         ProfileCanvas.SetActive(false);
         PauseCanvas.SetActive(true);
+    }
+    public static void OpenFocus()
+    {
+        if (currentState == GameState.Focus) return;
+        currentState = GameState.Focus;
+        focusOpened = true;
+        Instance.ComputerCanvas.SetActive(focusOn && focusOpened);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+    public static void CloseFocus()
+    {
+        if (currentState != GameState.Focus) return;
+        currentState = GameState.Unfocus;
+        Instance.ComputerCanvas.SetActive(false);
+        focusOn = false;
+        focusOpened = false;
+        CameraMover.SetTargetPosition(Vector3.zero, Quaternion.identity);
+        Computer.StopComputer();
+    }
+    public static void FocusOn()
+    {
+        focusOn = true;
+        Instance.ComputerCanvas.SetActive(focusOn && focusOpened);
+    }
+    public static void CloseUnfocus()
+    {
+        if (currentState != GameState.Unfocus) return;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Instance.SetPlayMode();
     }
     public void ExitGame()
     {

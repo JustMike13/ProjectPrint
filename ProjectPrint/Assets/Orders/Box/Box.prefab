@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7501632965609454141}
   - component: {fileID: 1005841999346016132}
   - component: {fileID: 1624763312343443511}
+  - component: {fileID: 8198177025057581536}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -118,6 +119,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Highlight
   hintText:
   - Place product in box
+--- !u!65 &8198177025057581536
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2212312099504853752}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2, y: 0.3, z: 0.01}
+  m_Center: {x: 0, y: 0, z: -0.235}
 --- !u!1 &4212799393567316228
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,6 +228,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7395403396453508151
 GameObject:

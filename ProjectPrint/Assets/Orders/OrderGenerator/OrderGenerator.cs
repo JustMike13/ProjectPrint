@@ -10,10 +10,12 @@ public class OrderGenerator : InteractableObject
     [SerializeField] List<PrintableModel> Inventory = new List<PrintableModel>();
     static List<PrintableModel> InventoryStatic = new List<PrintableModel>();
     [SerializeField] static int maxItems = 12;
-    [SerializeField] Order currentOrder;
+    //[SerializeField] Order currentOrder;
     [SerializeField] ShippingLabel labelPrefab;
     [SerializeField] GameObject center;
     [SerializeField] float radius = 1;
+
+    List<Order> orders = new List<Order>();
 
     private void Awake()
     {
@@ -55,7 +57,7 @@ public class OrderGenerator : InteractableObject
     private void GenerateOrder()
     {
         List<OrderItem> items = new List<OrderItem>();
-        currentOrder = new Order();
+        Order currentOrder = new Order();
         if (Inventory.Count == 0)
         {
             Debug.LogError("No items in inventory!");
@@ -81,10 +83,26 @@ public class OrderGenerator : InteractableObject
             }
             currentOrder.CreateOrder(items);
         }
+        orders.Add(currentOrder);
+
+    }
+
+    public void CreateShippingLabel(int n)
+    {
         GameObject label = AssetSystem.Create("ShippingLabel", AssetType.Other);
-        label.GetComponent<ShippingLabel>().GetOrder = currentOrder;
+        label.GetComponent<ShippingLabel>().GetOrder = orders[n];
+        orders.RemoveAt(n);
         label.transform.position = center.transform.position;
         label.transform.rotation = center.transform.rotation;
+    }
+
+    public List<Order> GetNOrders(int n)
+    {
+        while (orders.Count < n)
+        {
+            GenerateOrder();
+        }
+        return orders;//.GetRange(0, n-1);
     }
 
     public static List<OrderItem> GenerateOrder(string json)
