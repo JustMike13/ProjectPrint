@@ -92,10 +92,6 @@ public class ShopController : MonoBehaviour
         {
             if (currentShop == ShopType.Filament)
             {
-                currentShop = ShopType.Model;
-            } 
-            else if (currentShop == ShopType.Model)
-            {
                 currentShop = ShopType.Printer;
             }
             else if (currentShop == ShopType.Printer)
@@ -116,10 +112,6 @@ public class ShopController : MonoBehaviour
                 currentShop = ShopType.Printer;
             }
             else if (currentShop == ShopType.Printer)
-            {
-                currentShop = ShopType.Model;
-            }
-            else if (currentShop == ShopType.Model)
             {
                 currentShop = ShopType.Filament;
             }
