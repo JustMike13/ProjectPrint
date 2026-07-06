@@ -17,11 +17,27 @@ public class InteractableObject : SaveObject
     }
     public virtual void StartHighlight()
     {
-        ScreenHint hint = new ScreenHint { 
-            Hint = objectName,
-            RightClickHint = CanBePickedUp ? "Pick up" : "Move"
-        };
-        ScreenHints.AddHints(hint);
+        string moveHint = "";
+        if(CanBePickedUp)
+        {
+            moveHint = "Pick up";
+        }
+        else
+        {
+            if (transform.tag == "Movable")
+            {
+                moveHint = "Move";
+            }
+        }
+        if(moveHint != "")
+        {
+            ScreenHint hint = new ScreenHint
+            {
+                Hint = objectName,
+                RightClickHint = moveHint
+            };
+            ScreenHints.AddHints(hint);
+        }
     }
 
     public virtual GameObject Interact(ControlBinding control)
