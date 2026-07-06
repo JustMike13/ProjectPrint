@@ -58,6 +58,7 @@ public class AssetSystem : MonoBehaviour
             {
                 bc.enabled = true;
             }
+            go.transform.parent = null;
             return go;
         }
         if (type == AssetType.Model || type == AssetType.None)

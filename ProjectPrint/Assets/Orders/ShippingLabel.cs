@@ -27,7 +27,11 @@ public class ShippingLabel : InteractableObject
     }
     public override void Recycle()
     {
-        order = null;
+        order = null; Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
     }
     public override string CreateSave(string saveName)
     {
