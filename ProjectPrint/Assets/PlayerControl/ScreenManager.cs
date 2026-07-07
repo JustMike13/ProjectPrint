@@ -23,6 +23,7 @@ public class ScreenManager : MonoBehaviour
     [SerializeField] GameObject ProfileCanvas;
     [SerializeField] GameObject PrinterCanvas;
     [SerializeField] GameObject ComputerCanvas;
+    [SerializeField] GameObject Crosshair;
     public static ScreenManager Instance;
     private static GameState currentState = GameState.PlayMode;
     public static GameState CurrentState => currentState;
@@ -98,6 +99,7 @@ public class ScreenManager : MonoBehaviour
         ShopCanvas.SetActive(false);
         BoxCanvas.SetActive(false);
         PrinterCanvas.SetActive(false);
+        Crosshair.SetActive(true);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -107,6 +109,7 @@ public class ScreenManager : MonoBehaviour
         currentState = GameState.Pause;
         //Debug.Log("Pause");
         PauseCanvas.SetActive(true);
+        Crosshair.SetActive(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -118,6 +121,7 @@ public class ScreenManager : MonoBehaviour
         SetPlayMode();
         //Debug.Log("Play");
         PauseCanvas.SetActive(false);
+        Crosshair.SetActive(true);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -128,6 +132,7 @@ public class ScreenManager : MonoBehaviour
 
         SetPlayMode();
         ShopCanvas.SetActive(false);
+        Crosshair.SetActive(true);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -137,6 +142,7 @@ public class ScreenManager : MonoBehaviour
         if (currentState == GameState.Shop) return;
         currentState = GameState.Shop;
         ShopCanvas.SetActive(true);
+        Crosshair.SetActive(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -145,6 +151,7 @@ public class ScreenManager : MonoBehaviour
     {
         currentState = GameState.Printer;
         Instance.PrinterCanvas.SetActive(true);
+        Instance.Crosshair.SetActive(false);
         PrinterScreen.AssignPrinter(printer);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -154,6 +161,7 @@ public class ScreenManager : MonoBehaviour
         if (currentState != GameState.Printer) return;
         PrinterScreen.RemovePrinter();
         Instance.PrinterCanvas.SetActive(false);
+        Instance.Crosshair.SetActive(true);
         Instance.SetPlayMode();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -163,6 +171,7 @@ public class ScreenManager : MonoBehaviour
     {
         currentState = GameState.Box;
         BoxCanvas.SetActive(true);
+        Crosshair.SetActive(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -171,6 +180,7 @@ public class ScreenManager : MonoBehaviour
         if (currentState != GameState.Box) return;
         SetPlayMode();
         BoxCanvas.SetActive(false);
+        Crosshair.SetActive(true);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         BoxScreen.Instance.CloseBox();
@@ -204,6 +214,7 @@ public class ScreenManager : MonoBehaviour
         if (currentState != GameState.Focus) return;
         currentState = GameState.Unfocus;
         Instance.ComputerCanvas.SetActive(false);
+        Instance.Crosshair.SetActive(true);
         focusOn = false;
         focusOpened = false;
         CameraMover.SetTargetPosition(Vector3.zero, Quaternion.identity);
@@ -213,6 +224,7 @@ public class ScreenManager : MonoBehaviour
     {
         focusOn = true;
         Instance.ComputerCanvas.SetActive(focusOn && focusOpened);
+        Instance.Crosshair.SetActive(!(focusOn && focusOpened));
     }
     public static void CloseUnfocus()
     {
