@@ -32,6 +32,10 @@ public class ShippingLabel : InteractableObject
         {
             rb.isKinematic = true;
         }
+        else
+        {
+            gameObject.AddComponent<Rigidbody>();
+        }
     }
     public override string CreateSave(string saveName)
     {
