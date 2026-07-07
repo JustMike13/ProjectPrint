@@ -14,7 +14,9 @@ public class ComputerScreen : MonoBehaviour
     [SerializeField] private float yPos = 0f;
     [SerializeField] private float yDelta = 0f;
     [SerializeField] GameObject buttonPrefab;
-    static Canvas canvas;
+    [SerializeField] GameObject DesktopCanvas;
+    [SerializeField] GameObject OrdersCanvas;
+    //[SerializeField] List<ComputerApp> apps = new List<ComputerApp>();
     static List<Button> buttons = new List<Button>();
 
     private void Awake()
@@ -28,7 +30,6 @@ public class ComputerScreen : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        canvas = GetComponent<Canvas>();
     }
 
     public static void AddOrders(int n = 0)
@@ -45,7 +46,7 @@ public class ComputerScreen : MonoBehaviour
         List<Order> orders = instance.generator.GetNOrders(n);
         for (int i = 0; i < orders.Count; i++)
         {
-            GameObject buttonGO = Instantiate(instance.buttonPrefab, instance.transform);
+            GameObject buttonGO = Instantiate(instance.buttonPrefab, instance.OrdersCanvas.transform);
             buttonGO.transform.position = buttonGO.transform.parent.position + new Vector3(instance.xPos, instance.yPos - i * instance.yDelta, 0);
             TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
             if (buttonText != null)
@@ -69,4 +70,26 @@ public class ComputerScreen : MonoBehaviour
         instance.generator.CreateShippingLabel(n);
         AddOrders();
     }
+
+    public void OpenOrderManager()
+    {
+        DesktopCanvas.SetActive(false);
+        OrdersCanvas.SetActive(true);
+        AddOrders(3);
+    }
+
+    public void CloseOrderManager()
+    {
+        DesktopCanvas.SetActive(true);
+        OrdersCanvas.SetActive(false);
+    }
 }
+
+//[Serializable]
+//public class ComputerApp
+//{
+//    public string Name;
+//    public string Description;
+//    public GameObject Button;
+//    public GameObject Canvas;
+//}

@@ -40,7 +40,7 @@ public class Computer : InteractableObject
                     complete = true;
                     monitorMaterial.SetFloat("_Mode", 0);
                     ScreenManager.FocusOn();
-                    ComputerScreen.AddOrders(3);
+                    //ComputerScreen.AddOrders(3); //TODO: Remove, let UI add orders
                 }
                 monitorMaterial.SetFloat("_dist", dist);
                 monitorMaterial.SetFloat("_n", UnityEngine.Random.Range(0f, 100f));

@@ -44,6 +44,7 @@ public class ScreenManager : MonoBehaviour
         ShopCanvas.SetActive(false);
         BoxCanvas.SetActive(false);
         PrinterCanvas.SetActive(false);
+        ComputerCanvas.SetActive(false);
     }
 
     // Update is called once per frame
