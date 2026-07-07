@@ -19,25 +19,28 @@ public class Shop : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
-        float h = Inventory.Count/2;
-        for (int i = 0; i < Inventory.Count; i++)
+        if (Buttons.Count == 0)
         {
-            GameObject buttonGO = Instantiate(buttonPrefab, transform);
-            buttonGO.transform.position = buttonGO.transform.parent.position + new Vector3(0, (h - i) * 100, 0);
-            TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
-            if (buttonText != null)
+            float h = Inventory.Count / 2;
+            for (int i = 0; i < Inventory.Count; i++)
             {
-                buttonText.text = Inventory[i].product.GetComponent<InteractableObject>().ObjectName
-                    +" $" + Inventory[i].price;
-            }
+                GameObject buttonGO = Instantiate(buttonPrefab, transform);
+                buttonGO.transform.position = buttonGO.transform.parent.position + new Vector3(0, (h - i) * 100, 0);
+                TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
+                if (buttonText != null)
+                {
+                    buttonText.text = Inventory[i].product.GetComponent<InteractableObject>().ObjectName
+                        + " $" + Inventory[i].price;
+                }
 
-            // Add listener to the button
-            Button buttonComponent = buttonGO.GetComponent<Button>();
-            if (buttonComponent != null)
-            {
-                int index = i; 
-                buttonComponent.onClick.AddListener(() => Buy(index));
-                buttons.Add(buttonComponent);
+                // Add listener to the button
+                Button buttonComponent = buttonGO.GetComponent<Button>();
+                if (buttonComponent != null)
+                {
+                    int index = i;
+                    buttonComponent.onClick.AddListener(() => Buy(index));
+                    buttons.Add(buttonComponent);
+                }
             }
         }
     }
