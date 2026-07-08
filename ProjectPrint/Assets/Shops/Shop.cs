@@ -19,6 +19,11 @@ public class Shop : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
+        GenerateButtons();
+    }
+
+    public void GenerateButtons()
+    {
         if (Buttons.Count == 0)
         {
             float h = Inventory.Count / 2;

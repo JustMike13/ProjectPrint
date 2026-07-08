@@ -16,8 +16,9 @@ public class ComputerScreen : MonoBehaviour
     [SerializeField] GameObject buttonPrefab;
     [SerializeField] GameObject DesktopCanvas;
     [SerializeField] GameObject OrdersCanvas;
-    //[SerializeField] List<ComputerApp> apps = new List<ComputerApp>();
-    static List<Button> buttons = new List<Button>();
+    [SerializeField] GameObject ShopsCanvas;
+
+    static List<OrderElement> orderElements = new List<OrderElement>();
 
     private void Awake()
     {
@@ -30,15 +31,18 @@ public class ComputerScreen : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        ShopsCanvas.SetActive(false);
+        OrdersCanvas.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     public static void AddOrders(int n = 0)
     {
-        foreach(Button button in buttons)
+        foreach(OrderElement order in ComputerScreen.orderElements)
         {
-            Destroy(button.gameObject);
+            Destroy(order.gameObject);
         }
-        buttons.Clear();
+        ComputerScreen.orderElements.Clear();
         if (instance.generator == null)
         {
             Debug.LogWarning("OrderGenerator (generator) is not assigned.");
@@ -48,20 +52,12 @@ public class ComputerScreen : MonoBehaviour
         {
             GameObject buttonGO = Instantiate(instance.buttonPrefab, instance.OrdersCanvas.transform);
             buttonGO.transform.position = buttonGO.transform.parent.position + new Vector3(instance.xPos, instance.yPos - i * instance.yDelta, 0);
-            TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
-            if (buttonText != null)
-            {
-                buttonText.text = orders[i].ToString();
-            }
-
-            // Add listener to the button
-            Button buttonComponent = buttonGO.GetComponent<Button>();
-            if (buttonComponent != null)
-            {
-                int index = i;
-                buttonComponent.onClick.AddListener(() => CreateLabel(index));
-                buttons.Add(buttonComponent);
-            }
+            OrderElement oe = buttonGO.GetComponent<OrderElement>();
+            oe.NoOfItemsText.text = "No of Items: " + orders[i].NoOfItems;
+            oe.PriceText.text = "Price: $" + orders[i].Price;
+            int index = i;
+            oe.PrintButton.onClick.AddListener(() => CreateLabel(index));
+            orderElements.Add(oe);
         }
     }
 
@@ -83,13 +79,16 @@ public class ComputerScreen : MonoBehaviour
         DesktopCanvas.SetActive(true);
         OrdersCanvas.SetActive(false);
     }
-}
 
-//[Serializable]
-//public class ComputerApp
-//{
-//    public string Name;
-//    public string Description;
-//    public GameObject Button;
-//    public GameObject Canvas;
-//}
+    public void OpenShops()
+    {
+        DesktopCanvas.SetActive(false);
+        ShopsCanvas.SetActive(true);
+    }
+
+    public void CloseShops()
+    {
+        DesktopCanvas.SetActive(true);
+        ShopsCanvas.SetActive(false);
+    }
+}

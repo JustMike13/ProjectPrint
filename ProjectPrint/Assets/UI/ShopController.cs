@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 enum ShopType
 {
@@ -32,7 +33,10 @@ public class ShopController : MonoBehaviour
     }
     private void OnEnable()
     {
-        highlight.transform.position = GetCurrentShop().Buttons[currentIndex].transform.position;
+        Shop s = GetCurrentShop();
+        s.GenerateButtons();
+        Button button = s.Buttons[currentIndex];
+        highlight.transform.position = button.transform.position;
     }
 
     private void Update()

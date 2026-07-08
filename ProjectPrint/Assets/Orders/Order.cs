@@ -8,10 +8,31 @@ public class Order
 {
     [SerializeField] List<OrderItem> orderItems = new List<OrderItem>();
     public List<OrderItem> OrderItems { get { return orderItems; } }
+    public int NoOfItems { get 
+        {
+            int count = 0;
+            foreach (OrderItem item in orderItems)
+            {
+                count += item.quantity;
+            }
+            return count; 
+        } }
     public Order CreateOrder(List<OrderItem> items)
     {
         orderItems = items;
         return this;
+    }
+    public float Price
+    {
+        get
+        {
+            float total = 0;
+            foreach (OrderItem item in orderItems)
+            {
+                total += item.totalCost();
+            }
+            return total;
+        }
     }
     public bool FulfillOrder()
     {
