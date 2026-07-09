@@ -60,7 +60,7 @@ public class PlayerInteractions : MonoBehaviour
 
         if (Tab.WasPressedThisFrame())
         {
-            ScreenManager.Instance.TabButtonInteraction();
+            ScreenManager.Instance.EscButtonInteraction();
         }
 
         ProcessMenuButton(MenuButton, ControlBinding.MENU);

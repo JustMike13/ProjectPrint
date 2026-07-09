@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 7059031582643884298}
   - component: {fileID: 2380117755555605193}
   - component: {fileID: 3161978648082781796}
+  - component: {fileID: 5091777904525664015}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -243,7 +244,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 21300000, guid: 03c17908801cf9c4e9267194872072ca, type: 3}
+    m_HighlightedSprite: {fileID: 21300000, guid: 198039066b4ca284db7983c219ebf5a8, type: 3}
     m_PressedSprite: {fileID: 21300000, guid: 299ac5904942b774dbf338ff8954bf72, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: 198039066b4ca284db7983c219ebf5a8, type: 3}
     m_DisabledSprite: {fileID: 21300000, guid: a142577a9e96a37419ce2bb5463d7eb7, type: 3}
@@ -258,3 +259,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5091777904525664015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8195580825021053038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52b75e15d6bd50847b1b7d637a32469e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHover

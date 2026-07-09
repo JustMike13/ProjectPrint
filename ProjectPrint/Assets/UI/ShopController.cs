@@ -14,10 +14,8 @@ enum ShopType
 public class ShopController : MonoBehaviour
 {
     [SerializeField] Shop FilamentShop;
-    [SerializeField] Shop ModelShop;
     [SerializeField] Shop PrinterShop;
     [SerializeField] Shop OthersShop;
-    [SerializeField] GameObject highlight;
     [SerializeField] float controllerDelay = 0.15f;
     float lastMove;
     InputAction DPad;
@@ -36,7 +34,7 @@ public class ShopController : MonoBehaviour
         Shop s = GetCurrentShop();
         s.GenerateButtons();
         Button button = s.Buttons[currentIndex];
-        highlight.transform.position = button.transform.position;
+        button.Select();
     }
 
     private void Update()
@@ -61,13 +59,13 @@ public class ShopController : MonoBehaviour
         if (dpadInput.y < -0.5f)
         {
             currentIndex = Math.Min(currentIndex + 1, GetCurrentShop().Buttons.Count - 1);
-            highlight.transform.position = GetCurrentShop().Buttons[currentIndex].transform.position;
+            GetCurrentShop().Buttons[currentIndex].Select();
             lastMove = Time.time;
         }
         else if (dpadInput.y > 0.5f)
         {
             currentIndex = Math.Max(currentIndex - 1, 0);
-            highlight.transform.position = GetCurrentShop().Buttons[currentIndex].transform.position;
+            GetCurrentShop().Buttons[currentIndex].Select();
             lastMove = Time.time;
         }
     }
@@ -78,8 +76,6 @@ public class ShopController : MonoBehaviour
         {
             case ShopType.Filament:
                 return FilamentShop;
-            case ShopType.Model:
-                return ModelShop;
             case ShopType.Printer:
                 return PrinterShop;
             case ShopType.Other:
@@ -107,7 +103,7 @@ public class ShopController : MonoBehaviour
             {
                 currentIndex = GetCurrentShop().Buttons.Count - 1;
             }
-            highlight.transform.position = GetCurrentShop().Buttons[currentIndex].transform.position;
+            GetCurrentShop().Buttons[currentIndex].Select();
         }
         else if (dpadInput.x < -0.5f)
         {
@@ -124,7 +120,7 @@ public class ShopController : MonoBehaviour
             {
                 currentIndex = GetCurrentShop().Buttons.Count - 1;
             }
-            highlight.transform.position = GetCurrentShop().Buttons[currentIndex].transform.position;
+            GetCurrentShop().Buttons[currentIndex].Select();
         }
     }
 }

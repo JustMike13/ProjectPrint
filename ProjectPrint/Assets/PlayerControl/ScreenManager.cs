@@ -47,24 +47,6 @@ public class ScreenManager : MonoBehaviour
         ComputerCanvas.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //BoxCanvas.SetActive(currentState == GameState.Box);
-    }
-
-    public void TabButtonInteraction()
-    {
-        if (currentState == GameState.PlayMode)
-        {
-            OpenShop();
-        }
-        else
-        {
-            EscButtonInteraction();
-        }
-    }
-
     public void EscButtonInteraction()
     {
         switch (currentState)
