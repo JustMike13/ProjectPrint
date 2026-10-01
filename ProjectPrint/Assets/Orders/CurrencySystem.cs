@@ -12,6 +12,7 @@ public class CurrencySystem : MonoBehaviour
     static float currentValue = 1000;
     static public float CurrentValue {  get { return currentValue; } set { currentValue = value; ShowCurrency(); } }
     public static CurrencySystem Instance;
+    public static event Action BalanceChanged;
     static TextMeshProUGUI TextBox;
     #endregion
 
@@ -60,6 +61,13 @@ public class CurrencySystem : MonoBehaviour
 
     private static void ShowCurrency()
     {
+        if (TextBox == null)
+        {
+            Debug.LogError("CurrencySystem requires a TextMeshProUGUI component on the same GameObject.");
+            return;
+        }
+
         TextBox.text = "$" + currentValue.ToString();
+        BalanceChanged?.Invoke();
     }
 }

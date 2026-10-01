@@ -15,6 +15,32 @@ public class Shop : MonoBehaviour
     [SerializeField] GameObject boxPrefab;
     List<Button> buttons = new List<Button>();
     public List<Button> Buttons { get { return buttons; } }
+    public int ProductCount { get { return Inventory.Count; } }
+
+    public string GetProductName(int index)
+    {
+        GameObject product = Inventory[index].product;
+        if (product == null)
+        {
+            return "Unavailable product";
+        }
+
+        InteractableObject interactable = product.GetComponent<InteractableObject>();
+        return interactable != null ? interactable.ObjectName : product.name;
+    }
+
+    public float GetProductPrice(int index)
+    {
+        return Inventory[index].price;
+    }
+
+    public void BuyProduct(int index)
+    {
+        if (index >= 0 && index < Inventory.Count)
+        {
+            Buy(index);
+        }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
