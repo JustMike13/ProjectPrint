@@ -19,12 +19,18 @@ public class ComputerScreen : MonoBehaviour
     [SerializeField] GameObject OrdersCanvas;
     [SerializeField] GameObject ShopsCanvas;
     [SerializeField] private GameObject shopPageCanvas;
-    [SerializeField] private Button[] shopTabs;
     [SerializeField] private GameObject[] shopPages;
     [SerializeField] private Shop[] shopInventories;
+    [SerializeField] private Button tabButtonPrefab;
+    [SerializeField] private Button cardPrefab;
+    private Button[] shopTabs;
+    private bool[] shopPageDirty;
     private InputAction previousShopTab;
     private InputAction nextShopTab;
     private int selectedShopTab;
+    private static readonly string[] ShopTabNames = { "Filament", "Printers", "Others" };
+    private const float TabBarStart = 0.11f;
+    private const float TabBarEnd = 0.77f;
 
     static List<OrderElement> orderElements = new List<OrderElement>();
 
@@ -45,17 +51,17 @@ public class ComputerScreen : MonoBehaviour
         AssignWorldCamera(DesktopCanvas);
         AssignWorldCamera(OrdersCanvas);
         AssignWorldCamera(shopPageCanvas);
-        PopulateShopPages();
+        BuildShopTabs();
+        shopPageDirty = new bool[shopPages.Length];
+        for (int i = 0; i < shopPageDirty.Length; i++)
+        {
+            shopPageDirty[i] = true; // nothing generated yet; first open of each tab builds its cards
+        }
         previousShopTab = InputSystem.actions.FindAction("Previous");
         nextShopTab = InputSystem.actions.FindAction("Next");
         if (previousShopTab == null || nextShopTab == null)
         {
             Debug.LogError("ComputerScreen requires Previous and Next actions in the active Input Actions asset.");
-        }
-        for (int i = 0; i < shopTabs.Length; i++)
-        {
-            int tabIndex = i;
-            shopTabs[i].onClick.AddListener(() => SelectShopTab(tabIndex));
         }
         Transform exitButtonTransform = shopPageCanvas.transform.Find("ShopTabs/ShopExitButton");
         if (exitButtonTransform == null)
@@ -109,7 +115,11 @@ public class ComputerScreen : MonoBehaviour
     {
         foreach(OrderElement order in ComputerScreen.orderElements)
         {
-            Destroy(order.gameObject);
+            // guards against stale references left over from a prior play session
+            if (order != null)
+            {
+                Destroy(order.gameObject);
+            }
         }
         ComputerScreen.orderElements.Clear();
         if (instance.generator == null)
@@ -174,25 +184,18 @@ public class ComputerScreen : MonoBehaviour
         }
 
         selectedShopTab = tabIndex;
+        if (shopPageDirty[tabIndex])
+        {
+            RebuildShopPage(tabIndex);
+            shopPageDirty[tabIndex] = false;
+        }
+
         for (int i = 0; i < shopPages.Length; i++)
         {
             shopPages[i].SetActive(i == tabIndex);
-
-            if (i < shopTabs.Length)
-            {
-                shopTabs[i].transition = Selectable.Transition.None;
-                Image tabImage = shopTabs[i].targetGraphic as Image;
-                if (tabImage == null)
-                {
-                    Debug.LogError("ComputerScreen shop tab " + i + " requires an Image target graphic.");
-                    continue;
-                }
-
-                tabImage.color = i == tabIndex
-                    ? new Color(0.09f, 0.35f, 0.64f, 1f)
-                    : new Color(0.42f, 0.46f, 0.49f, 1f);
-            }
         }
+
+        shopTabs[tabIndex].Select(); // baked prefab ColorBlock shows the selected color; other tabs fall back to normal
 
         ScrollRect scrollRect = shopPages[tabIndex].GetComponentInChildren<ScrollRect>(true);
         if (scrollRect != null)
@@ -201,46 +204,57 @@ public class ComputerScreen : MonoBehaviour
         }
     }
 
-    private void PopulateShopPages()
+    /// <summary>Call this when a Shop's inventory changes so its page regenerates on next (re)open, or immediately if already open.</summary>
+    public void MarkShopDirty(int shopIndex)
     {
-        if (shopInventories == null || shopInventories.Length != shopPages.Length)
+        if (shopIndex < 0 || shopIndex >= shopPageDirty.Length)
+        {
+            Debug.LogError("ComputerScreen.MarkShopDirty: shop index " + shopIndex + " is out of range.");
+            return;
+        }
+
+        shopPageDirty[shopIndex] = true;
+        if (shopPageCanvas.activeInHierarchy && selectedShopTab == shopIndex)
+        {
+            RebuildShopPage(shopIndex);
+            shopPageDirty[shopIndex] = false;
+        }
+    }
+
+    private void RebuildShopPage(int shopIndex)
+    {
+        if (shopInventories == null || shopIndex >= shopInventories.Length)
         {
             return;
         }
 
-        for (int shopIndex = 0; shopIndex < shopPages.Length; shopIndex++)
+        Shop shop = shopInventories[shopIndex];
+        Transform content = shopPages[shopIndex].transform.Find("Viewport/Content");
+        foreach (Transform existingCard in content)
         {
-            Shop shop = shopInventories[shopIndex];
-            Transform content = shopPages[shopIndex].transform.Find("Viewport/Content");
+            Destroy(existingCard.gameObject);
+        }
 
-            for (int itemIndex = 0; itemIndex < content.childCount; itemIndex++)
+        int productCount = shop != null ? shop.ProductCount : 0;
+        for (int itemIndex = 0; itemIndex < productCount; itemIndex++)
+        {
+            int productIndex = itemIndex;
+            Button card = Instantiate(cardPrefab, content);
+            card.transform.Find("ProductLabel").GetComponent<TMP_Text>().text = shop.GetProductName(productIndex);
+            Button buyButton = card.transform.Find("BuyButton").GetComponent<Button>();
+            buyButton.GetComponentInChildren<TMP_Text>(true).text = "BUY  $" + shop.GetProductPrice(productIndex).ToString("0.##");
+            buyButton.onClick.AddListener(() =>
             {
-                Transform card = content.GetChild(itemIndex);
-                Button cardButton = card.GetComponent<Button>();
-                Button buyButton = card.Find("BuyButton").GetComponent<Button>();
-                TMP_Text title = card.Find("ProductLabel").GetComponent<TMP_Text>();
-                TMP_Text buyLabel = buyButton.GetComponentInChildren<TMP_Text>(true);
-                bool hasProduct = shop != null && itemIndex < shop.ProductCount;
-                cardButton.transition = Selectable.Transition.None;
-                cardButton.interactable = false;
-                buyButton.onClick.RemoveAllListeners();
+                shop.BuyProduct(productIndex);
+                RefreshShopButtons();
+            });
+        }
 
-                if (hasProduct)
-                {
-                    int productIndex = itemIndex;
-                    buyButton.onClick.AddListener(() =>
-                    {
-                        shop.BuyProduct(productIndex);
-                        RefreshShopButtons();
-                    });
-                    title.text = shop.GetProductName(itemIndex);
-                    buyLabel.text = "BUY  $" + shop.GetProductPrice(itemIndex).ToString("0.##");
-                }
-                else
-                {
-                    buyLabel.text = "OUT OF STOCK";
-                }
-            }
+        // TODO: remove these 10 blank placeholders once real inventories reliably fill the page; kept only to scroll-test the layout
+        for (int blankIndex = 0; blankIndex < 10; blankIndex++)
+        {
+            Button card = Instantiate(cardPrefab, content);
+            card.transform.Find("BuyButton").GetComponentInChildren<TMP_Text>(true).text = "OUT OF STOCK";
         }
 
         RefreshShopButtons();
@@ -272,17 +286,39 @@ public class ComputerScreen : MonoBehaviour
 
                 bool hasProduct = shop != null && itemIndex < shop.ProductCount;
                 Button buyButton = buyTransform.GetComponent<Button>();
-                bool canBuy = hasProduct && CurrencySystem.CanAfford(shop.GetProductPrice(itemIndex));
-                ColorBlock colors = buyButton.colors;
-                colors.normalColor = new Color(0.09f, 0.35f, 0.64f, 1f);
-                colors.highlightedColor = new Color(0.12f, 0.42f, 0.73f, 1f);
-                colors.selectedColor = colors.highlightedColor;
-                colors.pressedColor = new Color(0.06f, 0.27f, 0.5f, 1f);
-                colors.disabledColor = new Color(0.42f, 0.46f, 0.49f, 1f);
-                buyButton.colors = colors;
-                buyButton.transition = Selectable.Transition.ColorTint;
-                buyButton.interactable = canBuy;
+                buyButton.interactable = hasProduct && CurrencySystem.CanAfford(shop.GetProductPrice(itemIndex));
             }
+        }
+    }
+
+    private void BuildShopTabs()
+    {
+        Transform tabBar = shopPageCanvas.transform.Find("ShopTabs");
+        if (tabBar == null)
+        {
+            Debug.LogError("ComputerScreen requires a ShopTabs container under the shop page canvas.");
+            return;
+        }
+
+        shopTabs = new Button[ShopTabNames.Length];
+        for (int i = 0; i < ShopTabNames.Length; i++)
+        {
+            string tabName = ShopTabNames[i] + "Tab";
+            Transform existingTab = tabBar.Find(tabName);
+            if (existingTab != null)
+            {
+                Destroy(existingTab.gameObject);
+            }
+
+            Button tab = Instantiate(tabButtonPrefab, tabBar);
+            tab.name = tabName;
+            RectTransform tabRect = (RectTransform)tab.transform;
+            tabRect.anchorMin = new Vector2(TabBarStart + (TabBarEnd - TabBarStart) * i / ShopTabNames.Length, 0f);
+            tabRect.anchorMax = new Vector2(TabBarStart + (TabBarEnd - TabBarStart) * (i + 1) / ShopTabNames.Length, 1f);
+            tab.GetComponentInChildren<TMP_Text>(true).text = ShopTabNames[i];
+            int tabIndex = i;
+            tab.onClick.AddListener(() => SelectShopTab(tabIndex));
+            shopTabs[i] = tab;
         }
     }
 
