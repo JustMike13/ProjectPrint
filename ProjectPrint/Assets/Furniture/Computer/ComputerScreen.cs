@@ -42,11 +42,9 @@ public class ComputerScreen : MonoBehaviour
         ShopsCanvas.SetActive(false);
         OrdersCanvas.SetActive(false);
         shopPageCanvas.SetActive(false);
-        Canvas shopCanvas = shopPageCanvas.GetComponent<Canvas>();
-        if (shopCanvas.worldCamera == null)
-        {
-            shopCanvas.worldCamera = Camera.main;
-        }
+        AssignWorldCamera(DesktopCanvas);
+        AssignWorldCamera(OrdersCanvas);
+        AssignWorldCamera(shopPageCanvas);
         PopulateShopPages();
         previousShopTab = InputSystem.actions.FindAction("Previous");
         nextShopTab = InputSystem.actions.FindAction("Next");
@@ -122,7 +120,7 @@ public class ComputerScreen : MonoBehaviour
         for (int i = 0; i < orders.Count; i++)
         {
             GameObject buttonGO = Instantiate(instance.buttonPrefab, instance.OrdersCanvas.transform);
-            buttonGO.transform.position = buttonGO.transform.parent.position + new Vector3(instance.xPos, instance.yPos - i * instance.yDelta, 0);
+            buttonGO.transform.localPosition = new Vector3(instance.xPos, instance.yPos - i * instance.yDelta, 0);
             OrderElement oe = buttonGO.GetComponent<OrderElement>();
             oe.NoOfItemsText.text = "No of Items: " + orders[i].NoOfItems;
             oe.PriceText.text = "Price: $" + orders[i].Price;
@@ -285,6 +283,21 @@ public class ComputerScreen : MonoBehaviour
                 buyButton.transition = Selectable.Transition.ColorTint;
                 buyButton.interactable = canBuy;
             }
+        }
+    }
+
+    private static void AssignWorldCamera(GameObject canvasObject)
+    {
+        Canvas canvas = canvasObject.GetComponent<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogError(canvasObject.name + " requires a Canvas component.");
+            return;
+        }
+
+        if (canvas.worldCamera == null)
+        {
+            canvas.worldCamera = Camera.main;
         }
     }
 }
