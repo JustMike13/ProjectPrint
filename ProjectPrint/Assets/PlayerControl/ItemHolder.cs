@@ -10,7 +10,7 @@ public class ItemHolder : MonoBehaviour
     [SerializeField] static GameObject currentItem = null;
     [SerializeField] GameObject objectPlacer;
     [SerializeField] GameObject objectMover;
-    [SerializeField] InputActionAsset inputActions;
+    [SerializeField] private float rotationIncrement = 15f; // 15 degree increments
     public static ItemHolder Instance { get; private set; }
     static bool moving = false;
     public static bool IsMovingSomething { get { return moving; } 
@@ -136,33 +136,51 @@ public class ItemHolder : MonoBehaviour
         }
     }
 
+    [SerializeField] private float rotationDelay = 0.1f; // Delay between rotations when holding controller input
+    private float lastRotationTime = 0f;
+
     private void HandleRotation(Quaternion objRotation)
     {
-        if (RotateButton.WasPressedThisFrame())
+        float rotationInput = RotateButton.ReadValue<float>();
+        if (rotationInput != 0)
         {
-            float[] targetRotations = new float[4];
-            for (int i = 0; i < 4; i++)
+            // Check if enough time has passed since last rotation to allow another one
+            if (Time.time - lastRotationTime > rotationDelay)
             {
-                targetRotations[i] = objRotation.eulerAngles.y + i * 90;
-                if (targetRotations[i] > 360)
+                // Mouse wheel or controller input
+                if (rotationInput > 0)
                 {
-                    targetRotations[i] -= 360;
+                    // Rotate right (clockwise)
+                    angle += rotationIncrement;
                 }
-            }
-            bool found = false;
-            foreach (float target in targetRotations)
-            {
-                float angleDiff = target - angle;
-                if (angleDiff < 5f && angleDiff > -5)
+                else
                 {
-                    angle = target + 90;
-                    found = true;
-                    break;
+                    // Rotate left (counter-clockwise)
+                    angle -= rotationIncrement;
                 }
-            }
-            if (!found)
-            {
-                angle = objRotation.eulerAngles.y;
+
+                // Normalize angle to stay within 0-360 degrees
+                if (angle >= 360f)
+                    angle -= 360f;
+                else if (angle < 0f)
+                    angle += 360f;
+
+                // Ensure angle is a multiple of rotationIncrement
+                float remainder = angle % rotationIncrement;
+                if (remainder != 0)
+                {
+                    // Snap to the nearest increment
+                    if (remainder > rotationIncrement / 2f)
+                    {
+                        angle += (rotationIncrement - remainder);
+                    }
+                    else
+                    {
+                        angle -= remainder;
+                    }
+                }
+
+                lastRotationTime = Time.time; // Update last rotation time
             }
         }
     }

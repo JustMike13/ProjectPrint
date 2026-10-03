@@ -125,12 +125,12 @@
                 },
                 {
                     "name": "RotateObject",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "1c9fc85a-aef1-440e-be0d-7df8d7f6606a",
-                    "expectedControlType": "",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Test",
@@ -596,17 +596,6 @@
                 },
                 {
                     "name": "",
-                    "id": "413a2396-24d0-48c3-a0f1-851e7319ef98",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "RightClick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "db150c39-81f1-4397-aaef-8f9768c5f029",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -662,17 +651,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8aae3eba-635b-44d7-ae6b-110b4f53bf09",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "MoveObject",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "0dba71c8-f995-4a43-b48c-0c2b0175216f",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -695,17 +673,6 @@
                 },
                 {
                     "name": "",
-                    "id": "ec60208e-b13c-4243-88d5-7c840767ab69",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "RotateObject",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3e805d08-0f2c-4fe1-bfb5-ca0741dd9e08",
                     "path": "<Keyboard>/j",
                     "interactions": "",
@@ -714,6 +681,72 @@
                     "action": "Test",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "bc45fd96-0d28-43e0-9313-27c7d34fe9b3",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateObject",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "9daf3324-7dbb-4dfb-8b60-e80a7775d920",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RotateObject",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "8e010fdd-2576-4367-bcf5-d8bffaccb0d6",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RotateObject",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "cf73a0a3-bcef-4e40-bf89-dc83d8357a5d",
+                    "path": "1DAxis",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateObject",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "8695d243-a15d-47d1-900a-fc15dc1e523e",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "RotateObject",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "da810ab6-4017-43b4-b581-09e97937c56e",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "RotateObject",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
