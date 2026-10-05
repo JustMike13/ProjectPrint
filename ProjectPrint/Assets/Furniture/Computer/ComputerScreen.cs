@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -25,10 +26,17 @@ public class ComputerScreen : MonoBehaviour
     [SerializeField] private Button cardPrefab;
     private Button[] shopTabs;
     private bool[] shopPageDirty;
+    private InputAction navigateShop;
+    private InputAction buyShopItem;
+    private InputAction closeShop;
     private InputAction previousShopTab;
     private InputAction nextShopTab;
     private int selectedShopTab;
+    private int selectedShopProduct;
+    private float lastShopMove;
+    [SerializeField] private float controllerDelay = 0.15f;
     private static readonly string[] ShopTabNames = { "Filament", "Printers", "Others" };
+    private const int ShopGridColumns = 3;
     private const float TabBarStart = 0.11f;
     private const float TabBarEnd = 0.77f;
 
@@ -57,11 +65,18 @@ public class ComputerScreen : MonoBehaviour
         {
             shopPageDirty[i] = true; // nothing generated yet; first open of each tab builds its cards
         }
+        navigateShop = InputSystem.actions.FindAction("Navigate");
+        buyShopItem = InputSystem.actions.FindAction("Buy");
+        closeShop = InputSystem.actions.FindAction("Back");
         previousShopTab = InputSystem.actions.FindAction("Previous");
         nextShopTab = InputSystem.actions.FindAction("Next");
+        if (navigateShop == null || buyShopItem == null || closeShop == null)
+        {
+            Debug.LogError("ComputerScreen requires the Navigate, Buy, and Back actions in the active Input Actions asset.");
+        }
         if (previousShopTab == null || nextShopTab == null)
         {
-            Debug.LogError("ComputerScreen requires Previous and Next actions in the active Input Actions asset.");
+            Debug.LogError("ComputerScreen requires Previous (LB) and Next (RB) actions in the active Input Actions asset.");
         }
         Transform exitButtonTransform = shopPageCanvas.transform.Find("ShopTabs/ShopExitButton");
         if (exitButtonTransform == null)
@@ -86,18 +101,50 @@ public class ComputerScreen : MonoBehaviour
 
     private void Update()
     {
-        if (!shopPageCanvas.activeInHierarchy || previousShopTab == null || nextShopTab == null)
+        if (!shopPageCanvas.activeInHierarchy)
         {
             return;
         }
 
-        if (previousShopTab.WasPressedThisFrame())
+        if (previousShopTab != null && previousShopTab.WasPressedThisFrame())
         {
             SelectShopTab((selectedShopTab + shopPages.Length - 1) % shopPages.Length);
         }
-        else if (nextShopTab.WasPressedThisFrame())
+        else if (nextShopTab != null && nextShopTab.WasPressedThisFrame())
         {
             SelectShopTab((selectedShopTab + 1) % shopPages.Length);
+        }
+
+        if (closeShop != null && closeShop.WasPressedThisFrame())
+        {
+            CloseShops();
+            return;
+        }
+
+        if (navigateShop != null && Time.time - lastShopMove >= controllerDelay)
+        {
+            Vector2 navigation = navigateShop.ReadValue<Vector2>();
+            if (Mathf.Abs(navigation.x) > Mathf.Abs(navigation.y) && navigation.x > 0.5f)
+            {
+                MoveShopProductSelection(1, 0);
+            }
+            else if (Mathf.Abs(navigation.x) > Mathf.Abs(navigation.y) && navigation.x < -0.5f)
+            {
+                MoveShopProductSelection(-1, 0);
+            }
+            else if (navigation.y > 0.5f)
+            {
+                MoveShopProductSelection(0, -1);
+            }
+            else if (navigation.y < -0.5f)
+            {
+                MoveShopProductSelection(0, 1);
+            }
+        }
+
+        if (buyShopItem != null && buyShopItem.WasPressedThisFrame())
+        {
+            BuySelectedShopProduct();
         }
     }
 
@@ -174,6 +221,10 @@ public class ComputerScreen : MonoBehaviour
         DesktopCanvas.SetActive(true);
         shopPageCanvas.SetActive(false);
         ShopsCanvas.SetActive(false);
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     public void SelectShopTab(int tabIndex)
@@ -202,6 +253,9 @@ public class ComputerScreen : MonoBehaviour
         {
             scrollRect.verticalNormalizedPosition = 1f;
         }
+
+        selectedShopProduct = 0;
+        FocusSelectedShopProduct();
     }
 
     /// <summary>Call this when a Shop's inventory changes so its page regenerates on next (re)open, or immediately if already open.</summary>
@@ -218,6 +272,10 @@ public class ComputerScreen : MonoBehaviour
         {
             RebuildShopPage(shopIndex);
             shopPageDirty[shopIndex] = false;
+            Shop shop = shopInventories[shopIndex];
+            int productCount = shop != null ? shop.ProductCount : 0;
+            selectedShopProduct = Mathf.Clamp(selectedShopProduct, 0, Mathf.Max(0, productCount - 1));
+            FocusSelectedShopProduct();
         }
     }
 
@@ -240,6 +298,7 @@ public class ComputerScreen : MonoBehaviour
         {
             int productIndex = itemIndex;
             Button card = Instantiate(cardPrefab, content);
+            ConfigureShopCardFocus(card);
             card.transform.Find("ProductLabel").GetComponent<TMP_Text>().text = shop.GetProductName(productIndex);
             Button buyButton = card.transform.Find("BuyButton").GetComponent<Button>();
             buyButton.GetComponentInChildren<TMP_Text>(true).text = "BUY  $" + shop.GetProductPrice(productIndex).ToString("0.##");
@@ -257,7 +316,163 @@ public class ComputerScreen : MonoBehaviour
             card.transform.Find("BuyButton").GetComponentInChildren<TMP_Text>(true).text = "OUT OF STOCK";
         }
 
+        selectedShopProduct = Mathf.Clamp(selectedShopProduct, 0, Mathf.Max(0, productCount - 1));
         RefreshShopButtons();
+    }
+
+    private void MoveShopProductSelection(int columnDirection, int rowDirection)
+    {
+        if (shopInventories == null || selectedShopTab >= shopInventories.Length)
+        {
+            return;
+        }
+
+        Shop shop = shopInventories[selectedShopTab];
+        int productCount = shop != null ? shop.ProductCount : 0;
+        if (productCount == 0)
+        {
+            return;
+        }
+
+        int currentRow = selectedShopProduct / ShopGridColumns;
+        int currentColumn = selectedShopProduct % ShopGridColumns;
+        int nextRow = currentRow + rowDirection;
+        int nextColumn = currentColumn + columnDirection;
+
+        if (nextRow < 0 || nextColumn < 0 || nextColumn >= ShopGridColumns)
+        {
+            return;
+        }
+
+        int rowStart = nextRow * ShopGridColumns;
+        if (rowStart >= productCount)
+        {
+            return;
+        }
+
+        int nextProduct = rowStart + nextColumn;
+        if (nextProduct >= productCount)
+        {
+            if (rowDirection == 0)
+            {
+                return;
+            }
+
+            nextProduct = productCount - 1;
+        }
+
+        if (nextProduct == selectedShopProduct)
+        {
+            return;
+        }
+
+        selectedShopProduct = nextProduct;
+        lastShopMove = Time.time;
+        FocusSelectedShopProduct();
+    }
+
+    private void FocusSelectedShopProduct()
+    {
+        if (selectedShopTab >= shopPages.Length || shopInventories == null || selectedShopTab >= shopInventories.Length)
+        {
+            return;
+        }
+
+        Shop shop = shopInventories[selectedShopTab];
+        if (shop == null || selectedShopProduct < 0 || selectedShopProduct >= shop.ProductCount)
+        {
+            return;
+        }
+
+        Transform content = shopPages[selectedShopTab].transform.Find("Viewport/Content");
+        if (content == null || selectedShopProduct >= content.childCount)
+        {
+            return;
+        }
+
+        Button card = content.GetChild(selectedShopProduct).GetComponent<Button>();
+        if (card == null)
+        {
+            return;
+        }
+
+        card.Select();
+        ScrollShopRowIntoView(content, selectedShopProduct);
+    }
+
+    private void BuySelectedShopProduct()
+    {
+        if (selectedShopTab >= shopPages.Length)
+        {
+            return;
+        }
+
+        Transform content = shopPages[selectedShopTab].transform.Find("Viewport/Content");
+        if (content == null || selectedShopProduct >= content.childCount)
+        {
+            return;
+        }
+
+        Transform buyTransform = content.GetChild(selectedShopProduct).Find("BuyButton");
+        Button buyButton = buyTransform != null ? buyTransform.GetComponent<Button>() : null;
+        if (buyButton != null && buyButton.interactable)
+        {
+            buyButton.onClick.Invoke();
+        }
+    }
+
+    private void ScrollShopRowIntoView(Transform content, int productIndex)
+    {
+        ScrollRect scrollRect = shopPages[selectedShopTab].GetComponentInChildren<ScrollRect>(true);
+        RectTransform viewport = scrollRect != null ? scrollRect.viewport : null;
+        if (scrollRect == null || scrollRect.content == null || viewport == null || productIndex < 0 || productIndex >= content.childCount)
+        {
+            return;
+        }
+
+        Canvas.ForceUpdateCanvases();
+        int firstInRow = productIndex / ShopGridColumns * ShopGridColumns;
+        int lastInRow = Mathf.Min(firstInRow + ShopGridColumns - 1, content.childCount - 1);
+        Bounds rowBounds = RectTransformUtility.CalculateRelativeRectTransformBounds(viewport, (RectTransform)content.GetChild(firstInRow));
+        if (lastInRow > firstInRow)
+        {
+            rowBounds.Encapsulate(RectTransformUtility.CalculateRelativeRectTransformBounds(viewport, (RectTransform)content.GetChild(lastInRow)));
+        }
+
+        float offset = 0f;
+        if (rowBounds.max.y > viewport.rect.yMax)
+        {
+            offset = rowBounds.max.y - viewport.rect.yMax;
+        }
+        else if (rowBounds.min.y < viewport.rect.yMin)
+        {
+            offset = rowBounds.min.y - viewport.rect.yMin;
+        }
+
+        if (offset != 0f)
+        {
+            scrollRect.StopMovement();
+            Vector2 contentPosition = scrollRect.content.anchoredPosition;
+            float maxPosition = Mathf.Max(0f, scrollRect.content.rect.height - viewport.rect.height);
+            contentPosition.y = Mathf.Clamp(contentPosition.y - offset, 0f, maxPosition);
+            scrollRect.content.anchoredPosition = contentPosition;
+        }
+    }
+
+    private static void ConfigureShopCardFocus(Button card)
+    {
+        card.interactable = true;
+        Navigation navigation = card.navigation;
+        navigation.mode = Navigation.Mode.None;
+        card.navigation = navigation;
+        card.transition = Selectable.Transition.ColorTint;
+
+        ColorBlock colors = card.colors;
+        Color normalColor = card.targetGraphic != null ? card.targetGraphic.color : Color.white;
+        colors.normalColor = normalColor;
+        colors.highlightedColor = Color.Lerp(normalColor, Color.white, 0.15f);
+        colors.selectedColor = Color.Lerp(normalColor, new Color(0.2f, 0.6f, 0.9f, normalColor.a), 0.5f);
+        card.colors = colors;
     }
 
     private void RefreshShopButtons()
