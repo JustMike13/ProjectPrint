@@ -448,8 +448,9 @@ public class ComputerScreen : MonoBehaviour
 
         if (focusSelection)
         {
-            shopTabs[tabIndex].Select(); // baked prefab ColorBlock shows the selected color; other tabs fall back to normal
+            shopTabs[tabIndex].Select();
         }
+        UpdateShopTabColors();
 
         ScrollRect scrollRect = shopPages[tabIndex].GetComponentInChildren<ScrollRect>(true);
         if (scrollRect != null)
@@ -461,6 +462,28 @@ public class ComputerScreen : MonoBehaviour
         if (focusSelection)
         {
             FocusSelectedShopProduct();
+        }
+    }
+
+    private void UpdateShopTabColors()
+    {
+        if (shopTabs == null)
+        {
+            return;
+        }
+
+        Color activeColor = new Color(0.09f, 0.35f, 0.64f, 1f);
+        for (int i = 0; i < shopTabs.Length; i++)
+        {
+            Button tab = shopTabs[i];
+            if (tab == null || tab.targetGraphic == null)
+            {
+                continue;
+            }
+
+            ColorBlock colors = tab.colors;
+            tab.transition = Selectable.Transition.None;
+            tab.targetGraphic.color = i == selectedShopTab ? activeColor : colors.normalColor;
         }
     }
 
@@ -838,6 +861,7 @@ public class ComputerScreen : MonoBehaviour
 
             Button tab = Instantiate(tabButtonPrefab, tabBar);
             tab.name = tabName;
+            tab.transition = Selectable.Transition.None;
             RectTransform tabRect = (RectTransform)tab.transform;
             tabRect.anchorMin = new Vector2(TabBarStart + (TabBarEnd - TabBarStart) * i / ShopTabNames.Length, 0f);
             tabRect.anchorMax = new Vector2(TabBarStart + (TabBarEnd - TabBarStart) * (i + 1) / ShopTabNames.Length, 1f);

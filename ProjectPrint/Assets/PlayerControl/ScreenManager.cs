@@ -70,9 +70,6 @@ public class ScreenManager : MonoBehaviour
             case GameState.Profile:
                 CloseProfile();
                 break;
-            case GameState.Focus:
-                CloseFocus();
-                break;
         }
     } 
 

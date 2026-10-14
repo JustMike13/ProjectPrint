@@ -290,11 +290,11 @@ public class Printer : InteractableObject
     {
         if (control == ControlBinding.E)
         {
-            HandleItemInteraction();
+            Print();
         }
         if (control == ControlBinding.F)
         {
-            Print();
+            HandleItemInteraction();
         }
         if (control == ControlBinding.MENU)
         {
