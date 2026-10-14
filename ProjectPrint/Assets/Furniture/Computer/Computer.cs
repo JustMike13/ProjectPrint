@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Computer : InteractableObject
 {
@@ -62,13 +63,13 @@ public class Computer : InteractableObject
         }
     }
 
-    public static void StartComputer()
+    public static void StartComputer(bool openedWithController = false)
     {
         mode = ONMODE;
         dist = 0;
         complete = false;
         monitorMaterial.SetFloat("_Mode", 1);
-        ScreenManager.OpenFocus();
+        ScreenManager.OpenFocus(openedWithController);
     }
 
     public static void StopComputer()
@@ -83,7 +84,9 @@ public class Computer : InteractableObject
         if (control == ControlBinding.MENU)
         {
             CameraMover.SetTargetPosition(cameraPoint.transform.position, cameraPoint.transform.rotation);
-            StartComputer();
+            InputAction menuAction = InputSystem.actions != null ? InputSystem.actions.FindAction("MenuButton") : null;
+            bool openedWithController = menuAction != null && menuAction.activeControl != null && menuAction.activeControl.device is Gamepad;
+            StartComputer(openedWithController);
         }
         return null;
     }

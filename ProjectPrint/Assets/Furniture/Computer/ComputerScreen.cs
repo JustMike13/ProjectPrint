@@ -22,6 +22,8 @@ public class ComputerScreen : MonoBehaviour
     [SerializeField] private GameObject shopPageCanvas;
     [SerializeField] private GameObject[] shopPages;
     [SerializeField] private Shop[] shopInventories;
+    [SerializeField] private List<GameObject> desktopApps = new List<GameObject>();
+    [SerializeField] private int desktopAppsPerRow = 4;
     [SerializeField] private Button tabButtonPrefab;
     [SerializeField] private Button cardPrefab;
     private Button[] shopTabs;
@@ -33,6 +35,12 @@ public class ComputerScreen : MonoBehaviour
     private InputAction nextShopTab;
     private int selectedShopTab;
     private int selectedShopProduct;
+    private int selectedDesktopApp;
+    private int selectedOrder;
+    private bool activatingDesktopAppWithController;
+    private bool showOrderSelectionHighlight;
+    private int pageInputBlockedFrame = -1;
+    private int controllerBuyPressedFrame = -1;
     private float lastShopMove;
     [SerializeField] private float controllerDelay = 0.15f;
     private static readonly string[] ShopTabNames = { "Filament", "Printers", "Others" };
@@ -78,6 +86,18 @@ public class ComputerScreen : MonoBehaviour
         {
             Debug.LogError("ComputerScreen requires Previous (LB) and Next (RB) actions in the active Input Actions asset.");
         }
+        if (desktopAppsPerRow < 1)
+        {
+            Debug.LogError("ComputerScreen requires desktopAppsPerRow to be greater than zero.", this);
+            desktopAppsPerRow = 1;
+        }
+        for (int i = 0; i < desktopApps.Count; i++)
+        {
+            if (desktopApps[i] == null || desktopApps[i].GetComponent<ButtonHover>() == null)
+            {
+                Debug.LogError("ComputerScreen desktop app at index " + i + " must have a ButtonHover component.", this);
+            }
+        }
         Transform exitButtonTransform = shopPageCanvas.transform.Find("ShopTabs/ShopExitButton");
         if (exitButtonTransform == null)
         {
@@ -101,11 +121,32 @@ public class ComputerScreen : MonoBehaviour
 
     private void Update()
     {
-        if (!shopPageCanvas.activeInHierarchy)
+        if (Time.frameCount == pageInputBlockedFrame
+            && (shopPageCanvas.activeInHierarchy || OrdersCanvas.activeInHierarchy))
         {
             return;
         }
 
+        if (shopPageCanvas.activeInHierarchy)
+        {
+            UpdateShopControls();
+            return;
+        }
+
+        if (OrdersCanvas.activeInHierarchy)
+        {
+            UpdateOrderManagerControls();
+            return;
+        }
+
+        if (DesktopCanvas.activeInHierarchy)
+        {
+            UpdateDesktopControls();
+        }
+    }
+
+    private void UpdateShopControls()
+    {
         if (previousShopTab != null && previousShopTab.WasPressedThisFrame())
         {
             SelectShopTab((selectedShopTab + shopPages.Length - 1) % shopPages.Length);
@@ -124,6 +165,11 @@ public class ComputerScreen : MonoBehaviour
         if (navigateShop != null && Time.time - lastShopMove >= controllerDelay)
         {
             Vector2 navigation = navigateShop.ReadValue<Vector2>();
+            if (Mathf.Abs(navigation.x) > 0.5f || Mathf.Abs(navigation.y) > 0.5f)
+            {
+                FocusSelectedShopProduct();
+            }
+
             if (Mathf.Abs(navigation.x) > Mathf.Abs(navigation.y) && navigation.x > 0.5f)
             {
                 MoveShopProductSelection(1, 0);
@@ -148,14 +194,97 @@ public class ComputerScreen : MonoBehaviour
         }
     }
 
+    private void UpdateDesktopControls()
+    {
+        if (closeShop != null && closeShop.WasPressedThisFrame())
+        {
+            ScreenManager.CloseFocus();
+            return;
+        }
+
+        if (navigateShop != null && Time.time - lastShopMove >= controllerDelay)
+        {
+            Vector2 navigation = navigateShop.ReadValue<Vector2>();
+            if (Mathf.Abs(navigation.x) > 0.5f || Mathf.Abs(navigation.y) > 0.5f)
+            {
+                FocusSelectedDesktopApp();
+            }
+
+            if (Mathf.Abs(navigation.x) > Mathf.Abs(navigation.y) && navigation.x > 0.5f)
+            {
+                MoveDesktopAppSelection(1, 0);
+            }
+            else if (Mathf.Abs(navigation.x) > Mathf.Abs(navigation.y) && navigation.x < -0.5f)
+            {
+                MoveDesktopAppSelection(-1, 0);
+            }
+            else if (navigation.y > 0.5f)
+            {
+                MoveDesktopAppSelection(0, -1);
+            }
+            else if (navigation.y < -0.5f)
+            {
+                MoveDesktopAppSelection(0, 1);
+            }
+        }
+
+        if (buyShopItem != null && buyShopItem.WasPressedThisFrame())
+        {
+            ActivateSelectedDesktopApp();
+        }
+    }
+
+    private void UpdateOrderManagerControls()
+    {
+        if (closeShop != null && closeShop.WasPressedThisFrame())
+        {
+            CloseOrderManager();
+            return;
+        }
+
+        if (navigateShop != null && Time.time - lastShopMove >= controllerDelay)
+        {
+            Vector2 navigation = navigateShop.ReadValue<Vector2>();
+            if (navigation.y > 0.5f)
+            {
+                SelectOrder(selectedOrder - 1);
+            }
+            else if (navigation.y < -0.5f)
+            {
+                SelectOrder(selectedOrder + 1);
+            }
+        }
+
+        if (buyShopItem != null && buyShopItem.WasPressedThisFrame())
+        {
+            PrintSelectedOrder();
+        }
+    }
+
     private void OnEnable()
     {
         CurrencySystem.BalanceChanged += RefreshShopButtons;
+        if (buyShopItem != null)
+        {
+            buyShopItem.performed += RecordControllerBuyPress;
+        }
     }
 
     private void OnDisable()
     {
         CurrencySystem.BalanceChanged -= RefreshShopButtons;
+        if (buyShopItem != null)
+        {
+            buyShopItem.performed -= RecordControllerBuyPress;
+        }
+    }
+
+    private void RecordControllerBuyPress(InputAction.CallbackContext context)
+    {
+        if (context.control != null && context.control.device is Gamepad)
+        {
+            controllerBuyPressedFrame = Time.frameCount;
+        }
     }
 
     public static void AddOrders(int n = 0)
@@ -169,6 +298,7 @@ public class ComputerScreen : MonoBehaviour
             }
         }
         ComputerScreen.orderElements.Clear();
+        instance.selectedOrder = 0;
         if (instance.generator == null)
         {
             Debug.LogWarning("OrderGenerator (generator) is not assigned.");
@@ -185,6 +315,10 @@ public class ComputerScreen : MonoBehaviour
             oe.PrintButton.onClick.AddListener(() => CreateLabel(index));
             orderElements.Add(oe);
         }
+        if (instance.showOrderSelectionHighlight && orderElements.Count > 0)
+        {
+            orderElements[0].SetSelected(true);
+        }
     }
 
     static void CreateLabel(int n)
@@ -195,11 +329,55 @@ public class ComputerScreen : MonoBehaviour
 
     public void OpenOrderManager()
     {
+        showOrderSelectionHighlight = activatingDesktopAppWithController
+            || controllerBuyPressedFrame == Time.frameCount;
         DesktopCanvas.SetActive(false);
         ShopsCanvas.SetActive(false);
         shopPageCanvas.SetActive(false);
         OrdersCanvas.SetActive(true);
         AddOrders(3);
+        ClearEventSystemSelection();
+        pageInputBlockedFrame = Time.frameCount;
+    }
+
+    private void SelectOrder(int orderIndex)
+    {
+        if (orderElements.Count == 0)
+        {
+            return;
+        }
+
+        int clampedIndex = Mathf.Clamp(orderIndex, 0, orderElements.Count - 1);
+        if (clampedIndex == selectedOrder)
+        {
+            return;
+        }
+
+        if (showOrderSelectionHighlight && selectedOrder >= 0 && selectedOrder < orderElements.Count && orderElements[selectedOrder] != null)
+        {
+            orderElements[selectedOrder].SetSelected(false);
+        }
+
+        selectedOrder = clampedIndex;
+        if (showOrderSelectionHighlight && orderElements[selectedOrder] != null)
+        {
+            orderElements[selectedOrder].SetSelected(true);
+        }
+        lastShopMove = Time.time;
+    }
+
+    private void PrintSelectedOrder()
+    {
+        if (selectedOrder < 0 || selectedOrder >= orderElements.Count)
+        {
+            return;
+        }
+
+        OrderElement selected = orderElements[selectedOrder];
+        if (selected != null && selected.PrintButton != null && selected.PrintButton.interactable)
+        {
+            selected.PrintButton.onClick.Invoke();
+        }
     }
 
     public void CloseOrderManager()
@@ -210,10 +388,19 @@ public class ComputerScreen : MonoBehaviour
 
     public void OpenShops()
     {
+        bool openedWithController = activatingDesktopAppWithController
+            || controllerBuyPressedFrame == Time.frameCount;
         DesktopCanvas.SetActive(false);
         ShopsCanvas.SetActive(false);
         shopPageCanvas.SetActive(true);
-        SelectShopTab(0);
+        SelectShopTab(0, false);
+        ClearEventSystemSelection();
+        if (openedWithController)
+        {
+            shopTabs[0].Select();
+            FocusSelectedShopProduct();
+        }
+        pageInputBlockedFrame = Time.frameCount;
     }
 
     public void CloseShops()
@@ -227,7 +414,20 @@ public class ComputerScreen : MonoBehaviour
         }
     }
 
+    private static void ClearEventSystemSelection()
+    {
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
+
     public void SelectShopTab(int tabIndex)
+    {
+        SelectShopTab(tabIndex, true);
+    }
+
+    private void SelectShopTab(int tabIndex, bool focusSelection)
     {
         if (tabIndex < 0 || tabIndex >= shopPages.Length)
         {
@@ -246,7 +446,10 @@ public class ComputerScreen : MonoBehaviour
             shopPages[i].SetActive(i == tabIndex);
         }
 
-        shopTabs[tabIndex].Select(); // baked prefab ColorBlock shows the selected color; other tabs fall back to normal
+        if (focusSelection)
+        {
+            shopTabs[tabIndex].Select(); // baked prefab ColorBlock shows the selected color; other tabs fall back to normal
+        }
 
         ScrollRect scrollRect = shopPages[tabIndex].GetComponentInChildren<ScrollRect>(true);
         if (scrollRect != null)
@@ -255,7 +458,10 @@ public class ComputerScreen : MonoBehaviour
         }
 
         selectedShopProduct = 0;
-        FocusSelectedShopProduct();
+        if (focusSelection)
+        {
+            FocusSelectedShopProduct();
+        }
     }
 
     /// <summary>Call this when a Shop's inventory changes so its page regenerates on next (re)open, or immediately if already open.</summary>
@@ -369,6 +575,111 @@ public class ComputerScreen : MonoBehaviour
         selectedShopProduct = nextProduct;
         lastShopMove = Time.time;
         FocusSelectedShopProduct();
+    }
+
+    private void MoveDesktopAppSelection(int columnDirection, int rowDirection)
+    {
+        if (desktopApps == null || desktopApps.Count == 0)
+        {
+            return;
+        }
+
+        int currentRow = selectedDesktopApp / desktopAppsPerRow;
+        int currentColumn = selectedDesktopApp % desktopAppsPerRow;
+        int nextRow = currentRow + rowDirection;
+        int rowCount = (desktopApps.Count + desktopAppsPerRow - 1) / desktopAppsPerRow;
+        if (nextRow < 0 || nextRow >= rowCount)
+        {
+            return;
+        }
+
+        int nextRowStart = nextRow * desktopAppsPerRow;
+        int nextRowEnd = Mathf.Min(nextRowStart + desktopAppsPerRow - 1, desktopApps.Count - 1);
+        int nextColumn = currentColumn + columnDirection;
+        if (rowDirection == 0)
+        {
+            if (nextColumn < 0 || nextColumn >= nextRowEnd - nextRowStart + 1)
+            {
+                return;
+            }
+        }
+        else
+        {
+            nextColumn = Mathf.Min(nextColumn, nextRowEnd - nextRowStart);
+        }
+
+        int nextApp = nextRowStart + nextColumn;
+        if (nextApp == selectedDesktopApp)
+        {
+            return;
+        }
+
+        selectedDesktopApp = nextApp;
+        lastShopMove = Time.time;
+        FocusSelectedDesktopApp();
+    }
+
+    private void FocusSelectedDesktopApp()
+    {
+        if (desktopApps == null || selectedDesktopApp < 0 || selectedDesktopApp >= desktopApps.Count)
+        {
+            return;
+        }
+
+        GameObject app = desktopApps[selectedDesktopApp];
+        ButtonHover hover = app != null ? app.GetComponent<ButtonHover>() : null;
+        if (hover != null)
+        {
+            hover.SelectButton(true);
+        }
+    }
+
+    public static void SetDesktopFocus(bool openedWithController)
+    {
+        if (instance == null)
+        {
+            Debug.LogError("ComputerScreen is not initialized when desktop focus is requested.");
+            return;
+        }
+
+        if (openedWithController)
+        {
+            instance.FocusSelectedDesktopApp();
+            return;
+        }
+
+        foreach (GameObject app in instance.desktopApps)
+        {
+            ButtonHover hover = app != null ? app.GetComponent<ButtonHover>() : null;
+            if (hover != null)
+            {
+                hover.SetControllerHighlight(false);
+            }
+        }
+        ClearEventSystemSelection();
+    }
+
+    private void ActivateSelectedDesktopApp()
+    {
+        if (desktopApps == null || selectedDesktopApp < 0 || selectedDesktopApp >= desktopApps.Count)
+        {
+            return;
+        }
+
+        GameObject app = desktopApps[selectedDesktopApp];
+        ButtonHover hover = app != null ? app.GetComponent<ButtonHover>() : null;
+        if (hover != null)
+        {
+            activatingDesktopAppWithController = true;
+            try
+            {
+                hover.ActivateButton();
+            }
+            finally
+            {
+                activatingDesktopAppWithController = false;
+            }
+        }
     }
 
     private void FocusSelectedShopProduct()

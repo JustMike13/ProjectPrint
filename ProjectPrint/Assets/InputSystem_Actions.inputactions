@@ -1485,6 +1485,28 @@
                     "action": "Back",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Keyboard Space",
+                    "id": "f84f4c3a-f2b2-49a2-8e60-9e23aa0a3d34",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Buy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Keyboard Enter",
+                    "id": "e0bc12aa-64d9-45c7-a140-2ce241ab118c",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Buy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

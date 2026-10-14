@@ -29,6 +29,7 @@ public class ScreenManager : MonoBehaviour
     public static GameState CurrentState => currentState;
     static bool focusOpened = false;
     static bool focusOn = false;
+    static bool focusOpenedWithController;
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -183,12 +184,18 @@ public class ScreenManager : MonoBehaviour
         ProfileCanvas.SetActive(false);
         PauseCanvas.SetActive(true);
     }
-    public static void OpenFocus()
+    public static void OpenFocus(bool openedWithController = false)
     {
         if (currentState == GameState.Focus) return;
         currentState = GameState.Focus;
         focusOpened = true;
-        Instance.ComputerCanvas.SetActive(focusOn && focusOpened);
+        focusOpenedWithController = openedWithController;
+        bool showComputerCanvas = focusOn && focusOpened;
+        Instance.ComputerCanvas.SetActive(showComputerCanvas);
+        if (showComputerCanvas)
+        {
+            ComputerScreen.SetDesktopFocus(focusOpenedWithController);
+        }
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -200,14 +207,20 @@ public class ScreenManager : MonoBehaviour
         Instance.Crosshair.SetActive(true);
         focusOn = false;
         focusOpened = false;
+        focusOpenedWithController = false;
         CameraMover.SetTargetPosition(Vector3.zero, Quaternion.identity);
         Computer.StopComputer();
     }
     public static void FocusOn()
     {
         focusOn = true;
-        Instance.ComputerCanvas.SetActive(focusOn && focusOpened);
-        Instance.Crosshair.SetActive(!(focusOn && focusOpened));
+        bool showComputerCanvas = focusOn && focusOpened;
+        Instance.ComputerCanvas.SetActive(showComputerCanvas);
+        if (showComputerCanvas)
+        {
+            ComputerScreen.SetDesktopFocus(focusOpenedWithController);
+        }
+        Instance.Crosshair.SetActive(!showComputerCanvas);
     }
     public static void CloseUnfocus()
     {
